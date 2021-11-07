@@ -1,0 +1,65 @@
+doctrine:
+    dbal:
+        # configure these for your database server
+        driver: 'pdo_pgsql'
+        server_version: '12.3'
+        charset: utf8
+        default_table_options:
+            charset: utf8
+            collate: utf8_unicode_ci
+
+        url: '%env(resolve:DATABASE_URL)%'
+        # Important: be sure that this parameters exists and its value is set to true #TODO
+        # to fix the deprecation warning! https://github.com/doctrine/DoctrineBundle/pull/1290 #TODO
+        #override_url: true #TODO: remove, since doctrine/doctrine-bundle 2.4 && 4.4.32 not need anymore
+
+        mapping_types:
+            cidr: string #docrtinr does not know cidr type
+
+        types:
+            bigint: { class: 'App\Model\BigIntType' } #//we override that Type because of this https://github.com/doctrine/dbal/issues/3690
+            audit_log_id: { class: 'App\Model\AuditLog\Entity\IdType' }
+            audit_log_user_id: { class: 'App\Model\AuditLog\Entity\UserIdType' }
+            audit_log_entity_type: { class: 'App\Model\AuditLog\Entity\EntityTypeType' }
+            audit_log_task_name_type: { class: 'App\Model\AuditLog\Entity\TaskNameType' }
+            audit_log_record_type: { class: 'App\Model\AuditLog\Entity\Record\RecordType' }
+
+            user_user_id: { class: 'App\Model\User\Entity\User\IdType' }
+            user_user_role: { class: 'App\Model\User\Entity\User\RoleType' }
+            user_user_status: { class: 'App\Model\User\Entity\User\StatusType' }
+
+            cp_package_id: {class: 'App\Model\ControlPanel\Entity\Package\IdType'}
+            cp_package_type: {class: 'App\Model\ControlPanel\Entity\Package\PackageTypeType'}
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '13'
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        mappings:
+#            App:
+#                is_bundle: false
+#                type: annotation
+#                dir: '%kernel.project_dir%/src/Entity'
+#                prefix: 'App\Entity'
+#                alias: App
+            AuditLog:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Model/AuditLog/Entity'
+                prefix: 'App\Model\AuditLog\Entity'
+                alias: AuditLog
+            User:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Model/User/Entity'
+                prefix: 'App\Model\User\Entity'
+                alias: User
+            ControlPanel:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Model/ControlPanel/Entity'
+                prefix: 'App\Model\ControlPanel\Entity'
+                alias: ControlPanel

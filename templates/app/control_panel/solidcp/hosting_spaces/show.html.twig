@@ -1,0 +1,206 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ hostingSpace.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces') }}">{{ main_title }}</a></li>
+        <li class="breadcrumb-item active">Show {{ hostingSpace.name }} </li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">Name:{{ hostingSpace.name}}</div>
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="{{ path('solidCpHostingSpaces.edit', {'id': hostingSpace.id}) }}"
+                   class="btn btn-primary" role="button">Edit</a>
+            </div>
+            <hr>
+            <div class="box">
+
+                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                    <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ hostingSpace.name }}</td>
+                    </tr>
+                    <tr>
+                        <th style="width:20%;">Node:</th>
+                        <td><a href="{{ path('solidCpServers.show', {'id': hostingSpace.solidcpServer.id}) }}"> {{ hostingSpace.solidcpServer.name }}</a>
+                            {% if hostingSpace.hostingPlans|length == 0 %}
+                                <a href="{{ path('solidCpHostingSpaces.changeNode', {'id': hostingSpace.id}) }}"
+                                   class="btn-sm btn-primary" role="button">Change</a>
+                            {% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th style="width:20%;">SolidCP Hosting Space Id:</th>
+                        <td>{{ hostingSpace.solidCpIdHostingSpace }}
+                            {% if hostingSpace.hostingPlans|length == 0 %}
+                                <a href="{{ path('solidCpHostingSpaces.changeSolidCpHostingSpaceId', {'id': hostingSpace.id}) }}"
+                                   class="btn-sm btn-primary" role="button">Change</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>maxActiveNumber</th>
+                        <td>{{ hostingSpace.maxActiveNumber }}</td>
+                    </tr>
+                    <tr>
+                        <th>maxReservedMemory MB</th>
+                        <td>{{ hostingSpace.maxReservedMemoryKb / 1024 }}</td>
+                    </tr>
+                    <tr>
+                        <th>spaceQuotaGb</th>
+                        <td>{{ hostingSpace.spaceQuotaGb }}</td>
+                    </tr>
+                    <tr>
+                        <th>Enabled</th>
+                        <td>{{ hostingSpace.enabled ? 'Yes' : 'No' }}
+                            {% if hostingSpace.isEnabled %}
+                                <form action="{{ path('solidCpHostingSpaces.disable', {'id': hostingSpace.id}) }}"
+                                      style="display: inline-block;" method="post"
+                                      onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('disable') }}"/>
+                                    <button type="submit" class="btn btn-sm btn-danger">Disable
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{{ path('solidCpHostingSpaces.enable', {'id': hostingSpace.id}) }}"
+                                      style="display: inline-block;" method="post"
+                                      onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('enable') }}"/>
+                                    <button type="submit" class="btn btn-sm btn-success">Enable
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="card">
+                    <div class="card-header">
+                        Hosting Plans
+                    </div>
+                    <div class="card-body">
+                        <div class="bd-row">
+                            <a href="{{ path('solidCpHostingSpaces.addPlan', {'id':hostingSpace.id}) }}"
+                               class="btn btn-primary" role="button">Add Plan</a>
+                        </div>
+                        <hr>
+                        <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ knp_pagination_sortable(hostingPlans, 'Name', 'name') }}</th>
+                                <th>{{ knp_pagination_sortable(hostingPlans, 'SolidCP Plan ID', 'solidcp_id_plan') }}</th>
+                                <th>{{ knp_pagination_sortable(hostingPlans, 'SolidCP Server ID', 'solidcp_id_server') }}</th>
+                                <th>{{ knp_pagination_sortable(hostingPlans, 'Is Default', 'is_default') }}</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if hostingPlans.count == 0 %}
+                                <tr>
+                                    <td colspan="5">No Plans</td>
+                                </tr>
+                            {% else %}
+                                {% for object in hostingPlans %}
+                                    <tr>
+                                        <td>
+                                            <a href="#">{{ object.name }}</a>
+                                        </td>
+                                        <td>{{ object.solidcp_id_plan }}</td>
+                                        <td>{{ object.solidcp_id_server }}</td>
+                                        <td>{{ object.is_default ? 'Yes' : 'No' }}
+                                            {% if object.is_default != true %}
+                                                <form action="{{ path('solidCpHostingSpaces.setDefaultPlan', {'id': hostingSpace.id, 'id_plan': object.id}) }}"
+                                                      style="display: inline-block;" method="post"
+                                                      onsubmit="return confirm('Are you sure?')">
+                                                    <input type="hidden" name="token" value="{{ csrf_token('setDefault') }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-warning">Set Default
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <form action="{{ path('solidCpHostingSpaces.removePlan', {'id': hostingSpace.id, 'id_plan': object.id}) }}"
+                                                  style="display: inline-block;" method="post"
+                                                  onsubmit="return confirm('Are you sure?')">
+                                                <input type="hidden" name="token" value="{{ csrf_token('removePlan') }}"/>
+                                                <button type="submit" class="btn btn-sm btn-danger">Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+
+                        <div class="navigation">
+                            {{ knp_pagination_render(hostingPlans) }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="card">
+                    <div class="card-header">
+                        Hosting OS Templates
+                    </div>
+                    <div class="card-body">
+                        <div class="bd-row">
+                            <a href="{{ path('solidCpHostingSpaces.addOsTemplate', {'id':hostingSpace.id}) }}"
+                               class="btn btn-primary" role="button">Add OS</a>
+                        </div>
+                        <hr>
+                        <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ knp_pagination_sortable(hostingTemplates, 'Name', 'name') }}</th>
+                                <th>{{ knp_pagination_sortable(hostingTemplates, 'Path', 'path') }}</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if hostingTemplates.count == 0 %}
+                                <tr>
+                                    <td colspan="3">No OS Templates</td>
+                                </tr>
+                            {% else %}
+                                {% for object in hostingTemplates %}
+                                    <tr>
+                                        <td>
+                                            <a href="#">{{ object.name }}</a>
+                                        </td>
+                                        <td>{{ object.path }}</td>
+                                        <td>
+                                            <form action="{{ path('solidCpHostingSpaces.removeOsTemplate', {'id': hostingSpace.id, 'id_os_template': object.id}) }}"
+                                                  style="display: inline-block;" method="post"
+                                                  onsubmit="return confirm('Are you sure?')">
+                                                <input type="hidden" name="token" value="{{ csrf_token('removeOsTemplate') }}"/>
+                                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-archive"></i> DEL
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+
+                        <div class="navigation">
+                            {{ knp_pagination_render(hostingTemplates) }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

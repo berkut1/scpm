@@ -1,0 +1,54 @@
+version: '3'
+services:
+    scpsc-nginx:
+        build:
+            context: ./docker/development
+            dockerfile: nginx.docker
+        volumes:
+            - ./:/app
+#            - vendor:/app/vendor
+        depends_on:
+            - scpsc-php-fpm
+        ports:
+            - "8080:80"
+    scpsc-php-fpm:
+        build:
+            context: ./docker/development
+            dockerfile: php-fpm.docker
+        volumes:
+            - ./:/app
+#            - vendor:/app/vendor
+        environment:
+            PHP_IDE_CONFIG: "serverName=Docker"
+        depends_on:
+            - scpsc-postgres
+    scpsc-php-cli:
+        build:
+            context: ./docker/development
+            dockerfile: php-cli.docker
+        volumes:
+            - ./:/app
+            - composer:/root/.composer/cache
+#            - vendor:/app/vendor
+        depends_on:
+            - scpsc-postgres
+    scpsc-node:
+        image: node:15.13-alpine
+        volumes:
+          - ./:/app
+        working_dir: /app
+    scpsc-postgres:
+        image: postgres:12.3-alpine
+        volumes:
+            - scpsc-postgres:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: app_user
+            POSTGRES_PASSWORD: secret
+            POSTGRES_DB: app_db
+        ports:
+            - "54321:5432"
+
+volumes:
+    scpsc-postgres:
+    composer:
+#    vendor:

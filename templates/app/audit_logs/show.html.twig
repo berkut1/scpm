@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ auditLog.taskName.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item active">Show {{ auditLog.taskName.name }} </li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">Name:{{ auditLog.taskName.name }}</div>
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="#"
+                   class="btn btn-primary" role="button">Edit</a>
+            </div>
+            <hr>
+            <div class="box">
+                {{ dump(auditLog) }}
+
+                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                    <tbody>
+                    <tr>
+                        <td>dd</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

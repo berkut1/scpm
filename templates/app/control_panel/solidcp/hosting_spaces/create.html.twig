@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces') }}">{{ main_title }}</a></li>
+        <li class="breadcrumb-item active">Create</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-body">
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-primary">Create</button>
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
+    {{ parent() }}
+    <script>
+
+        $('#form_id_enterprise').change(function () {
+            let firstSelector = $(this);
+            $.ajax({
+                url: "{{ path('solidCpAjax.allServerArrayFromEnterprise') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    id_enterprise: firstSelector.val()
+                },
+                success: function (items) {
+                    onSuccess(items, $("#form_id_server"), 'Select a Node');
+                },
+                error: function (err) {
+                    alert("An error ocurred while loading data ...");
+                }
+            });
+        });
+
+        $('#form_id_server').change(function () {
+            let firstSelector = $(this);
+            $.ajax({
+                url: "{{ path('solidCpAjax.allNonAddedHostingSpaceArrayFromEnterprise') }}",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    id_enterprise: firstSelector.val()
+                },
+                success: function (items) {
+                    onSuccess(items, $("#form_id_hosting_space"), 'Select a Hosting Space');
+                },
+                error: function (err) {
+                    alert("An error ocurred while loading data ...");
+                }
+            });
+        });
+
+        $('#form_id_hosting_space').change(function () {
+            let firstSelector = $(this);
+            $("#form_name").val(firstSelector.find('option:selected').text());
+        });
+
+        function onSuccess(items, idFormSelector, placeHolder)
+        {
+            let successSelector = idFormSelector;
+            successSelector.html(''); // Remove current options
+            successSelector.append('<option value selected="selected">' + placeHolder + '</option>'); // Empty value ...
+            $.each(items, function (key, item) {
+                //successSelector.append('<option value="' + item.id + '">' + item.name + '</option>');
+                successSelector.append('<option value="' + key + '">' + item + '</option>');
+            });
+        }
+    </script>
+{% endblock %}

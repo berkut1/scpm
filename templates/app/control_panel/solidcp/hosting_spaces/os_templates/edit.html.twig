@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces') }}">{{ main_title }}</a></li>
+        <li class="breadcrumb-item"><a
+                    href="{{ path('solidCpHostingSpaces.show', {'id':hostingSpace.id}) }}">{{ hostingSpace.name }}</a>
+        </li>
+        <li class="breadcrumb-item active">Add</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-body">
+
+            {{ form_start(form) }}
+{#            {{ form_row(form.id_hosting_space) }}#}
+            <div id="templates_card" class="card">
+                <div class="card-body">
+                    <div id="prototype_templates"
+                         data-prototype="
+                        {% apply escape %}
+                            {{ include('app/control_panel/solidcp/hosting_spaces/os_templates/prototype.html.twig', { 'form': form.osTemplates.vars.prototype }) }}
+                        {% endapply %}">
+                        {% for row in form.osTemplates %}
+                            <div class="panel form-row">
+                                <div class="form-group col-sm-3">
+                                    {{ form_widget(row.path) }}
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    {{ form_widget(row.name) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {# <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
+    <script>
+        let $collectionHolder;
+        let $card;
+
+        let $addNew = $('<a href="#" class="btn btn-sm btn-primary">Add</a>');
+
+        $(document).ready(function () {
+            // get the collectionHolder, initilize the var by getting the list;
+            $collectionHolder = $('#prototype_templates');
+            $card = $('#templates_card');
+            addAllButtonsAndEventsToCollection($card, $addNew, $collectionHolder);
+        });
+
+        function addAllButtonsAndEventsToCollection($card, $button, $collection) {
+            addAddButtonToForm($card, $button);
+            addRemoveButtonToForm($collection);
+            addClickEventToButtonAndAddFormInCollection($button, $collection);
+        }
+
+        function addAddButtonToForm($card, $button) {
+            let $cardFooter = $('<div class="card-footer"></div>');
+            $cardFooter.append($button);
+            $card.append($cardFooter);
+        }
+
+        function addClickEventToButtonAndAddFormInCollection($button, $collection) {
+            $button.click(function (e) {
+                e.preventDefault();
+                addNewForm($collection);
+            });
+        }
+
+        function addRemoveButtonToForm($collection) {
+            // add an index property to the collectionHolder which helps track the count of forms we have in the list
+            $collection.data('index', $collection.find('.panel').length);
+            // finds all the panels in the list and foreach one of them we add a remove button to it
+            // add remove button to existing items
+            $collection.find('.panel').each(function () {
+                addRemoveButton($(this));
+            });
+        }
+
+        /**
+         * creates a new form and appends it to the collectionHolder
+         */
+        function addNewForm($collection) {
+            // getting the prototype
+            // the prototype is the form itself, plain html
+            let prototype = $collection.data('prototype');
+            let index = $collection.data('index');
+            let newForm = prototype;
+            // replace the __name__ string in the html using a regular expression with the index value
+            newForm = newForm.replace(/__name__/g, index);
+            // incrementing the index data and setting it again to the collectionHolder
+            $collection.data('index', index + 1);
+            // create the panel
+            let $panel = $('<div class="panel"></div>');
+            let $panelBody = $('<div class="form-row"></div>').append(newForm);
+
+            $panel.append($panelBody);
+            addRemoveButton($panelBody);
+            // append the panel to the addNewItem
+            // we are doing it this way to that the link is always at the bottom of the collectionHolder
+            //$addNew.before($panel);
+            $collection.before($panel);
+        }
+
+        /**
+         * adds a remove button to the panel that is passed in the parameter
+         * @param $panel
+         */
+        function addRemoveButton($panel) {
+            let $removeButton = $('<a href="#" class="btn btn-danger">Remove</a>');
+            let $panelFooter = $('<div class="col-sm-3"></div>').append($removeButton);
+            $removeButton.click(function (e) {
+                e.preventDefault();
+                $(e.target).parents('.panel').slideUp(1000, function () {
+                    $(this).remove();
+                })
+            });
+            $panel.append($panelFooter);
+        }
+
+    </script>
+
+{% endblock %}

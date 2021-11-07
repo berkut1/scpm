@@ -1,0 +1,1148 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "SolidCP simple API",
+        "description": "HTTP JSON API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/login/authentication_token": {
+            "post": {
+                "tags": [
+                    "Get JWT toket to Login"
+                ],
+                "operationId": "9828c8d99cd86e444dfea8e7930b06dd",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "nullable": true,
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer"
+                                                },
+                                                "message": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/solidCP/enterprise-servers": {
+            "get": {
+                "tags": [
+                    "Get List of Enterprise Servers"
+                ],
+                "description": "Get list of Enterprise Servers, use only if you have more than one Enterprise Server",
+                "operationId": "6fcc5e8b5fefc53a66269341c37726d8",
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "return ids and names",
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/enterprise-server/is-enable": {
+            "get": {
+                "tags": [
+                    "Is Enterprise Server Enable?"
+                ],
+                "description": "Check if Enterprise Server is manually disabled",
+                "operationId": "d68ae9d8737bf8b3f07d75d527c9fcae",
+                "parameters": [
+                    {
+                        "name": "id_enterprise",
+                        "in": "query",
+                        "description": "if not pass value, it will use a default",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "isEnable": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/all-in-one/user/package/vps": {
+            "post": {
+                "tags": [
+                    "Create SolidCP All in One User/Package/Vps"
+                ],
+                "description": "Correct way to create VPS for SolidCP panel. It will automatically create user, package and VPS if needed.",
+                "operationId": "e739dff13ccf33edb0f3e1850c1d289c",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "client_login",
+                                    "client_email",
+                                    "client_password",
+                                    "server_package_name",
+                                    "server_location_name",
+                                    "server_os_name",
+                                    "server_password",
+                                    "server_ip_amount"
+                                ],
+                                "properties": {
+                                    "client_login": {
+                                        "description": "The login that the user will use for the SolidCP panel",
+                                        "type": "string"
+                                    },
+                                    "client_email": {
+                                        "description": "The email that the user will use in the SolidCP panel, if forget password",
+                                        "type": "string",
+                                        "example": "example@mail.ufo"
+                                    },
+                                    "client_password": {
+                                        "description": "Generated password for SolidCP client",
+                                        "type": "string"
+                                    },
+                                    "server_package_name": {
+                                        "type": "string",
+                                        "example": "Silver RDP12"
+                                    },
+                                    "server_location_name": {
+                                        "type": "string",
+                                        "example": "Meppel, Netherlands"
+                                    },
+                                    "server_os_name": {
+                                        "type": "string",
+                                        "example": "Windows Server 2019"
+                                    },
+                                    "server_password": {
+                                        "description": "Generated password for VM server",
+                                        "type": "string"
+                                    },
+                                    "server_ip_amount": {
+                                        "description": "The number of IP addresses to be assigned to the VM server.",
+                                        "type": "integer"
+                                    },
+                                    "id_enterprise": {
+                                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                                        "type": "integer"
+                                    },
+                                    "ignore_node_ids": {
+                                        "description": "nodes ids that need to ignore for installation (all storages that related to this node). For example, if the old installation is not yet complete",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "ignore_hosting_space_ids": {
+                                        "description": "hostingspace ids (storages) that need to ignore for installation. For example, if the old installation is not yet complete",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "is_user_exists": {
+                                            "description": "if false, this user was not created, but the old one with the same login was used (the password was not changed)",
+                                            "type": "boolean"
+                                        },
+                                        "solidcp_package_id": {
+                                            "description": "The package in which the virtual machine is installed",
+                                            "type": "integer"
+                                        },
+                                        "vps": {
+                                            "description": "The VPS details",
+                                            "properties": {
+                                                "solidcp_item_id": {
+                                                    "description": "VM SolidCP ID",
+                                                    "type": "integer"
+                                                },
+                                                "provisioning_status": {
+                                                    "type": "string"
+                                                },
+                                                "main_ip": {
+                                                    "type": "string",
+                                                    "example": "192.168.0.2"
+                                                },
+                                                "secondary_ips": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "example": [
+                                                        "192.168.0.4",
+                                                        "192.168.0.5"
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "solidcp_server_node": {
+                                            "description": "The Node/HDD in which the virtual machine was installed.",
+                                            "properties": {
+                                                "node_id": {
+                                                    "description": "SolidCP HyperV node",
+                                                    "type": "integer"
+                                                },
+                                                "solidcp_hosting_space_id": {
+                                                    "description": "SolidCP hosting space aka Storage HDD/SSD/NAS/etc",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/users": {
+            "post": {
+                "tags": [
+                    "Create SolidCP User"
+                ],
+                "description": "Manually create a SolidCP user. Not required if you are using All in One User/Package/Vps",
+                "operationId": "73eea6da5a9584a5cbb42beb0ac11872",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "first_name": {
+                                        "description": "if not selected, then use the username",
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "description": "if not selected, then use the username",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "id_enterprise": {
+                                        "description": "if not selected, then use the default one",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "userId": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/users/{username}/is-exists": {
+            "get": {
+                "tags": [
+                    "Is SolidCP User Exists"
+                ],
+                "description": "Check if the user exists. Not required if you are using All in One User/Package/Vps",
+                "operationId": "a6d453063f4ad0f0112c85c3d87af427",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id_enterprise",
+                        "in": "query",
+                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "isUserExists": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/users/{username}/email": {
+            "put": {
+                "tags": [
+                    "Change SolidCP user's email address"
+                ],
+                "description": "Change SolidCP user's email",
+                "operationId": "d0a9e05db7dfbe62c25f2b2337119c5f",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id_enterprise",
+                        "in": "query",
+                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "new_email"
+                                ],
+                                "properties": {
+                                    "new_email": {
+                                        "type": "string"
+                                    },
+                                    "id_enterprise": {
+                                        "description": "if not selected, then use the default one",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success response"
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/users/{username}/password": {
+            "put": {
+                "tags": [
+                    "Change SolidCP User password"
+                ],
+                "operationId": "68c98a787b5ecc5057ea62b4caf97915",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id_enterprise",
+                        "in": "query",
+                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "new_password"
+                                ],
+                                "properties": {
+                                    "new_password": {
+                                        "type": "string"
+                                    },
+                                    "id_enterprise": {
+                                        "description": "if not selected, then use the default one",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success response"
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/vps/{solidcp_item_id}/provisioning-status": {
+            "get": {
+                "tags": [
+                    "VPS Provisioning Status"
+                ],
+                "description": "Get VPS Provisioning Status. Whether the server is prepared or not. Should be used after calling All in One User/Package/Vps",
+                "operationId": "177545e5a04cc9b11f6be5bc055a99bb",
+                "parameters": [
+                    {
+                        "name": "solidcp_item_id",
+                        "in": "path",
+                        "description": "the id that provides the VPS creation method",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "id_enterprise",
+                        "in": "query",
+                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "provisioning_status": {
+                                            "description": "OK, Error, InProgress",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/vps/{solidcp_item_id}/state": {
+            "get": {
+                "tags": [
+                    "VPS State of fully installed VM"
+                ],
+                "description": "Get state of VM Running/Stopped/ets. Must be used only if VPS Provisioning Status shows - OK",
+                "operationId": "8e4d187e6bf4f8b2f4ef489045332896",
+                "parameters": [
+                    {
+                        "name": "solidcp_item_id",
+                        "in": "path",
+                        "description": "the id that provides the VPS creation method",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "id_enterprise",
+                        "in": "query",
+                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "state": {
+                                            "description": "After installation, we need to get the state = Running, everything else in this case means a problem. If state = Starting, then need to wait.",
+                                            "type": "string",
+                                            "example": "Snapshotting or Migrating or Deleted or Unknown or Other or Running or Off or Stopping or Saved or Paused or Starting or Reset or Saving or Pausing or Resuming or FastSaved or FastSaving or RunningCritical or OffCritical or StoppingCritical or SavedCritical or PausedCritical or StartingCritical or ResetCritical or SavingCritical or PausingCritical or ResumingCritical or FastSavedCritical or FastSavingCritical"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/vps/{vps_ip_address}/status": {
+            "put": {
+                "tags": [
+                    "Change VPS package status over IPv4"
+                ],
+                "description": "Change VPS and its packet status over IPv4",
+                "operationId": "c2b983dae2e8e2df8418895803e497a1",
+                "parameters": [
+                    {
+                        "name": "vps_ip_address",
+                        "in": "path",
+                        "description": "Main IPv4 address",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "ipv4"
+                        }
+                    },
+                    {
+                        "name": "id_enterprise",
+                        "in": "query",
+                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "vps_status"
+                                ],
+                                "properties": {
+                                    "vps_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Active",
+                                            "Suspended",
+                                            "Cancelled"
+                                        ]
+                                    },
+                                    "id_enterprise": {
+                                        "description": "if not selected, then use the default one",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success response"
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/vps/available-spaces/count": {
+            "get": {
+                "tags": [
+                    "Number of Available VPS Spaces aka VPS storages"
+                ],
+                "description": "Provides the number of available spaces for a specific package",
+                "operationId": "b8bb977e8b74d9633cc424a09beb618b",
+                "parameters": [
+                    {
+                        "name": "server_package_name",
+                        "in": "query",
+                        "required": true,
+                        "style": "form",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Silver RDP23"
+                    },
+                    {
+                        "name": "server_location_name",
+                        "in": "query",
+                        "required": true,
+                        "style": "form",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Meppel, Netherlands"
+                    },
+                    {
+                        "name": "id_enterprise",
+                        "in": "query",
+                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ignore_node_ids[]",
+                        "in": "query",
+                        "description": "nodes ids that need to ignore for installation. For example, if the old installation is not yet complete",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    {
+                        "name": "ignore_hosting_space_ids[]",
+                        "in": "query",
+                        "description": "hostingspace ids (storages) that need to ignore for installation. For example, if the old installation is not yet complete",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "number_available_spaces": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/": {
+            "get": {
+                "tags": [
+                    "API"
+                ],
+                "description": "API Home",
+                "operationId": "e06135082c6ce70270e8bcfadc27a474",
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErrorModel": {
+                "properties": {
+                    "error": {
+                        "nullable": true,
+                        "properties": {
+                            "code": {
+                                "type": "integer"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "violations": {
+                        "nullable": true,
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "propertyPath": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "SimpleError": {
+                "properties": {
+                    "error": {
+                        "nullable": true,
+                        "properties": {
+                            "code": {
+                                "type": "integer"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

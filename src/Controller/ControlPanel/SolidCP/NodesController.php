@@ -1,0 +1,251 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Controller\ControlPanel\SolidCP;
+
+use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Create;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\Create as CreateHostingSpace;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Edit;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Enable;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Disable;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Remove;
+use App\ReadModel\ControlPanel\Panel\SolidCP\Node\HostingSpace\SolidcpHostingSpaceFetcher;
+use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * @Route("/panel/solidcp/node-servers", name="solidCpServers")
+ * @IsGranted("ROLE_MODERATOR")
+ */
+class NodesController extends AbstractController
+{
+    private const PER_PAGE = 25;
+    private const MAIN_TITLE = 'Node Servers';
+
+    private LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * @Route("", name="")
+     * @param Request $request
+     * @param SolidcpServerFetcher $fetcher
+     * @return Response
+     */
+    public function index(Request $request, SolidcpServerFetcher $fetcher): Response
+    {
+        $pagination = $fetcher->all(
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'name'),
+            $request->query->get('direction', 'desc')
+        );
+
+        return $this->render('app/control_panel/solidcp/nodes/index.html.twig', [
+            'page_title' => self::MAIN_TITLE,
+            'pagination' => $pagination,
+        ]);
+    }
+
+    /**
+     * @Route("/create", name=".create")
+     * @param Request $request
+     * @param Create\Handler $handler
+     * @return Response
+     */
+    public function create(Request $request, Create\Handler $handler): Response
+    {
+        $command = new Create\Command();
+
+        $form = $this->createForm(Create\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                return $this->redirectToRoute('solidCpServers');
+            } catch (\DomainException $e) {
+                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('app/control_panel/solidcp/nodes/create.html.twig', [
+            'page_title' => 'Add SolidCP Server',
+            'main_title' => self::MAIN_TITLE,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/create-hosting-space", name=".createHostingSpace")
+     * @param SolidcpServer $solidcpServer
+     * @param Request $request
+     * @param CreateHostingSpace\Handler $handler
+     * @return Response
+     */
+    public function createHostingSpace(SolidcpServer $solidcpServer, Request $request, CreateHostingSpace\Handler $handler): Response
+    {
+        $command = CreateHostingSpace\Command::fromServer($solidcpServer);
+
+        $form = $this->createForm(CreateHostingSpace\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                return $this->redirectToRoute('solidCpServers.show', ['id' => $solidcpServer->getId()]);
+            } catch (\DomainException $e) {
+                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('app/control_panel/solidcp/nodes/hosting_spaces/create.html.twig', [
+            'page_title' => 'Add hosting Spaces',
+            'main_title' => self::MAIN_TITLE,
+            'form' => $form->createView(),
+            'solidcpServer' => $solidcpServer,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name=".edit")
+     * @param SolidcpServer $solidcpServer
+     * @param Request $request
+     * @param Edit\Handler $handler
+     * @return Response
+     */
+    public function edit(SolidcpServer $solidcpServer, Request $request, Edit\Handler $handler): Response
+    {
+        $command = Edit\Command::fromSolidcpServer($solidcpServer);
+
+        $form = $this->createForm(Edit\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                return $this->redirectToRoute('solidCpServers.show', ['id' => $solidcpServer->getId()]);
+            } catch (\DomainException $e) {
+                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+        return $this->render('app/control_panel/solidcp/nodes/edit.html.twig', [
+            'page_title' => 'Edit SolidCP Server',
+            'main_title' => self::MAIN_TITLE,
+            'form' => $form->createView(),
+            'solidcpServer' => $solidcpServer,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/enable", name=".enable", methods={"POST"})
+     * @param int $id
+     * @param Request $request
+     * @param Enable\Handler $handler
+     * @return Response
+     */
+    public function enable(int $id, Request $request, Enable\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('enable', $request->request->get('token'))) {
+            return $this->redirectToRoute('solidCpServers');
+        }
+
+        $command = new Enable\Command($id);
+
+        try {
+            $handler->handle($command);
+        } catch (\DomainException $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('solidCpServers');
+    }
+
+    /**
+     * @Route("/{id}/disable", name=".disable", methods={"POST"})
+     * @param int $id
+     * @param Request $request
+     * @param Disable\Handler $handler
+     * @return Response
+     */
+    public function disable(int $id, Request $request, Disable\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('disable', $request->request->get('token'))) {
+            return $this->redirectToRoute('solidCpServers');
+        }
+
+        $command = new Disable\Command($id);
+
+        try {
+            $handler->handle($command);
+        } catch (\DomainException $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('solidCpServers');
+    }
+
+    /**
+     * @Route("/{id}/show", name=".show")
+     * @param Request $request
+     * @param SolidcpServer $solidcpServer
+     * @param SolidcpHostingSpaceFetcher $hostingSpaceFetcher
+     * @return Response
+     */
+    public function show(Request $request, SolidcpServer $solidcpServer, SolidcpHostingSpaceFetcher $hostingSpaceFetcher): Response
+    {
+        $spaceFromNode = $hostingSpaceFetcher->allHostingSpaceFromNode(
+            $solidcpServer->getId(),
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'name'),
+            $request->query->get('direction', 'asc'));
+
+        return $this->render('app/control_panel/solidcp/nodes/show.html.twig',
+            [
+                'main_title' => self::MAIN_TITLE,
+                'solidcpServer' => $solidcpServer,
+                'spaceFromNode' => $spaceFromNode,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/remove", name=".remove", methods={"POST"})
+     * @param int $id ,
+     * @param Request $request
+     * @param Remove\Handler $handler
+     * @return Response
+     */
+    public function remove(int $id, Request $request, Remove\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {
+            return $this->redirectToRoute('solidCpServers');
+        }
+
+        $command = new Remove\Command($id);
+
+        try {
+            $handler->handle($command);
+        } catch (\DomainException $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('solidCpServers');
+    }
+}

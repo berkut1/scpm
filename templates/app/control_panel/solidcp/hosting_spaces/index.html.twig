@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">{{ page_title }}</div>
+
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="{{ path('solidCpHostingSpaces.create') }}" class="btn btn-success">Add</a>
+            </div>
+            <hr>
+
+            <div class="box">
+                <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(pagination, 'Name', 'name') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Node', 'server_name') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Location', 'location_name') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'ID SolidCP Space', 'solidcp_id_hosting_space') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Max Active #', 'max_active_number') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Reserved RAM', 'max_reserved_memory_kb') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Space Quoate (GB)', 'space_quota_gb') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Enabled', 'enabled') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, '#plans', 'num_of_plans') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, '#os', 'num_of_templates') }}</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for object in pagination %}
+                        <tr>
+                            <td><a href="{{ path('solidCpHostingSpaces.show', {'id': object.id}) }}">{{ object.name }}</a></td>
+                            <td>{{ object.server_name }}</td>
+                            <td>{{ object.location_name }}</td>
+                            <td>{{ object.solidcp_id_hosting_space }}</td>
+                            <td>{{ object.max_active_number }}</td>
+                            <td>{{ object.max_reserved_memory_kb / 1024 }} MB</td>
+                            <td>{{ object.space_quota_gb }}</td>
+                            <td>{{ object.enabled ? 'Yes' : 'No' }}</td>
+                            <td>{{ object.num_of_plans }}</td>
+                            <td>{{ object.num_of_templates }}</td>
+                            <td><a class="btn btn-sm btn-success"
+                                   href="{{ path('solidCpHostingSpaces.show', {'id': object.id}) }}">
+                                    <i class="fa fa-search-plus"></i>SHOW
+                                </a>
+                                <a class="btn btn-sm btn-info" href="{{ path('solidCpHostingSpaces.edit', {'id': object.id}) }}">
+                                    <i class="fa fa-edit"></i>EDIT
+                                </a>
+                                <form action="{{ path('solidCpHostingSpaces.remove', {'id':object.id}) }}"
+                                      style="display: inline-block;" method="post"
+                                      onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('remove') }}"/>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-archive"></i>REMOVE
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

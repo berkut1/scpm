@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">{{ page_title }}</div>
+
+        <div class="card-body">
+            <div class="box">
+                <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(pagination, 'Login', 'login') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Date', 'date') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'IP', 'ip_inet') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Entity', 'entity_type') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Task', 'task_name') }}</th>
+{#                        <th>{{ knp_pagination_sortable(pagination, 'Records', 'records') }}</th>#}
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for object in pagination %}
+                        <tr>
+                            <td><a href="#">
+                                    {% if object.id_user == constant('App\\Model\\AuditLog\\Entity\\UserId::SYSTEM_USER_ID') %}
+                                        System
+                                    {% elseif object.id_user == constant('App\\Model\\AuditLog\\Entity\\UserId::JWT_USER_ID') %}
+                                        JWT API
+                                    {% else %}
+                                        {{ object.login }}
+                                    {% endif %}
+                                </a></td>
+                            <td>{{ object.date }}</td>
+                            <td>{{ object.ip_inet }}</td>
+                            <td>{{ object.entity_type }}</td>
+                            <td>{{ object.task_name }}</td>
+{#                            <td>{{ object.records }}</td>#}
+                            <td><a class="btn btn-sm btn-success" role="button" data-toggle="modal" data-target="#showRecordsN{{ object.id }}"
+                                   href="#">
+                                    Detail Records
+                                </a>
+                            </td>
+                        </tr>
+
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="showRecordsN{{ object.id }}" tabindex="-1" role="dialog" aria-labelledby="showRecordsLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addSocketLabel">Records ID:
+                                            {{ object.id }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ audit_log_records(object.records) }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

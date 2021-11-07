@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('users') }}">Users</a></li>
+        <li class="breadcrumb-item active">{{ user.login }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">User: {{ user.login }}</div>
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="{{ path('users.password', {'id': user.id}) }}" class="btn btn-primary" role="button">Change Password</a>
+
+                {% if user.id.value != app.user.id or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('users.role', {'id': user.id}) }}" class="btn btn-primary" role="button">Change Role</a>
+                {% endif %}
+                {% if user.status.isActive and user.id.value != app.user.id %}
+                    <form action="{{ path('users.suspend', {'id': user.id}) }}" style="display: inline-block;" method="post" onsubmit="return confirm('Are you sure?')">
+                        <input type="hidden" name="token" value="{{ csrf_token('suspend') }}" />
+                        <button type="submit" class="btn btn-danger">Suspend</button>
+                    </form>
+                {% endif %}
+                {% if user.status.isSuspended or (user.status.isActive == false and is_granted('ROLE_ADMIN')) %}
+                    <form action="{{ path('users.activate', {'id': user.id}) }}" style="display: inline-block;" method="post" onsubmit="return confirm('Are you sure?')">
+                        <input type="hidden" name="token" value="{{ csrf_token('activate') }}" />
+                        <button type="submit" class="btn btn-success">Activate</button>
+                    </form>
+                {% endif %}
+
+
+
+                {% if user.status.isArchived == false and user.id.value != app.user.id %}
+                    <form action="{{ path('users.remove', {'id': user.id}) }}" style="display: inline-block;" method="post" onsubmit="return confirm('Are you sure?')">
+                        <input type="hidden" name="token" value="{{ csrf_token('remove') }}" />
+                        <button type="submit" class="btn btn-dark">Remove</button>
+                    </form>
+                {% endif %}
+
+            </div>
+            <hr>
+
+            <div class="box">
+                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                    <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <td>{{ user.id.value }}</td>
+                    </tr>
+                    <tr>
+                        <th>Created</th>
+                        <td>{{ user.date|date('Y-m-d H:i:s') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Role</th>
+                        <td>{{ user_role(user.role.name) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ user_status(user.status) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+    </div>
+
+
+
+{% endblock %}

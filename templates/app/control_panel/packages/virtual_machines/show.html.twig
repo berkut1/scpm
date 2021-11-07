@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ virtualMachinePackage.package.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('virtualMachinePackages') }}">{{ main_title }}</a></li>
+        <li class="breadcrumb-item active">Show {{ virtualMachinePackage.package.name }} </li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">Name:{{ virtualMachinePackage.package.name}}</div>
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="{{ path('virtualMachinePackages.edit', {'id': virtualMachinePackage.id}) }}"
+                   class="btn btn-primary" role="button">Edit</a>
+            </div>
+            <hr>
+            <div class="box">
+
+                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                    <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>
+                            {{ virtualMachinePackage.package.name }}
+                            <a href="{{ path('virtualMachinePackages.rename', {'id': virtualMachinePackage.id}) }}"
+                               class="btn-sm btn-primary" role="button">Rename</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:20%;">Cores/Threads:</th>
+                        <td>{{ virtualMachinePackage.cores }}/{{ virtualMachinePackage.threads }}</td>
+                    </tr>
+                    <tr>
+                        <th>RAM</th>
+                        <td>{{ virtualMachinePackage.ramMb }}</td>
+                    </tr>
+                    <tr>
+                        <th>Space</th>
+                        <td>{{ virtualMachinePackage.spaceGb }}</td>
+                    </tr>
+                    <tr>
+                        <th>IOPS</th>
+                        <td>Min: {{ virtualMachinePackage.iopsMin }} / Max: {{ virtualMachinePackage.iopsMax }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="card">
+                    <div class="card-header">
+                        Hosting Plans
+                    </div>
+                    <div class="card-body">
+                        <div class="bd-row">
+                            <a href="{{ path('virtualMachinePackages.changeSolidCpPlans', {'id':virtualMachinePackage.id}) }}"
+                               class="btn btn-primary" role="button">Assign/Deassign Plan</a>
+                        </div>
+                        <hr>
+                        <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ knp_pagination_sortable(plansFromPackage, 'Name', 'name') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if plansFromPackage.count == 0 %}
+                                <tr>
+                                    <td colspan="3">No Plans</td>
+                                </tr>
+                            {% else %}
+                                {% for object in plansFromPackage %}
+                                    <tr>
+                                        <td>
+                                            <a href="#">{{ object.name }}</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+
+                        <div class="navigation">
+                            {{ knp_pagination_render(plansFromPackage) }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

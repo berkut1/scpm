@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item active">Users</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">Users</div>
+
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-2">
+                <a href="{{ path('users.create') }}" class="btn btn-success">Create User</a>
+                </div>
+            </div>
+
+            <hr>
+                {{ form_start(form) }}
+                <div class="form-group">
+
+
+                    <div class="row">
+                        <div class="col-md-2">{{ form_widget(form.login) }}</div>
+                        <div class="col-md-2">{{ form_widget(form.role) }}</div>
+                        <div class="col-md-2">{{ form_widget(form.status) }}</div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <a href="{{ path('users') }}" class="btn btn-outline-secondary">Reset</a>
+                        </div>
+                    </div>
+
+
+                </div>
+                {{ form_end(form) }}
+
+            <div class="box">
+                <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(pagination, 'Date', 'date') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Login', 'login') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Role', 'role') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Status', 'status') }}</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in pagination %}
+                        <tr>
+                            <td>{{ user.date|date('Y-m-d') }}</td>
+                            <td><a href="{{ path('users.show', {'id': user.id}) }}">{{ user.login }}</a></td>
+                            <td>{{ user_role(user.role) }}</td>
+                            <td>{{ user_status(user.status) }}</td>
+                            <td><a class="btn btn-sm btn-success" href="{{ path('users.show', {'id': user.id}) }}">
+                                    <i class="fa fa-search-plus"></i>
+                                </a>
+                                <a class="btn btn-sm btn-info" href="#">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <form action="{{ path('users.remove', {'id': user.id}) }}" style="display: inline-block;" method="post" onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('remove') }}" />
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-archive"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

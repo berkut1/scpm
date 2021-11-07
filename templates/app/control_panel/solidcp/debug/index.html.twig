@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">{{ page_title }}</div>
+
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="{{ path('solidcpDebug.createUser') }}" class="btn btn-success">Add User</a>
+                <a href="{{ path('solidcpDebug.userExists') }}" class="btn btn-success">Check User</a>
+                <a href="{{ path('solidcpDebug.createPackage') }}" class="btn btn-success">Create Package</a>
+                <a href="{{ path('solidcpDebug.createVM') }}" class="btn btn-success">Create VM</a>
+                <a href="{{ path('solidcpDebug.checkVMProvisioningStatus') }}" class="btn btn-success">Check VM status</a>
+                <a href="{{ path('solidcpDebug.createVmAllInOne') }}" class="btn btn-success">Check VM All in one</a>
+            </div>
+            <hr>
+
+            <div class="box">
+                buttons
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

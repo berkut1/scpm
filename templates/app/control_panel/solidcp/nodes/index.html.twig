@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">{{ page_title }}</div>
+
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="{{ path('solidCpServers.create') }}" class="btn btn-success">Add</a>
+            </div>
+            <hr>
+
+            <div class="box">
+                <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(pagination, 'Name', 'name') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Enterprise', 'enterprise_name') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Location', 'location_name') }}</th>
+                        <th>Cores/Threads</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'RAM', 'memory_mb') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Enabled', 'enabled') }}</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for object in pagination %}
+                        <tr>
+                            <td><a href="{{ path('solidCpServers.show', {'id': object.id}) }}">{{ object.name }}</a></td>
+                            <td>{{ object.enterprise_name }}</td>
+                            <td>{{ object.location_name }}</td>
+                            <td>{{ object.cores }}/{{ object.threads }}</td>
+                            <td>{{ object.memory_mb }}</td>
+                            <td>{{ object.enabled ? 'Yes' : 'No' }}
+                                {% if object.enabled != true %}
+                                    <form action="{{ path('solidCpServers.enable', {'id': object.id}) }}"
+                                          style="display: inline-block;" method="post"
+                                          onsubmit="return confirm('Are you sure?')">
+                                        <input type="hidden" name="token" value="{{ csrf_token('enable') }}"/>
+                                        <button type="submit" class="btn btn-sm btn-success">Enable
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <form action="{{ path('solidCpServers.disable', {'id': object.id}) }}"
+                                          style="display: inline-block;" method="post"
+                                          onsubmit="return confirm('Are you sure?')">
+                                        <input type="hidden" name="token" value="{{ csrf_token('disable') }}"/>
+                                        <button type="submit" class="btn btn-sm btn-warning">Disable
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                            <td><a class="btn btn-sm btn-success"
+                                   href="{{ path('solidCpServers.show', {'id': object.id}) }}">
+                                    <i class="fa fa-search-plus"></i>SHOW
+                                </a>
+                                <a class="btn btn-sm btn-info" href="{{ path('solidCpServers.edit', {'id': object.id}) }}">
+                                    <i class="fa fa-edit"></i>EDIT
+                                </a>
+                                <form action="{{ path('solidCpServers.remove', {'id':object.id}) }}"
+                                      style="display: inline-block;" method="post"
+                                      onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('remove') }}"/>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-archive"></i>REMOVE
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

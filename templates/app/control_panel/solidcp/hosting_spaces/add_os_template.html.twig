@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces') }}">{{ main_title }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces.show', {'id':hostingSpace.id}) }}">{{ hostingSpace.name }}</a></li>
+        <li class="breadcrumb-item active">Add</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-body">
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-primary">Add</button>
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+{% endblock %}

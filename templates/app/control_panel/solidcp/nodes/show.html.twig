@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ solidcpServer.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb border-0 m-0">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('solidCpServers') }}">{{ main_title }}</a></li>
+        <li class="breadcrumb-item active">Show {{ solidcpServer.name }} </li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">Name:{{ solidcpServer.name}}</div>
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="{{ path('solidCpServers.edit', {'id': solidcpServer.id}) }}"
+                   class="btn btn-primary" role="button">Edit</a>
+            </div>
+            <hr>
+            <div class="box">
+
+                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                    <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ solidcpServer.name }}</td>
+                    </tr>
+                    <tr>
+                        <th style="width:20%;">Enterprise Server:</th>
+                        <td>{{ solidcpServer.enterprise.name }} ({{ solidcpServer.enterprise.login }})
+                    </tr>
+                    <tr>
+                        <th style="width:20%;">Node location:</th>
+                        <td>{{ solidcpServer.location.name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Cores/Threads</th>
+                        <td>{{ solidcpServer.cores }} / {{ solidcpServer.threads }}</td>
+                    </tr>
+                    <tr>
+                        <th>Installed RAM GB</th>
+                        <td>{{ solidcpServer.memoryMb / 1024 }}</td>
+                    </tr>
+                    <tr>
+                        <th>Enabled</th>
+                        <td>{{ solidcpServer.enabled ? 'Yes' : 'No' }}
+                            {% if solidcpServer.isEnabled %}
+                                <form action="{{ path('solidCpServers.disable', {'id': solidcpServer.id}) }}"
+                                      style="display: inline-block;" method="post"
+                                      onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('disable') }}"/>
+                                    <button type="submit" class="btn btn-sm btn-danger">Disable
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{{ path('solidCpServers.enable', {'id': solidcpServer.id}) }}"
+                                      style="display: inline-block;" method="post"
+                                      onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('enable') }}"/>
+                                    <button type="submit" class="btn btn-sm btn-success">Enable
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="card">
+                    <div class="card-header">
+                        Hosting Spaces
+                    </div>
+                    <div class="card-body">
+                        <div class="bd-row">
+                            <a href="{{ path('solidCpServers.createHostingSpace', {'id': solidcpServer.id}) }}"
+                               class="btn btn-primary" role="button">Add Hosting Space</a>
+                        </div>
+                        <hr>
+                        <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ knp_pagination_sortable(spaceFromNode, 'Name', 'name') }}</th>
+                                <th>{{ knp_pagination_sortable(spaceFromNode, 'SolidCP ID', 'solidcp_id_hosting_space') }}</th>
+                                <th>{{ knp_pagination_sortable(spaceFromNode, 'Max Active VPS', 'max_active_number') }}</th>
+                                <th>{{ knp_pagination_sortable(spaceFromNode, 'Max reserved RAM MB', 'max_reserved_memory_kb') }}</th>
+                                <th>{{ knp_pagination_sortable(spaceFromNode, 'Space quota GB', 'space_quota_gb') }}</th>
+                                <th>{{ knp_pagination_sortable(spaceFromNode, 'Is Enabled?', 'enabled') }}</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if spaceFromNode.count == 0 %}
+                                <tr>
+                                    <td colspan="7">No Hosting Plans</td>
+                                </tr>
+                            {% else %}
+                                {% for object in spaceFromNode %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path('solidCpHostingSpaces.show', {'id': object.id}) }}">{{ object.name }}</a>
+                                        </td>
+                                        <td>{{ object.solidcp_id_hosting_space }}</td>
+                                        <td>{{ object.max_active_number }}</td>
+                                        <td>{{ object.max_reserved_memory_kb/1024 }}</td>
+                                        <td>{{ object.space_quota_gb }}</td>
+                                        <td>{{ object.enabled ? 'Yes' : 'No' }}
+{#                                            {% if object.is_default != true %}#}
+{#                                                <form action="{{ path('solidCpHostingSpaces.setDefaultPlan', {'id': hostingSpace.id, 'id_plan': object.id}) }}"#}
+{#                                                      style="display: inline-block;" method="post"#}
+{#                                                      onsubmit="return confirm('Are you sure?')">#}
+{#                                                    <input type="hidden" name="token" value="{{ csrf_token('setDefault') }}"/>#}
+{#                                                    <button type="submit" class="btn btn-sm btn-warning">Set Default#}
+{#                                                    </button>#}
+{#                                                </form>#}
+{#                                            {% endif %}#}
+                                        </td>
+                                        <td>
+                                            <form action="#"
+                                                  style="display: inline-block;" method="post"
+                                                  onsubmit="return confirm('Are you sure?')">
+                                                <input type="hidden" name="token" value="{{ csrf_token('removeHostingSpace') }}"/>
+                                                <button type="submit" class="btn btn-sm btn-danger">Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+
+                        <div class="navigation">
+                            {{ knp_pagination_render(spaceFromNode) }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
