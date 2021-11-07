@@ -244,6 +244,13 @@ class VpsController extends AbstractController
      *         style="form"
      *     ),
      *     @OA\Parameter(
+     *         name="server_ip_amount",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         style="form"
+     *     ),
+     *     @OA\Parameter(
      *         name="id_enterprise", description="if not selected, the default is used. No need to choose if only one enterprise is used",
      *         in="query",
      *         required=false,

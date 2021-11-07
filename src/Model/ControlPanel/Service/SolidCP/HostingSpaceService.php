@@ -85,12 +85,13 @@ class HostingSpaceService
      * @param int $id_enterprise
      * @param string $location_name
      * @param string $server_package_name
+     * @param int $ip_amount
      * @param int[] $ignore_node_ids
      * @param int[] $ignore_hosting_space_ids
      * @return SolidcpHostingSpace[]
      * @throws \Exception
      */
-    public function possibleHostingSpacesForInstallation(int $id_enterprise, string $location_name, string $server_package_name, array $ignore_node_ids, array $ignore_hosting_space_ids): array
+    public function possibleHostingSpacesForInstallation(int $id_enterprise, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
     {
         $enterpriseServer = $this->enterpriseServerRepository->get($id_enterprise);
         if (!$enterpriseServer->isEnabled()) {
@@ -117,18 +118,35 @@ class HostingSpaceService
                     break;
                 }
             }
+            if($ignoreHostingSpace){
+                continue;
+            }
+            $ips = $esServers->getPackageUnassignedIPAddressesVpsExternalNetwork($possiblePlan->getHostingSpace()->getSolidCpIdHostingSpace());
+            /*thanks for that terribly code for SolidCP returning data*/
+            if(!isset($ips['PackageIPAddress'])){
+                continue;
+            }
+            if(isset($ips['PackageIPAddress'][0])){ //we can get different arrays, so if it is a true array, check that exist 0 index
+                if(count($ips['PackageIPAddress']) < $ip_amount){
+                    continue;
+                }
+            }else{ //if we get assoc array, that means there is only 1 ip left
+                if(1 < $ip_amount){
+                    continue;
+                }
+            }
 
             $isEnabled = ($solidcpHostingSpace->getSolidcpServer()->isEnabled() && $solidcpHostingSpace->isEnabled());
 
-            if (!$ignoreHostingSpace && $isEnabled && $solidcpHostingSpace->getSolidcpServer()->getLocation()->getId() === $location->getId()) {
+            if ($isEnabled && $solidcpHostingSpace->getSolidcpServer()->getLocation()->getId() === $location->getId()) {
                 //Check Free RAM
                 $memory = $esServers->getMemoryPackageId($solidcpHostingSpace->getSolidCpIdHostingSpace());
                 $freeMemory = (int)$memory['FreePhysicalMemoryKB'] - ($package->getRamMb() * 1024);
                 if ($freeMemory >= $possiblePlan->getHostingSpace()->getMaxReservedMemoryKb()) {
-
                     //Get current active spaces
                     $summary = $esPackages->getNestedPackagesSummary($solidcpHostingSpace->getSolidCpIdHostingSpace())['NewDataSet']['Table1'];
                     $countOfActivePackage = 0;
+                    /*thanks for that terribly code for SolidCP returning data*/
                     if (isset($summary[0])) { //we can get different arrays from getNestedPackagesSummary
                         foreach ($summary as $one) {
                             if ($one['StatusID'] === 1) {
@@ -142,7 +160,7 @@ class HostingSpaceService
                             $countOfActivePackage = $summary['PackagesNumber'];
                         }
                     }
-                    //Get array of solidcpHostingSpace
+
                     if ($countOfActivePackage < $solidcpHostingSpace->getMaxActiveNumber() + 1) {
                         $possibleSpaces[] = $solidcpHostingSpace;
                     }

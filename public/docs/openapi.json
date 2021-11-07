@@ -976,6 +976,15 @@
                         "example": "Meppel, Netherlands"
                     },
                     {
+                        "name": "server_ip_amount",
+                        "in": "query",
+                        "required": true,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "id_enterprise",
                         "in": "query",
                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",

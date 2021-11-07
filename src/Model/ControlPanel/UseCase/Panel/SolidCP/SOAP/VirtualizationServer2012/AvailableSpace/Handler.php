@@ -42,6 +42,7 @@ class Handler
             $enterpriseServer->getId(),
             $command->server_location_name,
             $command->server_package_name,
+            $command->server_ip_amount,
             $command->getIgnoreNodeIds(),
             $command->getIgnoreHostingSpaceIds());
 

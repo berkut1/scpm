@@ -72,6 +72,7 @@ class Handler
         $commandPossibleSpace = SOAPVirtualizationServer2012\AvailableSpace\Command::create(
             $command->server_location_name,
             $command->server_package_name,
+            $command->server_ip_amount,
             $command->ignore_node_ids,
             $command->ignore_hosting_space_ids,
             $this->enterpriseServer->getId());

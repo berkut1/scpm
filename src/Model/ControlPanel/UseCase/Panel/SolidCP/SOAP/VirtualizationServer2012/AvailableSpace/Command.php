@@ -17,6 +17,11 @@ class Command
      * @Assert\NotBlank()
      */
     public string $server_package_name = '';
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Positive()
+     */
+    public int $server_ip_amount = 0;
     /** @var int[] */
     private array $ignore_node_ids = [];
     /** @var int[] */
@@ -26,18 +31,20 @@ class Command
     /**
      * @param string $server_location_name
      * @param string $server_package_name
+     * @param int $server_ip_amount
      * @param int[] $ignore_node_ids
      * @param int[] $ignore_hosting_space_ids
      * @param int|null $id_enterprise
      * @return static
      */
     #[Pure]
-    public static function create(string $server_location_name, string $server_package_name, array $ignore_node_ids, array $ignore_hosting_space_ids, ?int $id_enterprise = null): self
+    public static function create(string $server_location_name, string $server_package_name, int $server_ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids, ?int $id_enterprise = null): self
     {
         $command = new self();
         $command->id_enterprise = $id_enterprise;
         $command->server_location_name = $server_location_name;
         $command->server_package_name = $server_package_name;
+        $command->server_ip_amount = $server_ip_amount;
         $command->ignore_node_ids = $ignore_node_ids;
         $command->ignore_hosting_space_ids = $ignore_hosting_space_ids;
         return $command;
