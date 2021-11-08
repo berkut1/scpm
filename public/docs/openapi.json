@@ -715,7 +715,7 @@
         "/solidCP/vps/{solidcp_item_id}/provisioning-status": {
             "get": {
                 "tags": [
-                    "VPS Provisioning Status"
+                    "VPS"
                 ],
                 "description": "Get VPS Provisioning Status. Whether the server is prepared or not. Should be used after calling All in One User/Package/Vps",
                 "operationId": "177545e5a04cc9b11f6be5bc055a99bb",
@@ -789,7 +789,7 @@
         "/solidCP/vps/{solidcp_item_id}/state": {
             "get": {
                 "tags": [
-                    "VPS State of fully installed VM"
+                    "VPS"
                 ],
                 "description": "Get state of VM Running/Stopped/ets. Must be used only if VPS Provisioning Status shows - OK",
                 "operationId": "8e4d187e6bf4f8b2f4ef489045332896",
@@ -864,9 +864,9 @@
         "/solidCP/vps/{vps_ip_address}/status": {
             "put": {
                 "tags": [
-                    "Change VPS package status over IPv4"
+                    "VPS"
                 ],
-                "description": "Change VPS and its packet status over IPv4",
+                "description": "Change VPS and its packet status over IPv4. Active/Suspend/Cancel",
                 "operationId": "c2b983dae2e8e2df8418895803e497a1",
                 "parameters": [
                     {
@@ -951,7 +951,7 @@
         "/solidCP/vps/available-spaces/count": {
             "get": {
                 "tags": [
-                    "Number of Available VPS Spaces aka VPS storages"
+                    "VPS"
                 ],
                 "description": "Provides the number of available spaces for a specific package",
                 "operationId": "b8bb977e8b74d9633cc424a09beb618b",

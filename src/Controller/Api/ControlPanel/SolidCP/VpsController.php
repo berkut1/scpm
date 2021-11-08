@@ -30,7 +30,7 @@ class VpsController extends AbstractController
     /**
      * @OA\Get(
      *     path="/solidCP/vps/{solidcp_item_id}/provisioning-status",
-     *     tags={"VPS Provisioning Status"},
+     *     tags={"VPS"},
      *     description="Get VPS Provisioning Status. Whether the server is prepared or not. Should be used after calling All in One User/Package/Vps",
      *     @OA\Parameter(
      *         in="path",
@@ -70,6 +70,7 @@ class VpsController extends AbstractController
      * )
      * @Route("/solidCP/vps/{solidcp_item_id}/provisioning-status", name="vps.vpsProvisioningStatus", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
      * @param int $solidcp_item_id
+     * @param Request $request
      * @param VirtualizationServer2012\Check\VpsProvisioningStatus\Handler $handler
      * @return Response
      */
@@ -93,7 +94,7 @@ class VpsController extends AbstractController
     /**
      * @OA\Get(
      *     path="/solidCP/vps/{solidcp_item_id}/state",
-     *     tags={"VPS State of fully installed VM"},
+     *     tags={"VPS"},
      *     description="Get state of VM Running/Stopped/ets. Must be used only if VPS Provisioning Status shows - OK",
      *     @OA\Parameter(
      *         in="path",
@@ -158,8 +159,8 @@ class VpsController extends AbstractController
     /**
      * @OA\Put(
      *     path="/solidCP/vps/{vps_ip_address}/status",
-     *     tags={"Change VPS package status over IPv4"},
-     *     description="Change VPS and its packet status over IPv4",
+     *     tags={"VPS"},
+     *     description="Change VPS and its packet status over IPv4. Active/Suspend/Cancel",
      *     @OA\Parameter(
      *         in="path",
      *         name="vps_ip_address", description="Main IPv4 address",
@@ -227,7 +228,7 @@ class VpsController extends AbstractController
     /**
      * @OA\Get(
      *     path="/solidCP/vps/available-spaces/count",
-     *     tags={"Number of Available VPS Spaces aka VPS storages"},
+     *     tags={"VPS"},
      *     description="Provides the number of available spaces for a specific package",
      *     @OA\Parameter(
      *         name="server_package_name", example="Silver RDP23",

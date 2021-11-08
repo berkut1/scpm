@@ -171,6 +171,10 @@ class Handler
                     break;
                 }
             }
+            if(empty($mainIp) && isset($resultPackageIPs['PackageIPAddress'][0])){ //if SolidCP not mark the Primary IP, then get the first one.
+                $mainIp = $resultPackageIPs['PackageIPAddress'][0]['ExternalIP'];
+                $resultPackageIPs['PackageIPAddress'][0]['IsPrimary'] = true; //manually set for next functions
+            }
             //get secondaryIps
             $filteredResultPackageSecondaryIPs = array_filter($resultPackageIPs['PackageIPAddress'], static function (array $e) {
                 return !$e['IsPrimary']; //return only if false
