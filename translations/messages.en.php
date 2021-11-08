@@ -22,7 +22,6 @@ return [
     'EDITED_SOLIDCP_HOSTING_SPACE_WITH_NAME' => 'Edited SolidCP Hosting Space: %s',
     'CREATED_SOLIDCP_HOSTING_PLAN_WITH_NAME' => 'Created SolidCP Hosting Plan: %s',
     'ASSIGNED_SOLIDCP_HOSTING_PLAN_WITH_NAME_TO_HOSTING_SPACE_NAME' => 'Assigned SolidCP Hosting Plan: %s to Hosting Space: %s',
-    'SET_DEFAULT_SOLIDCP_HOSTING_PLAN_NAME_FOR_HOSTING_SPACE_NAME' => 'Set default Hosting Plan: %s for Hosting Space: %s',
     'REMOVED_PLAN_NAME_FROM_HOSTING_SPACE_WITH_NAME' => 'Removed Plan: %s from Hosting Space: %s',
     'CHANGED_SOLIDCP_HOSTING_SPACE_WITH_NAME_NODE_FROM_NAME_TO_NAME' => 'Changed SolidCP Hosting Space: %s Node From %s to %s',
     'CHANGED_SOLIDCP_HOSTING_SPACE_WITH_NAME_SOLIDCPID_FROM_ID_TO_ID' => 'Changed SolidCP Hosting Space: %s SolidCP Hosting Space ID From %s to %s',

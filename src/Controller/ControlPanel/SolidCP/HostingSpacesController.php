@@ -286,36 +286,6 @@ class HostingSpacesController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/plan/{id_plan}/set-default", name=".setDefaultPlan", methods={"POST"})
-     * @ParamConverter("solidcpHostingPlan", options={"mapping": {"id_plan": "id"}})
-     * @param int $id
-     * @param int $id_plan
-     * @param SolidcpHostingPlanFetcher $solidcpHostingPlanFetcher
-     * @param Request $request
-     * @param HostingSpace\HostingPlan\SetDefault\Handler $handler
-     * @return Response
-     */
-    public function setDefaultPlan(int $id, int $id_plan, SolidcpHostingPlanFetcher $solidcpHostingPlanFetcher, Request $request, HostingSpace\HostingPlan\SetDefault\Handler $handler): Response
-    {
-        if (!$this->isCsrfTokenValid('setDefault', $request->request->get('token'))) {
-            return $this->redirectToRoute('solidCpHostingSpaces.show', ['id' => $id]);
-        }
-
-        $plan = $solidcpHostingPlanFetcher->get($id_plan);
-
-        $command = new HostingSpace\HostingPlan\SetDefault\Command($plan->getId());
-
-        try {
-            $handler->handle($command);
-        } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
-            $this->addFlash('error', $e->getMessage());
-        }
-
-        return $this->redirectToRoute('solidCpHostingSpaces.show', ['id' => $id]);
-    }
-
-    /**
      * @Route("/{id}/add-os-template", name=".addOsTemplate")
      * @param Request $request
      * @param SolidcpHostingSpace $solidcpHostingSpace

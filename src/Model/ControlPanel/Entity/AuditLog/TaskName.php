@@ -31,8 +31,6 @@ class TaskName implements TaskNameInterface
     public const TASK_EDIT_CP_SOLIDCP_HOSTING_SPACE = 'edit_cp_solidcp_hosting_space';
     public const TASK_CREATE_CP_SOLIDCP_HOSTING_PLAN = 'create_cp_solidcp_hosting_plan';
     public const TASK_REMOVE_CP_SOLIDCP_HOSTING_PLAN = 'remove_cp_solidcp_hosting_plan';
-    public const TASK_SET_DEFAULT_CP_SOLIDCP_HOSTING_PLAN = 'set_default_cp_solidcp_hosting_plan';
-    public const TASK_SET_NON_DEFAULT_CP_SOLIDCP_HOSTING_PLAN = 'set_non_default_cp_solidcp_hosting_plan';
     public const TASK_ADD_OS_TEMPLATE_CP_SOLIDCP_HOSTING_SPACE = 'add_os_template_cp_solidcp_hosting_space';
     public const TASK_REMOVE_OS_TEMPLATE_CP_SOLIDCP_HOSTING_SPACE = 'remove_os_template_cp_solidcp_hosting_space';
     public const TASK_DISABLE_CP_SOLIDCP_HOSTING_SPACE = 'disable_cp_solidcp_hosting_space';
@@ -72,8 +70,6 @@ class TaskName implements TaskNameInterface
             self::TASK_EDIT_CP_SOLIDCP_HOSTING_SPACE,
             self::TASK_CREATE_CP_SOLIDCP_HOSTING_PLAN,
             self::TASK_REMOVE_CP_SOLIDCP_HOSTING_PLAN,
-            self::TASK_SET_DEFAULT_CP_SOLIDCP_HOSTING_PLAN,
-            self::TASK_SET_NON_DEFAULT_CP_SOLIDCP_HOSTING_PLAN,
             self::TASK_ADD_OS_TEMPLATE_CP_SOLIDCP_HOSTING_SPACE,
             self::TASK_REMOVE_OS_TEMPLATE_CP_SOLIDCP_HOSTING_SPACE,
             self::TASK_DISABLE_CP_SOLIDCP_HOSTING_SPACE,
@@ -205,16 +201,6 @@ class TaskName implements TaskNameInterface
     public static function removeCpSolidcpHostingPlan(): self
     {
         return self::create(self::TASK_REMOVE_CP_SOLIDCP_HOSTING_PLAN);
-    }
-
-    public static function setDefaultCpSolidcpHostingPlan(): self
-    {
-        return self::create(self::TASK_SET_DEFAULT_CP_SOLIDCP_HOSTING_PLAN);
-    }
-
-    public static function setNonDefaultCpSolidcpHostingPlan(): self
-    {
-        return self::create(self::TASK_SET_NON_DEFAULT_CP_SOLIDCP_HOSTING_PLAN);
     }
 
     public static function addOsTemplateCpSolidcpHostingSpace(): self

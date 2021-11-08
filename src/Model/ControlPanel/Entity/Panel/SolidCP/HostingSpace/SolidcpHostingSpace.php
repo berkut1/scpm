@@ -133,16 +133,11 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function addHostingPlan(SolidcpHostingPlan $solidcpHostingPlan): void
     {
-        $isFirst = true;
         foreach ($this->hostingPlans as $current){
-            $isFirst = false;
             if($current->getSolidcpIdPlan() === $solidcpHostingPlan->getSolidcpIdPlan()){
                 throw new EntityNotFoundException('Hosting Plan already exists');
                 //return;
             }
-        }
-        if($isFirst){
-            $solidcpHostingPlan->setDefault();
         }
         $this->hostingPlans->add($solidcpHostingPlan);
         $this->mergeEventsFrom($solidcpHostingPlan);
@@ -154,11 +149,6 @@ class SolidcpHostingSpace implements AggregateRoot
             if($idHostingPlan === $current->getId()){
                 $this->hostingPlans->removeElement($current);
                 $this->recordEvent(new Event\SolidcpHostingSpaceRemovedPlan($this, $current->getName()));
-                if($current->isDefault() && $this->hostingPlans->count() > 0){
-                    $first = $this->hostingPlans->first();
-                    $first->setDefault();
-                    $this->mergeEventsFrom($first);
-                }
                 return;
             }
         }
@@ -268,16 +258,6 @@ class SolidcpHostingSpace implements AggregateRoot
     public function getHostingPlans(): array
     {
         return $this->hostingPlans->toArray();
-    }
-
-    public function getDefaultHostingPlan(): ?SolidcpHostingPlan
-    {
-        foreach ($this->getHostingPlans() as $hostingPlan){
-            if($hostingPlan->isDefault()){
-                return $hostingPlan;
-            }
-        }
-        return null;
     }
 
     /**

@@ -99,13 +99,12 @@ class SolidcpHostingPlanFetcher
                 'name',
                 'solidcp_id_plan',
                 'solidcp_id_server',
-                'is_default',
             )
             ->from('cp_solidcp_hosting_plans', 'plans')
             ->where('id_hosting_space = :id_hosting_space')
             ->setParameter('id_hosting_space', $id_hosting_space);
 
-        if (!in_array($sort, ['name', 'solidcp_id_plan', 'solidcp_id_server', 'is_default'], true)) {
+        if (!in_array($sort, ['name', 'solidcp_id_plan', 'solidcp_id_server'], true)) {
             throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 

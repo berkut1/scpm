@@ -17,9 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(
  *     name="cp_solidcp_hosting_plans",
- *     uniqueConstraints={
- *          @ORM\UniqueConstraint(name="only_one_default_for_id_hosting_space", columns={"id", "id_hosting_space"}, options={"where":"is_default"})
- *  },
  *     indexes={
  *          @ORM\Index(name="cp_solidcp_hosting_plans_id_hosting_space_idx", columns={"id_hosting_space"})
  *  })
@@ -59,11 +56,6 @@ class SolidcpHostingPlan implements AggregateRoot
     private string $name;
 
     /**
-     * @ORM\Column(name="is_default", type="boolean", nullable=false, options={"default"="0"})
-     */
-    private bool $isDefault;
-
-    /**
      * @var Collection|Package[]
      *
      * @ORM\ManyToMany(targetEntity=Package::class, inversedBy="solidcpHostingPlans")
@@ -84,7 +76,6 @@ class SolidcpHostingPlan implements AggregateRoot
         $this->solidcpIdPlan = $solidcpIdPlan;
         $this->solidcpIdServer = $hostingPlanService->getRealSolidCpServerIdFromPlanId($hostingSpace, $solidcpIdPlan);
         $this->name = $name;
-        $this->isDefault = false;
         $this->assignedPackages = new ArrayCollection();
         $this->recordEvent(new Event\SolidcpHostingPlanCreated($this));
     }
@@ -107,18 +98,6 @@ class SolidcpHostingPlan implements AggregateRoot
 
         $this->assignedPackages->removeElement($package);
         $package->removeSolidCpPlan($this);
-    }
-
-    public function setDefault(): void
-    {
-        $this->isDefault = true;
-        $this->recordEvent(new Event\SolidcpHostingPlanSetDefault($this));
-    }
-
-    public function setNonDefault(): void
-    {
-        $this->isDefault = false;
-        $this->recordEvent(new Event\SolidcpHostingPlanSetNonDefault($this));
     }
 
     public function getId(): int
@@ -144,11 +123,6 @@ class SolidcpHostingPlan implements AggregateRoot
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function isDefault(): bool
-    {
-        return $this->isDefault;
     }
 
     /**

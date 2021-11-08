@@ -154,13 +154,13 @@ final class Version20210122035429 extends AbstractMigration
             "solidcp_id_plan"   INT NOT NULL,
             "solidcp_id_server" INT NOT NULL,
             "name"              VARCHAR(128) NOT NULL,
-            "is_default"        BOOLEAN NOT NULL DEFAULT FALSE,
+           -- "is_default"        BOOLEAN NOT NULL DEFAULT FALSE,
             CONSTRAINT "pk_cp_solidcp_hosting_plans" PRIMARY KEY ("id"),
             CONSTRAINT "fk_cp_solidcp_hosting_plans_id_hosting_space" FOREIGN KEY ("id_hosting_space")
                 REFERENCES "cp_solidcp_hosting_spaces"("id") ON DELETE RESTRICT                         
             )');
         $this->addSql('CREATE UNIQUE INDEX "cp_solidcp_hosting_plans_unique_name" ON "cp_solidcp_hosting_plans" (lower("name"))');
-        $this->addSql('CREATE UNIQUE INDEX "only_one_default_for_id_hosting_space" ON "cp_solidcp_hosting_plans" ("id", "id_hosting_space") WHERE "is_default"');
+        //$this->addSql('CREATE UNIQUE INDEX "only_one_default_for_id_hosting_space" ON "cp_solidcp_hosting_plans" ("id", "id_hosting_space") WHERE "is_default"');
         $this->addSql('CREATE INDEX "cp_solidcp_hosting_plans_id_hosting_space_idx" ON "cp_solidcp_hosting_plans" ("id_hosting_space")');
 
         $this->addSql('CREATE TABLE "cp_package_assigned_scp_hosting_plans" (

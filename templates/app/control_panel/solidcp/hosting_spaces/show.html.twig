@@ -97,7 +97,6 @@
                                 <th>{{ knp_pagination_sortable(hostingPlans, 'Name', 'name') }}</th>
                                 <th>{{ knp_pagination_sortable(hostingPlans, 'SolidCP Plan ID', 'solidcp_id_plan') }}</th>
                                 <th>{{ knp_pagination_sortable(hostingPlans, 'SolidCP Server ID', 'solidcp_id_server') }}</th>
-                                <th>{{ knp_pagination_sortable(hostingPlans, 'Is Default', 'is_default') }}</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -114,17 +113,6 @@
                                         </td>
                                         <td>{{ object.solidcp_id_plan }}</td>
                                         <td>{{ object.solidcp_id_server }}</td>
-                                        <td>{{ object.is_default ? 'Yes' : 'No' }}
-                                            {% if object.is_default != true %}
-                                                <form action="{{ path('solidCpHostingSpaces.setDefaultPlan', {'id': hostingSpace.id, 'id_plan': object.id}) }}"
-                                                      style="display: inline-block;" method="post"
-                                                      onsubmit="return confirm('Are you sure?')">
-                                                    <input type="hidden" name="token" value="{{ csrf_token('setDefault') }}"/>
-                                                    <button type="submit" class="btn btn-sm btn-warning">Set Default
-                                                    </button>
-                                                </form>
-                                            {% endif %}
-                                        </td>
                                         <td>
                                             <form action="{{ path('solidCpHostingSpaces.removePlan', {'id': hostingSpace.id, 'id_plan': object.id}) }}"
                                                   style="display: inline-block;" method="post"
