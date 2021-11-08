@@ -98,15 +98,67 @@ class EnterpriseDispatchersController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/enterprise-dispatchers/default/is-enable", name="apiEnterpriseDispatchers.isEnable", methods={"GET"})
-     * @param Request $request
+     * @Route("/solidCP/enterprise-dispatchers/default/is-enable", name="apiEnterpriseDispatchers.isEnableDefault", methods={"GET"})
      * @param IsEnable\Handler $handler
      * @return Response
      * @throws \Exception
      */
-    public function isEnable(Request $request, IsEnable\Handler $handler): Response
+    public function isEnableDefault(IsEnable\Handler $handler): Response
     {
-        $command = new IsEnable\Command((int)$request->query->get('id_enterprise_dispatcher'));
+        $command = new IsEnable\Command();
+
+        $violations = $this->validator->validate($command);
+        if (\count($violations)) {
+            $json = $this->serializer->serialize($violations, 'json');
+            return new JsonResponse($json, Response::HTTP_BAD_REQUEST, [], true);
+        }
+
+        $isEnable = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
+
+        return $this->json(['isEnable' => $isEnable], Response::HTTP_OK);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/solidCP/enterprise-dispatchers/{id_enterprise_dispatcher}/is-enable",
+     *     tags={"Enterprise Dispatchers"},
+     *     description="Check if specific Enterprise Dispatcher is disabled",
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="id_enterprise_dispatcher",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="isEnable", type="boolean"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Errors",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Error",
+     *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     * @Route("/solidCP/enterprise-dispatchers/{id_enterprise_dispatcher}/is-enable", name="apiEnterpriseDispatchers.isEnable", methods={"GET"})
+     * @param int $id_enterprise_dispatcher
+     * @param IsEnable\Handler $handler
+     * @return Response
+     */
+    public function isEnable(int $id_enterprise_dispatcher, IsEnable\Handler $handler): Response
+    {
+        $command = new IsEnable\Command($id_enterprise_dispatcher);
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {

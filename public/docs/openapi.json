@@ -142,7 +142,7 @@
                     "Enterprise Dispatchers"
                 ],
                 "description": "Check if default Enterprise Dispatcher is manually disabled",
-                "operationId": "c450b13cb11e800640c3c75e012b97a4",
+                "operationId": "371e2d7b75c07dc30da56a457f394d7b",
                 "parameters": [
                     {
                         "name": "id_enterprise_dispatcher",
@@ -150,6 +150,67 @@
                         "description": "if not pass value, it will use a default",
                         "required": false,
                         "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "isEnable": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/enterprise-dispatchers/{id_enterprise_dispatcher}/is-enable": {
+            "get": {
+                "tags": [
+                    "Enterprise Dispatchers"
+                ],
+                "description": "Check if specific Enterprise Dispatcher is disabled",
+                "operationId": "26d3726f590fd318be1aea89ea0ce058",
+                "parameters": [
+                    {
+                        "name": "id_enterprise_dispatcher",
+                        "in": "path",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         }
