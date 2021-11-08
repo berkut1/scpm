@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "SolidCP simple API",
+        "title": "SCPM API",
         "description": "HTTP JSON API",
         "version": "1.0.0"
     },
@@ -81,13 +81,13 @@
                 }
             }
         },
-        "/solidCP/enterprise-servers": {
+        "/solidCP/enterprise-dispatchers": {
             "get": {
                 "tags": [
-                    "Get List of Enterprise Servers"
+                    "Enterprise Dispatchers"
                 ],
-                "description": "Get list of Enterprise Servers, use only if you have more than one Enterprise Server",
-                "operationId": "6fcc5e8b5fefc53a66269341c37726d8",
+                "description": "Get list of Enterprise Dispatchers, use only if you have more than one Enterprise Dispatchers",
+                "operationId": "2642c66dd2d037f80efb023be8bbf9bd",
                 "responses": {
                     "200": {
                         "description": "Success response",
@@ -136,16 +136,16 @@
                 ]
             }
         },
-        "/solidCP/enterprise-server/is-enable": {
+        "/solidCP/enterprise-dispatchers/default/is-enable": {
             "get": {
                 "tags": [
-                    "Is Enterprise Server Enable?"
+                    "Enterprise Dispatchers"
                 ],
-                "description": "Check if Enterprise Server is manually disabled",
-                "operationId": "d68ae9d8737bf8b3f07d75d527c9fcae",
+                "description": "Check if default Enterprise Dispatcher is manually disabled",
+                "operationId": "c450b13cb11e800640c3c75e012b97a4",
                 "parameters": [
                     {
-                        "name": "id_enterprise",
+                        "name": "id_enterprise_dispatcher",
                         "in": "query",
                         "description": "if not pass value, it will use a default",
                         "required": false,
@@ -254,7 +254,7 @@
                                         "description": "The number of IP addresses to be assigned to the VM server.",
                                         "type": "integer"
                                     },
-                                    "id_enterprise": {
+                                    "id_enterprise_dispatcher": {
                                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
                                         "type": "integer"
                                     },
@@ -396,7 +396,7 @@
         "/solidCP/users": {
             "post": {
                 "tags": [
-                    "Create SolidCP User"
+                    "SolidCP User"
                 ],
                 "description": "Manually create a SolidCP user. Not required if you are using All in One User/Package/Vps",
                 "operationId": "73eea6da5a9584a5cbb42beb0ac11872",
@@ -427,7 +427,7 @@
                                     "password": {
                                         "type": "string"
                                     },
-                                    "id_enterprise": {
+                                    "id_enterprise_dispatcher": {
                                         "description": "if not selected, then use the default one",
                                         "type": "integer"
                                     }
@@ -484,7 +484,7 @@
         "/solidCP/users/{username}/is-exists": {
             "get": {
                 "tags": [
-                    "Is SolidCP User Exists"
+                    "SolidCP User"
                 ],
                 "description": "Check if the user exists. Not required if you are using All in One User/Package/Vps",
                 "operationId": "a6d453063f4ad0f0112c85c3d87af427",
@@ -498,7 +498,7 @@
                         }
                     },
                     {
-                        "name": "id_enterprise",
+                        "name": "id_enterprise_dispatcher",
                         "in": "query",
                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
                         "required": false,
@@ -555,7 +555,7 @@
         "/solidCP/users/{username}/email": {
             "put": {
                 "tags": [
-                    "Change SolidCP user's email address"
+                    "SolidCP User"
                 ],
                 "description": "Change SolidCP user's email",
                 "operationId": "d0a9e05db7dfbe62c25f2b2337119c5f",
@@ -569,7 +569,7 @@
                         }
                     },
                     {
-                        "name": "id_enterprise",
+                        "name": "id_enterprise_dispatcher",
                         "in": "query",
                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
                         "required": false,
@@ -590,7 +590,7 @@
                                     "new_email": {
                                         "type": "string"
                                     },
-                                    "id_enterprise": {
+                                    "id_enterprise_dispatcher": {
                                         "description": "if not selected, then use the default one",
                                         "type": "integer"
                                     }
@@ -635,8 +635,9 @@
         "/solidCP/users/{username}/password": {
             "put": {
                 "tags": [
-                    "Change SolidCP User password"
+                    "SolidCP User"
                 ],
+                "description": "Change SolidCP User password",
                 "operationId": "68c98a787b5ecc5057ea62b4caf97915",
                 "parameters": [
                     {
@@ -648,7 +649,7 @@
                         }
                     },
                     {
-                        "name": "id_enterprise",
+                        "name": "id_enterprise_dispatcher",
                         "in": "query",
                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
                         "required": false,
@@ -669,7 +670,7 @@
                                     "new_password": {
                                         "type": "string"
                                     },
-                                    "id_enterprise": {
+                                    "id_enterprise_dispatcher": {
                                         "description": "if not selected, then use the default one",
                                         "type": "integer"
                                     }
@@ -730,7 +731,7 @@
                         }
                     },
                     {
-                        "name": "id_enterprise",
+                        "name": "id_enterprise_dispatcher",
                         "in": "query",
                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
                         "required": false,
@@ -804,7 +805,7 @@
                         }
                     },
                     {
-                        "name": "id_enterprise",
+                        "name": "id_enterprise_dispatcher",
                         "in": "query",
                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
                         "required": false,
@@ -879,7 +880,7 @@
                         }
                     },
                     {
-                        "name": "id_enterprise",
+                        "name": "id_enterprise_dispatcher",
                         "in": "query",
                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
                         "required": false,
@@ -905,7 +906,7 @@
                                             "Cancelled"
                                         ]
                                     },
-                                    "id_enterprise": {
+                                    "id_enterprise_dispatcher": {
                                         "description": "if not selected, then use the default one",
                                         "type": "integer"
                                     }
@@ -985,7 +986,7 @@
                         }
                     },
                     {
-                        "name": "id_enterprise",
+                        "name": "id_enterprise_dispatcher",
                         "in": "query",
                         "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
                         "required": false,

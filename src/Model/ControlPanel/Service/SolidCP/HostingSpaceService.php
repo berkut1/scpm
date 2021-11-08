@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\Service\SolidCP;
 
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServerRepository;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServerRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
@@ -16,33 +16,33 @@ use Doctrine\DBAL\Connection;
 class HostingSpaceService
 {
     private Connection $connection;
-    private EnterpriseServerRepository $enterpriseServerRepository;
+    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
     private LocationFetcher $locationFetcher;
     private VirtualMachinePackageRepository $virtualMachinePackageRepository;
     private SolidcpServerRepository $serverRepository;
 
     public function __construct(Connection                      $connection,
-                                EnterpriseServerRepository      $enterpriseServerRepository,
+                                EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
                                 LocationFetcher                 $locationFetcher,
                                 VirtualMachinePackageRepository $virtualMachinePackageRepository,
                                 SolidcpServerRepository         $serverRepository)
     {
         $this->connection = $connection;
-        $this->enterpriseServerRepository = $enterpriseServerRepository;
+        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
         $this->locationFetcher = $locationFetcher;
         $this->virtualMachinePackageRepository = $virtualMachinePackageRepository;
         $this->serverRepository = $serverRepository;
     }
 
     //$idEnterprise - means a Reseller with his hosting spaces
-    public function allNotAddedHostingSpacesFrom(int $id_enterprise): array
+    public function allNotAddedHostingSpacesFrom(int $id_enterprise_dispatcher): array
     {
-        return $this->allNotAddedHostingSpacesFromInternal($id_enterprise);
+        return $this->allNotAddedHostingSpacesFromInternal($id_enterprise_dispatcher);
     }
 
-    public function allNotAddedHostingSpacesExceptHostingSpaceIdFrom(int $id_enterprise, int $exceptHostingSpaceId): array
+    public function allNotAddedHostingSpacesExceptHostingSpaceIdFrom(int $id_enterprise_dispatcher, int $exceptHostingSpaceId): array
     {
-        return $this->allNotAddedHostingSpacesFromInternal($id_enterprise, $exceptHostingSpaceId);
+        return $this->allNotAddedHostingSpacesFromInternal($id_enterprise_dispatcher, $exceptHostingSpaceId);
     }
 
     /**
@@ -50,12 +50,12 @@ class HostingSpaceService
      * @throws \Doctrine\DBAL\Driver\Exception
      * @throws \Exception
      */
-    private function allNotAddedHostingSpacesFromInternal(int $id_enterprise, int $exceptHostingSpaceId = 0): array
+    private function allNotAddedHostingSpacesFromInternal(int $id_enterprise_dispatcher, int $exceptHostingSpaceId = 0): array
     {
-        $enterpriseServer = $this->enterpriseServerRepository->get($id_enterprise);
-        $esPackages = EsPackages::createFromEnterpriseServer($enterpriseServer);
+        $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);
+        $esPackages = EsPackages::createFromEnterpriseDispatcher($enterpriseDispatcher);
         $spaces = [];
-        foreach ($esPackages->getUserPackages($enterpriseServer->getSolidcpLoginId()) as $value) {
+        foreach ($esPackages->getUserPackages($enterpriseDispatcher->getSolidcpLoginId()) as $value) {
             $spaces[(int)$value['PackageId']] = "{$value['PackageName']} - id:{$value['PackageId']}";
         }
         //dump($spaces);
@@ -66,8 +66,8 @@ class HostingSpaceService
             )
             ->from('cp_solidcp_hosting_spaces', 'spaces')
             ->leftJoin('spaces', 'cp_solidcp_servers', 'servers', 'servers.id = spaces.id_server')
-            ->where('servers.id_enterprise = :id_enterprise')
-            ->setParameter('id_enterprise', $id_enterprise)
+            ->where('servers.id_enterprise_dispatcher = :id_enterprise_dispatcher')
+            ->setParameter('id_enterprise_dispatcher', $id_enterprise_dispatcher)
 //            ->where("NOT (id_hosting_space = ANY (string_to_array(:ids,',')::int[]))") //NOT IN ARRAY
 //            ->setParameter('ids', implode(',', array_keys($spaces)))
             ->orderBy('name')
@@ -82,7 +82,7 @@ class HostingSpaceService
     }
 
     /**
-     * @param int $id_enterprise
+     * @param int $id_enterprise_dispatcher
      * @param string $location_name
      * @param string $server_package_name
      * @param int $ip_amount
@@ -91,10 +91,10 @@ class HostingSpaceService
      * @return SolidcpHostingSpace[]
      * @throws \Exception
      */
-    public function possibleHostingSpacesForInstallation(int $id_enterprise, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
+    public function possibleHostingSpacesForInstallation(int $id_enterprise_dispatcher, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
     {
-        $enterpriseServer = $this->enterpriseServerRepository->get($id_enterprise);
-        if (!$enterpriseServer->isEnabled()) {
+        $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);
+        if (!$enterpriseDispatcher->isEnabled()) {
             return []; //obviously if disable then no available spaces. => empty array
         }
 
@@ -105,9 +105,9 @@ class HostingSpaceService
         $package = $this->virtualMachinePackageRepository->getByName($server_package_name);
         $possiblePlans = $package->getPackage()->getSolidcpHostingPlans();
 
-        $esServers = EsServers::createFromEnterpriseServer($enterpriseServer);
+        $esServers = EsServers::createFromEnterpriseDispatcher($enterpriseDispatcher);
         $possibleSpaces = [];
-        $esPackages = EsPackages::createFromEnterpriseServer($enterpriseServer);
+        $esPackages = EsPackages::createFromEnterpriseDispatcher($enterpriseDispatcher);
         //searching possible spaces for installation
         foreach ($possiblePlans as $possiblePlan) {
             $solidcpHostingSpace = $possiblePlan->getHostingSpace();

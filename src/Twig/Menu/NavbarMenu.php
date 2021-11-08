@@ -40,10 +40,10 @@ class NavbarMenu
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
 
-        $menu->addChild('Enterprise Servers', ['route' => 'enterpriseServers'])
+        $menu->addChild('Enterprise Dispatchers', ['route' => 'enterpriseDispatchers'])
             ->setExtra('routes', [
-                ['route' => 'enterpriseServers'],
-                ['pattern' => '/^enterpriseServers\..+/']
+                ['route' => 'enterpriseDispatchers'],
+                ['pattern' => '/^enterpriseDispatchers\..+/']
             ])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');

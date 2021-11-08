@@ -39,7 +39,7 @@ class SolidcpServerFetcher
         return array_column($stmt->fetchAllAssociative(), 'name','id');
     }
 
-    public function allListFrom(int $id_enterprise): array
+    public function allListFrom(int $id_enterprise_dispatcher): array
     {
         $stmt = $this->connection->createQueryBuilder()
             ->select(
@@ -47,8 +47,8 @@ class SolidcpServerFetcher
                 'name'
             )
             ->from('cp_solidcp_servers')
-            ->where('id_enterprise = :id_enterprise')
-            ->setParameter('id_enterprise', $id_enterprise)
+            ->where('id_enterprise_dispatcher = :id_enterprise_dispatcher')
+            ->setParameter('id_enterprise_dispatcher', $id_enterprise_dispatcher)
             ->orderBy('name')
             ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
 
@@ -69,7 +69,7 @@ class SolidcpServerFetcher
                 'servers.enabled',
             )
             ->from('cp_solidcp_servers', 'servers')
-            ->leftJoin('servers', 'cp_solidcp_enterprise_servers', 'enterprises', 'enterprises.id = servers.id_enterprise')
+            ->leftJoin('servers', 'cp_solidcp_enterprise_dispatchers', 'enterprises', 'enterprises.id = servers.id_enterprise_dispatcher')
             ->leftJoin('servers', 'cp_locations', 'locations', 'locations.id = servers.id_location');
 
         if (!in_array($sort, ['enterprise_name', 'location_name', 'name', 'memory_mb', 'enabled'], true)) {

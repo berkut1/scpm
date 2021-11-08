@@ -29,7 +29,7 @@ class UserController extends AbstractController
     /**
      * @OA\Post(
      *     path="/solidCP/users",
-     *     tags={"Create SolidCP User"},
+     *     tags={"SolidCP User"},
      *     description="Manually create a SolidCP user. Not required if you are using All in One User/Package/Vps",
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -40,7 +40,7 @@ class UserController extends AbstractController
      *             @OA\Property(property="last_name", type="string", description="if not selected, then use the username"),
      *             @OA\Property(property="email", type="string"),
      *             @OA\Property(property="password", type="string"),
-     *             @OA\Property(property="id_enterprise", type="integer", description="if not selected, then use the default one"),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, then use the default one"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -87,7 +87,7 @@ class UserController extends AbstractController
     /**
      * @OA\Get(
      *     path="/solidCP/users/{username}/is-exists",
-     *     tags={"Is SolidCP User Exists"},
+     *     tags={"SolidCP User"},
      *     description="Check if the user exists. Not required if you are using All in One User/Package/Vps",
      *     @OA\Parameter(
      *         in="path",
@@ -98,7 +98,7 @@ class UserController extends AbstractController
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="id_enterprise", description="if not selected, the default is used. No need to choose if only one enterprise is used",
+     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
      *         in="query",
      *         required=false,
      *         @OA\Schema(type="integer"),
@@ -126,13 +126,14 @@ class UserController extends AbstractController
      * )
      * @Route("/solidCP/users/{username}/is-exists", name="user.isExists", methods={"GET"})
      * @param string $username
+     * @param Request $request
      * @param SOAPUserCheck\Handler $handler
      * @return Response
      * @throws \Exception
      */
     public function isExists(string $username, Request $request, SOAPUserCheck\Handler $handler): Response
     {
-        $command = SOAPUserCheck\Command::create($username, (int)$request->query->get('id_enterprise'));
+        $command = SOAPUserCheck\Command::create($username, (int)$request->query->get('id_enterprise_dispatcher'));
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {
@@ -148,7 +149,7 @@ class UserController extends AbstractController
     /**
      * @OA\Put(
      *     path="/solidCP/users/{username}/email",
-     *     tags={"Change SolidCP user's email address"},
+     *     tags={"SolidCP User"},
      *     description="Change SolidCP user's email",
      *     @OA\Parameter(
      *         in="path",
@@ -159,7 +160,7 @@ class UserController extends AbstractController
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="id_enterprise", description="if not selected, the default is used. No need to choose if only one enterprise is used",
+     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
      *         in="query",
      *         required=false,
      *         @OA\Schema(type="integer"),
@@ -170,7 +171,7 @@ class UserController extends AbstractController
      *             type="object",
      *             required={"new_email"},
      *             @OA\Property(property="new_email", type="string"),
-     *             @OA\Property(property="id_enterprise", type="integer", description="if not selected, then use the default one"),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, then use the default one"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -200,7 +201,7 @@ class UserController extends AbstractController
         /** @var SOAPUserEdit\Email\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), SOAPUserEdit\Email\Command::class, 'json');
         $command->username = $username;
-        $command->id_enterprise = (int)$request->query->get('id_enterprise');
+        $command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {
@@ -216,7 +217,8 @@ class UserController extends AbstractController
     /**
      * @OA\Put(
      *     path="/solidCP/users/{username}/password",
-     *     tags={"Change SolidCP User password"},
+     *     tags={"SolidCP User"},
+     *     description="Change SolidCP User password",
      *     @OA\Parameter(
      *         in="path",
      *         name="username",
@@ -226,7 +228,7 @@ class UserController extends AbstractController
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="id_enterprise", description="if not selected, the default is used. No need to choose if only one enterprise is used",
+     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
      *         in="query",
      *         required=false,
      *         @OA\Schema(type="integer"),
@@ -237,7 +239,7 @@ class UserController extends AbstractController
      *             type="object",
      *             required={"new_password"},
      *             @OA\Property(property="new_password", type="string"),
-     *             @OA\Property(property="id_enterprise", type="integer", description="if not selected, then use the default one"),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, then use the default one"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -267,7 +269,7 @@ class UserController extends AbstractController
         /** @var SOAPUserEdit\Password\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), SOAPUserEdit\Password\Command::class, 'json');
         $command->username = $username;
-        $command->id_enterprise = (int)$request->query->get('id_enterprise');
+        $command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {

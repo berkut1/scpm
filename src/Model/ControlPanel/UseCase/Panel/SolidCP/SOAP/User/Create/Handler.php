@@ -9,7 +9,7 @@ use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServerRepository;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User\UserRole;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User\UserStatus;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User\UserInfo;
@@ -17,31 +17,31 @@ use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 
 class Handler
 {
-    private EnterpriseServerRepository $enterpriseServerRepository;
+    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
     private AuditLog\Add\SolidCP\Handler $auditLogHandler;
 
-    public function __construct(EnterpriseServerRepository $enterpriseServerRepository, AuditLog\Add\SolidCP\Handler $auditLogHandler)
+    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository, AuditLog\Add\SolidCP\Handler $auditLogHandler)
     {
-        $this->enterpriseServerRepository = $enterpriseServerRepository;
+        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
         $this->auditLogHandler = $auditLogHandler;
     }
 
     public function handle(Command $command, array &$auditLogRecords = [], bool $saveAuditLog = true): int
     {
-        $enterpriseServer = $this->enterpriseServerRepository->getDefaultOrById($command->id_enterprise);
+        $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
 
-        $esUsers = EsUsers::createFromEnterpriseServer($enterpriseServer);
+        $esUsers = EsUsers::createFromEnterpriseDispatcher($enterpriseDispatcher);
 //        $options = array(
-//            'login' => $enterpriseServer->getLogin(),
-//            'password' => $enterpriseServer->getPassword(),
+//            'login' => $enterpriseDispatcher->getLogin(),
+//            'password' => $enterpriseDispatcher->getPassword(),
 //            'trace' => 1,
 //            'exceptions' => 0,
 //            'soap_version'=>SOAP_1_2,
 //            'cache_wsdl'=>WSDL_CACHE_NONE,
 //        );
-//        $soapClient = new \SoapClient($enterpriseServer->getUrl().'/esUsers.asmx?WSDL', $options);
+//        $soapClient = new \SoapClient($enterpriseDispatcher->getUrl().'/esUsers.asmx?WSDL', $options);
         $user = new UserInfo(
-            $enterpriseServer->getSolidcpLoginId(),
+            $enterpriseDispatcher->getSolidcpLoginId(),
             UserRole::user(),
             UserStatus::active(),
             false,
@@ -65,7 +65,7 @@ class Handler
         if ($saveAuditLog) {
             $entity = new Entity(EntityType::soapExecute(), Id::zeros()->getValue());
             $auditLogCommand = new AuditLog\Add\SolidCP\Command(
-                $enterpriseServer,
+                $enterpriseDispatcher,
                 $entity,
                 TaskName::createSolidcpUser(),
                 $records

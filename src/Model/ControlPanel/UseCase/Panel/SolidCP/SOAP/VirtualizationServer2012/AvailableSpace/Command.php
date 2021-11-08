@@ -26,7 +26,7 @@ class Command
     private array $ignore_node_ids = [];
     /** @var int[] */
     private array $ignore_hosting_space_ids = [];
-    public ?int $id_enterprise = null;
+    public ?int $id_enterprise_dispatcher = null;
 
     /**
      * @param string $server_location_name
@@ -34,14 +34,14 @@ class Command
      * @param int $server_ip_amount
      * @param int[] $ignore_node_ids
      * @param int[] $ignore_hosting_space_ids
-     * @param int|null $id_enterprise
+     * @param int|null $id_enterprise_dispatcher
      * @return static
      */
     #[Pure]
-    public static function create(string $server_location_name, string $server_package_name, int $server_ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids, ?int $id_enterprise = null): self
+    public static function create(string $server_location_name, string $server_package_name, int $server_ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids, ?int $id_enterprise_dispatcher = null): self
     {
         $command = new self();
-        $command->id_enterprise = $id_enterprise;
+        $command->id_enterprise_dispatcher = $id_enterprise_dispatcher;
         $command->server_location_name = $server_location_name;
         $command->server_package_name = $server_package_name;
         $command->server_ip_amount = $server_ip_amount;

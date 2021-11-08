@@ -16,7 +16,7 @@ class Command
      * @Assert\NotBlank()
      * @Assert\Positive()
      */
-    private int $id_enterprise;
+    private int $id_enterprise_dispatcher;
     /**
      * @Assert\NotBlank()
      * @Assert\Positive()
@@ -51,13 +51,13 @@ class Command
     public static function fromServer(SolidcpServer $solidcpServer): self
     {
         $command = new self($solidcpServer->getId());
-        $command->id_enterprise = $solidcpServer->getEnterprise()->getId();
+        $command->id_enterprise_dispatcher = $solidcpServer->getEnterprise()->getId();
         return $command;
     }
 
     public function getIdEnterprise(): int
     {
-        return $this->id_enterprise;
+        return $this->id_enterprise_dispatcher;
     }
 
     public function getIdServer(): int

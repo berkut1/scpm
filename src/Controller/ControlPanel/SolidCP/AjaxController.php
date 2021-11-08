@@ -5,7 +5,7 @@ namespace App\Controller\ControlPanel\SolidCP;
 
 use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
 use App\Model\ControlPanel\Service\SolidCP\VirtualizationServer2012Service;
-use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseServer\EnterpriseServerFetcher;
+use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +27,7 @@ class AjaxController extends AbstractController
      */
     public function allServerArrayFromEnterprise(Request $request, SolidcpServerFetcher $fetcher): JsonResponse
     {
-        $arr = $fetcher->allListFrom((int)$request->query->get('id_enterprise'));
+        $arr = $fetcher->allListFrom((int)$request->query->get('id_enterprise_dispatcher'));
         return new JsonResponse($arr);
     }
 
@@ -39,7 +39,7 @@ class AjaxController extends AbstractController
      */
     public function allNonAddedHostingSpaceArrayFromEnterprise(Request $request, HostingSpaceService $fetcher): JsonResponse
     {
-        $arr = $fetcher->allNotAddedHostingSpacesFrom((int)$request->query->get('id_enterprise'));
+        $arr = $fetcher->allNotAddedHostingSpacesFrom((int)$request->query->get('id_enterprise_dispatcher'));
         return new JsonResponse($arr);
     }
 
@@ -51,7 +51,7 @@ class AjaxController extends AbstractController
      */
     public function allNotAddedHostingSpacesArrayExceptHostingSpaceIdFromEnterprise(Request $request, HostingSpaceService $fetcher): JsonResponse
     {
-        $arr = $fetcher->allNotAddedHostingSpacesExceptHostingSpaceIdFrom((int)$request->query->get('id_enterprise'), (int)$request->query->get('id_solidcp_hosting_space'));
+        $arr = $fetcher->allNotAddedHostingSpacesExceptHostingSpaceIdFrom((int)$request->query->get('id_enterprise_dispatcher'), (int)$request->query->get('id_solidcp_hosting_space'));
         return new JsonResponse($arr);
     }
 
@@ -59,17 +59,17 @@ class AjaxController extends AbstractController
      * @Route("/all-os-templates-array-from-enterprise-and-packageid", name=".allOsTempaltesArrayFromEnterpriseAndPackageId", condition="request.isXmlHttpRequest()"), methods={"GET"}
      * @param Request $request
      * @param VirtualizationServer2012Service $fetcher
-     * @param EnterpriseServerFetcher $enterpriseServerFetcher
+     * @param EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher
      * @return JsonResponse
      */
-    public function allOsTempaltesArrayFromEnterpriseAndPackageId(Request $request, VirtualizationServer2012Service $fetcher, EnterpriseServerFetcher $enterpriseServerFetcher): JsonResponse
+    public function allOsTempaltesArrayFromEnterpriseAndPackageId(Request $request, VirtualizationServer2012Service $fetcher, EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher): JsonResponse
     {
-        $id_enterprise = $request->query->get('id_enterprise');
-        if(empty($id_enterprise)){
-            $id_enterprise = $enterpriseServerFetcher->getDefault()->getId();
+        $id_enterprise_dispatcher = $request->query->get('id_enterprise_dispatcher');
+        if(empty($id_enterprise_dispatcher)){
+            $id_enterprise_dispatcher = $enterpriseDispatcherFetcher->getDefault()->getId();
         }
 
-        $arr = $fetcher->allOsTemplateListFrom((int)$id_enterprise, (int)$request->query->get('packageId'));
+        $arr = $fetcher->allOsTemplateListFrom((int)$id_enterprise_dispatcher, (int)$request->query->get('packageId'));
         return new JsonResponse($arr);
     }
 }

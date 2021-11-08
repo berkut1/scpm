@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    public ?int $id_enterprise = null;
+    public ?int $id_enterprise_dispatcher = null;
     /**
      * @Assert\NotBlank()
      * @Assert\Positive()
@@ -127,10 +127,10 @@ class Command
      */
     public bool $randomPrivateAddresses = false;
 
-    public static function createDefault(int $packageId, string $id_package_virtual_machines, string $osTemplateFile, string $password, int $externalAddressesNumber, ?int $id_enterprise = null):self
+    public static function createDefault(int $packageId, string $id_package_virtual_machines, string $osTemplateFile, string $password, int $externalAddressesNumber, ?int $id_enterprise_dispatcher = null):self
     {
         $command = new self();
-        $command->id_enterprise = $id_enterprise;
+        $command->id_enterprise_dispatcher = $id_enterprise_dispatcher;
         $command->packageId = $packageId;
         $command->id_package_virtual_machines = $id_package_virtual_machines;
         $command->osTemplateFile = $osTemplateFile;

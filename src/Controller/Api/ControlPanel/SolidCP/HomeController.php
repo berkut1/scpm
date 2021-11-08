@@ -44,7 +44,7 @@ class HomeController extends AbstractController
      *             @OA\Property(property="server_os_name", type="string", example="Windows Server 2019"),
      *             @OA\Property(property="server_password", type="string", description="Generated password for VM server"),
      *             @OA\Property(property="server_ip_amount", type="integer", description="The number of IP addresses to be assigned to the VM server."),
-     *             @OA\Property(property="id_enterprise", type="integer", description="if not selected, the default is used. No need to choose if only one enterprise is used"),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, the default is used. No need to choose if only one enterprise is used"),
      *             @OA\Property(property="ignore_node_ids", type="array",
      *                  @OA\Items(
      *                      @OA\Property(type="integer")

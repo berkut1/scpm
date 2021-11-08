@@ -28,9 +28,9 @@
     {# <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
     {{ parent() }}
     <script>
-        let id_enterprise;
-        $('#form_id_enterprise').change(function () {
-            id_enterprise = $(this).val();
+        let id_enterprise_dispatcher;
+        $('#form_id_enterprise_dispatcher').change(function () {
+            id_enterprise_dispatcher = $(this).val();
         });
 
         $('#form_packageId').change(function () {
@@ -40,7 +40,7 @@
                 type: "GET",
                 dataType: "JSON",
                 data: {
-                    id_enterprise: id_enterprise,
+                    id_enterprise_dispatcher: id_enterprise_dispatcher,
                     packageId: firstSelector.val(),
                 },
                 success: function (items) {

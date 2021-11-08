@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SolidCP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServerRepository;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsServers;
 use Doctrine\DBAL\Connection;
@@ -11,25 +11,25 @@ use Doctrine\DBAL\Connection;
 class ServerService
 {
     private Connection $connection;
-    private EnterpriseServerRepository $enterpriseServerRepository;
+    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
 
-    public function __construct(Connection $connection, EnterpriseServerRepository $enterpriseServerRepository)
+    public function __construct(Connection $connection, EnterpriseDispatcherRepository $enterpriseDispatcherRepository)
     {
         $this->connection = $connection;
-        $this->enterpriseServerRepository = $enterpriseServerRepository;
+        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
     }
 
-    public function allIPAddressesVpsExternalNetwork(int $id_enterprise): array
+    public function allIPAddressesVpsExternalNetwork(int $id_enterprise_dispatcher): array
     {
-        $enterpriseServer = $this->enterpriseServerRepository->get($id_enterprise);
-        $esServer = EsServers::createFromEnterpriseServer($enterpriseServer);
+        $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);
+        $esServer = EsServers::createFromEnterpriseDispatcher($enterpriseDispatcher);
 
         return $esServer->getPackageIPAddressesVpsExternalNetwork(1); //1 is the system package of all Panel package
     }
 
-    public function ipAddressVpsExternalNetworkDetails(int $id_enterprise, string $ipAddress): array
+    public function ipAddressVpsExternalNetworkDetails(int $id_enterprise_dispatcher, string $ipAddress): array
     {
-        $ips = $this->allIPAddressesVpsExternalNetwork($id_enterprise);
+        $ips = $this->allIPAddressesVpsExternalNetwork($id_enterprise_dispatcher);
         if($ips['Count'] > 1){
             foreach ($ips['Items']['PackageIPAddress'] as $ip){
                 if($ip['ExternalIP'] === $ipAddress){

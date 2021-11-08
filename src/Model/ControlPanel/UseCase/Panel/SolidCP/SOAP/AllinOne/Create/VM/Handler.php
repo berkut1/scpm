@@ -8,7 +8,7 @@ use App\Model\AuditLog\Entity\Id;
 use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServer;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\Package\PackageStatus;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsVirtualizationServer2012;
@@ -18,14 +18,14 @@ use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer2012 a
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsServers;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServerRepository;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 use JetBrains\PhpStorm\ArrayShape;
 
 class Handler
 {
-    private EnterpriseServer $enterpriseServer;
-    private EnterpriseServerRepository $enterpriseServerRepository;
+    private EnterpriseDispatcher $enterpriseDispatcher;
+    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
     private VirtualMachinePackageRepository $virtualMachinePackageRepository;
     private SOAPVirtualizationServer2012\AvailableSpace\Handler $soapVpsAvailableSpaceHandler;
     private SOAPUserCreate\Handler $soapUserCreateHandler;
@@ -34,16 +34,16 @@ class Handler
     private AuditLog\Add\SolidCP\Handler $auditLogHandler;
 
     public function __construct(
-        EnterpriseServerRepository $enterpriseServerRepository,
-        VirtualMachinePackageRepository $virtualMachinePackageRepository,
+        EnterpriseDispatcherRepository                      $enterpriseDispatcherRepository,
+        VirtualMachinePackageRepository                     $virtualMachinePackageRepository,
         SOAPVirtualizationServer2012\AvailableSpace\Handler $soapVpsAvailableSpaceHandler,
-        SOAPUserCreate\Handler $soapUserCreateHandler,
-        SOAPPackage\Create\Handler $soapCreatePackageHandler,
-        SOAPVirtualizationServer2012\CreateVM\Handler $soapCreateVmHandler,
-        AuditLog\Add\SolidCP\Handler $auditLogHandler
+        SOAPUserCreate\Handler                              $soapUserCreateHandler,
+        SOAPPackage\Create\Handler                          $soapCreatePackageHandler,
+        SOAPVirtualizationServer2012\CreateVM\Handler       $soapCreateVmHandler,
+        AuditLog\Add\SolidCP\Handler                        $auditLogHandler
     )
     {
-        $this->enterpriseServerRepository = $enterpriseServerRepository;
+        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
         $this->virtualMachinePackageRepository = $virtualMachinePackageRepository;
         $this->soapVpsAvailableSpaceHandler = $soapVpsAvailableSpaceHandler;
         $this->soapUserCreateHandler = $soapUserCreateHandler;
@@ -61,9 +61,9 @@ class Handler
         if ($command->server_ip_amount < 1) {
             throw new \DomainException("The server must have at least one IP");
         }
-        $this->enterpriseServer = $this->enterpriseServerRepository->getDefaultOrById($command->id_enterprise);
-        if(!$this->enterpriseServer->isEnabled()){
-            throw new \DomainException("The EnterpriseServer {$this->enterpriseServer->getName()} is disabled");
+        $this->enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
+        if(!$this->enterpriseDispatcher->isEnabled()){
+            throw new \DomainException("The EnterpriseDispatcher {$this->enterpriseDispatcher->getName()} is disabled");
         }
 
         /** @var Record[] $records */
@@ -75,7 +75,7 @@ class Handler
             $command->server_ip_amount,
             $command->ignore_node_ids,
             $command->ignore_hosting_space_ids,
-            $this->enterpriseServer->getId());
+            $this->enterpriseDispatcher->getId());
         $possibleSpaces = $this->soapVpsAvailableSpaceHandler->handle($commandPossibleSpace, $records, false);
         if(count($possibleSpaces) === 0){
             $this->saveAuditLogAndThrowDomainException($records, "No free spaces for VMs or was not assigned plants to VM packages");
@@ -94,7 +94,7 @@ class Handler
             $this->saveAuditLogAndThrowDomainException($records, "The OS $command->server_os_name was not found");
         }
 
-        $esUsers = EsUsers::createFromEnterpriseServer($this->enterpriseServer);
+        $esUsers = EsUsers::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
         $userId = 0;
         if (!$userExists = $esUsers->userExists($command->client_login)) {
             $commandUser = SOAPUserCreate\Command::create(
@@ -103,7 +103,7 @@ class Handler
                 null,
                 $command->client_email,
                 $command->client_password,
-                $this->enterpriseServer->getId()
+                $this->enterpriseDispatcher->getId()
             );
             $userId = $this->soapUserCreateHandler->handle($commandUser, $records, false);
         } else {
@@ -121,13 +121,13 @@ class Handler
             $userId,
             $possibleSpace->getDefaultHostingPlan()->getSolidcpIdPlan() ?? 0, //if 0 get exception
             null,
-            $this->enterpriseServer->getId()
+            $this->enterpriseDispatcher->getId()
         );
         $packageId = $this->soapCreatePackageHandler->handle($commandPackage, $records, false);
 
-        $esServers = EsServers::createFromEnterpriseServer($this->enterpriseServer);
+        $esServers = EsServers::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
         $result = $esServers->allocatePackageIPAddressesVpsExternalNetwork($packageId, true, $command->server_ip_amount);
-        $esPackages = EsPackages::createFromEnterpriseServer($this->enterpriseServer);
+        $esPackages = EsPackages::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
         $this->guardResultAndRenameProblemPackage($result, $esPackages, $packageId, $possibleSpace->getDefaultHostingPlan()->getName(), $records);
         $records[] = Record::create('SOLIDCP_ASSIGNED_IP_AMOUNT_TO_PACKAGE_ID', [$command->server_ip_amount, $packageId]);
 
@@ -138,13 +138,13 @@ class Handler
             $osTemplate->getPath(),
             $command->server_password,
             $command->server_ip_amount,
-            $this->enterpriseServer->getId()
+            $this->enterpriseDispatcher->getId()
         );
         $vmResultArray = $this->soapCreateVmHandler->handle($commandVm, $records, false);
         $this->guardResultAndRenameProblemPackage($vmResultArray, $esPackages, $packageId, $possibleSpace->getDefaultHostingPlan()->getName(), $records);
 
 
-        $esVirtualizationServer2012 = EsVirtualizationServer2012::createFromEnterpriseServer($this->enterpriseServer);
+        $esVirtualizationServer2012 = EsVirtualizationServer2012::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
         $vmItemResult = $esVirtualizationServer2012->getVirtualMachines($packageId)['Items']['VirtualMachineMetaItem'];
         if ($vmItemResult['ItemID'] !== $vmResultArray['Value']) { //check that we get correct item, maybe useless check, but with SolidCP we can't be sure
             $newItemIDResult = $vmResultArray['Value'];
@@ -214,7 +214,7 @@ class Handler
     {
         $entity = new Entity(EntityType::soapExecute(), Id::zeros()->getValue());
         $auditLogCommand = new AuditLog\Add\SolidCP\Command(
-            $this->enterpriseServer,
+            $this->enterpriseDispatcher,
             $entity,
             TaskName::createSolidcpAllInOneVps(),
             $records

@@ -16,11 +16,11 @@ class TaskName implements TaskNameInterface
     public const TASK_CHANGE_SOLIDCP_PLANS_CP_PACKAGE = 'change_solidcp_plans_cp_package';
     public const TASK_CREATE_CP_PACKAGE_VIRTUAL_MACHINE = 'create_cp_package_virtual_machine';
     public const TASK_EDIT_CP_PACKAGE_VIRTUAL_MACHINE = 'edit_cp_package_virtual_machine';
-    public const TASK_CREATE_CP_SOLIDCP_ENTERPRISE_SERVER = 'create_cp_solidcp_enterprise_server';
-    public const TASK_REMOVE_CP_SOLIDCP_ENTERPRISE_SERVER = 'remove_cp_solidcp_enterprise_server';
-    public const TASK_EDIT_CP_SOLIDCP_ENTERPRISE_SERVER = 'edit_cp_solidcp_enterprise_server';
-    public const TASK_DISABLE_CP_SOLIDCP_ENTERPRISE_SERVER = 'disable_cp_solidcp_enterprise_server';
-    public const TASK_ENABLE_CP_SOLIDCP_ENTERPRISE_SERVER = 'enable_cp_solidcp_enterprise_server';
+    public const TASK_CREATE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'create_cp_solidcp_enterprise_dispatcher';
+    public const TASK_REMOVE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'remove_cp_solidcp_enterprise_dispatcher';
+    public const TASK_EDIT_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'edit_cp_solidcp_enterprise_dispatcher';
+    public const TASK_DISABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'disable_cp_solidcp_enterprise_dispatcher';
+    public const TASK_ENABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'enable_cp_solidcp_enterprise_dispatcher';
     public const TASK_CREATE_CP_SOLIDCP_SERVER = 'create_cp_solidcp_server';
     public const TASK_REMOVE_CP_SOLIDCP_SERVER = 'remove_cp_solidcp_server';
     public const TASK_EDIT_CP_SOLIDCP_SERVER = 'edit_cp_solidcp_server';
@@ -57,11 +57,11 @@ class TaskName implements TaskNameInterface
             self::TASK_CHANGE_SOLIDCP_PLANS_CP_PACKAGE,
             self::TASK_CREATE_CP_PACKAGE_VIRTUAL_MACHINE,
             self::TASK_EDIT_CP_PACKAGE_VIRTUAL_MACHINE,
-            self::TASK_CREATE_CP_SOLIDCP_ENTERPRISE_SERVER,
-            self::TASK_REMOVE_CP_SOLIDCP_ENTERPRISE_SERVER,
-            self::TASK_EDIT_CP_SOLIDCP_ENTERPRISE_SERVER,
-            self::TASK_DISABLE_CP_SOLIDCP_ENTERPRISE_SERVER,
-            self::TASK_ENABLE_CP_SOLIDCP_ENTERPRISE_SERVER,
+            self::TASK_CREATE_CP_SOLIDCP_ENTERPRISE_DISPATCHER,
+            self::TASK_REMOVE_CP_SOLIDCP_ENTERPRISE_DISPATCHER,
+            self::TASK_EDIT_CP_SOLIDCP_ENTERPRISE_DISPATCHER,
+            self::TASK_DISABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER,
+            self::TASK_ENABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER,
             self::TASK_CREATE_CP_SOLIDCP_SERVER,
             self::TASK_REMOVE_CP_SOLIDCP_SERVER,
             self::TASK_EDIT_CP_SOLIDCP_SERVER,
@@ -132,29 +132,29 @@ class TaskName implements TaskNameInterface
         return self::create(self::TASK_EDIT_CP_PACKAGE_VIRTUAL_MACHINE);
     }
 
-    public static function createCpSolidcpEnterpriseServer(): self
+    public static function createCpSolidcpEnterpriseDispatcher(): self
     {
-        return self::create(self::TASK_CREATE_CP_SOLIDCP_ENTERPRISE_SERVER);
+        return self::create(self::TASK_CREATE_CP_SOLIDCP_ENTERPRISE_DISPATCHER);
     }
 
-    public static function removeCpSolidcpEnterpriseServer(): self
+    public static function removeCpSolidcpEnterpriseDispatcher(): self
     {
-        return self::create(self::TASK_REMOVE_CP_SOLIDCP_ENTERPRISE_SERVER);
+        return self::create(self::TASK_REMOVE_CP_SOLIDCP_ENTERPRISE_DISPATCHER);
     }
 
-    public static function editCpSolidcpEnterpriseServer(): self
+    public static function editCpSolidcpEnterpriseDispatcher(): self
     {
-        return self::create(self::TASK_EDIT_CP_SOLIDCP_ENTERPRISE_SERVER);
+        return self::create(self::TASK_EDIT_CP_SOLIDCP_ENTERPRISE_DISPATCHER);
     }
 
-    public static function disableCpSolidcpEnterpriseServer(): self
+    public static function disableCpSolidcpEnterpriseDispatcher(): self
     {
-        return self::create(self::TASK_DISABLE_CP_SOLIDCP_ENTERPRISE_SERVER);
+        return self::create(self::TASK_DISABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER);
     }
 
-    public static function enableCpSolidcpEnterpriseServer(): self
+    public static function enableCpSolidcpEnterpriseDispatcher(): self
     {
-        return self::create(self::TASK_ENABLE_CP_SOLIDCP_ENTERPRISE_SERVER);
+        return self::create(self::TASK_ENABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER);
     }
 
     public static function createCpSolidcpServer(): self

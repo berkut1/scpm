@@ -25,7 +25,7 @@ class Form extends AbstractType
             ->add('path', Type\ChoiceType::class,
                 [
                     'label' => 'Os',
-                    'choices' => array_flip($this->virtualizationServer2012Service->allOsTemplateListFrom((int)$options['id_enterprise'], (int)$options['packageId'])),
+                    'choices' => array_flip($this->virtualizationServer2012Service->allOsTemplateListFrom((int)$options['id_enterprise_dispatcher'], (int)$options['packageId'])),
                     'placeholder' => 'Select Os',
                     'required' => true,
                 ])
@@ -40,7 +40,7 @@ class Form extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Command::class,
-            'id_enterprise' => 0,
+            'id_enterprise_dispatcher' => 0,
             'packageId' => 0,
         ));
     }

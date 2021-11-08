@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    public ?int $id_enterprise;
+    public ?int $id_enterprise_dispatcher;
     /**
      * @Assert\NotBlank()
      */
@@ -17,10 +17,10 @@ class Command
      */
     public string $vps_status;
 
-    public static function create(string $vps_ip_address, string $vps_status, ?int $id_enterprise = null): self
+    public static function create(string $vps_ip_address, string $vps_status, ?int $id_enterprise_dispatcher = null): self
     {
         $command = new self();
-        $command->id_enterprise = $id_enterprise;
+        $command->id_enterprise_dispatcher = $id_enterprise_dispatcher;
         $command->vps_status = $vps_status;
         $command->vps_ip_address = $vps_ip_address;
         return $command;

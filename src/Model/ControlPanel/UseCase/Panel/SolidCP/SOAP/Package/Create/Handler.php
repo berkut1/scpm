@@ -9,25 +9,25 @@ use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServerRepository;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Service\Generators;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
 
 class Handler
 {
-    private EnterpriseServerRepository $enterpriseServerRepository;
+    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
     private AuditLog\Add\SolidCP\Handler $auditLogHandler;
 
-    public function __construct(EnterpriseServerRepository $enterpriseServerRepository, AuditLog\Add\SolidCP\Handler $auditLogHandler)
+    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository, AuditLog\Add\SolidCP\Handler $auditLogHandler)
     {
-        $this->enterpriseServerRepository = $enterpriseServerRepository;
+        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
         $this->auditLogHandler = $auditLogHandler;
     }
 
     public function handle(Command $command, array &$auditLogRecords = [], bool $saveAuditLog = true): int
     {
-        $enterpriseServer = $this->enterpriseServerRepository->getDefaultOrById($command->id_enterprise);
-        $esPackages = EsPackages::createFromEnterpriseServer($enterpriseServer);
+        $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
+        $esPackages = EsPackages::createFromEnterpriseDispatcher($enterpriseDispatcher);
 
         if (empty($command->spaceName)) {
             $command->spaceName = Generators::generateRandomString();
@@ -46,7 +46,7 @@ class Handler
         if ($saveAuditLog) {
             $entity = new Entity(EntityType::soapExecute(), Id::zeros()->getValue());
             $auditLogCommand = new AuditLog\Add\SolidCP\Command(
-                $enterpriseServer,
+                $enterpriseDispatcher,
                 $entity,
                 TaskName::createSolidcpPackage(),
                 $records

@@ -87,7 +87,7 @@ final class Version20210122035429 extends AbstractMigration
         $this->addSql('CREATE INDEX "cp_package_virtual_machines_id_package_idx" ON "cp_package_virtual_machines" ("id_package")');
         $this->addSql('COMMENT ON COLUMN cp_package_virtual_machines.id_package IS \'(DC2Type:cp_package_id)\'');
 
-        $this->addSql('CREATE TABLE "cp_solidcp_enterprise_servers" (
+        $this->addSql('CREATE TABLE "cp_solidcp_enterprise_dispatchers" (
             "id"                SERIAL NOT NULL,
             "name"              VARCHAR(128) NOT NULL, --UNIQUE
             "url"               VARCHAR(1024) NOT NULL,
@@ -96,14 +96,14 @@ final class Version20210122035429 extends AbstractMigration
             "solidcp_login_id"  INT NOT NULL, --get from SOAP call
             "is_default"        BOOLEAN NOT NULL DEFAULT FALSE,
             "enabled"           BOOLEAN NOT NULL DEFAULT TRUE,
-            CONSTRAINT "pk_cp_solidcp_enterprise_servers" PRIMARY KEY ("id")                         
+            CONSTRAINT "pk_cp_solidcp_enterprise_dispatchers" PRIMARY KEY ("id")                         
             )');
-        $this->addSql('CREATE UNIQUE INDEX "cp_solidcp_enterprise_servers_unique_name" ON "cp_solidcp_enterprise_servers" (lower("name"))');
-        $this->addSql('CREATE UNIQUE INDEX "cp_solidcp_enterprise_servers_unique_default" ON "cp_solidcp_enterprise_servers" ("id") WHERE "is_default"'); //only one true
+        $this->addSql('CREATE UNIQUE INDEX "cp_solidcp_enterprise_dispatchers_unique_name" ON "cp_solidcp_enterprise_dispatchers" (lower("name"))');
+        $this->addSql('CREATE UNIQUE INDEX "cp_solidcp_enterprise_dispatchers_unique_default" ON "cp_solidcp_enterprise_dispatchers" ("id") WHERE "is_default"'); //only one true
 
         $this->addSql('CREATE TABLE "cp_solidcp_servers" (
             "id"            SERIAL NOT NULL, 
-            "id_enterprise" INT NOT NULL,
+            "id_enterprise_dispatcher" INT NOT NULL,
             "id_location"   INT NOT NULL,
             "name"          VARCHAR(128) NOT NULL, --UNIQUE
             "cores"         INT NOT NULL DEFAULT 1,
@@ -111,13 +111,13 @@ final class Version20210122035429 extends AbstractMigration
             "memory_mb"     BIGINT NOT NULL DEFAULT 1024,
             "enabled"       BOOLEAN NOT NULL DEFAULT TRUE,
             CONSTRAINT "pk_cp_solidcp_servers" PRIMARY KEY ("id"),
-            CONSTRAINT "fk_cp_solidcp_servers_id_enterprise" FOREIGN KEY ("id_enterprise")
-                REFERENCES "cp_solidcp_enterprise_servers"("id") ON DELETE RESTRICT,
+            CONSTRAINT "fk_cp_solidcp_servers_id_enterprise_dispatcher" FOREIGN KEY ("id_enterprise_dispatcher")
+                REFERENCES "cp_solidcp_enterprise_dispatchers"("id") ON DELETE RESTRICT,
             CONSTRAINT "fk_cp_solidcp_servers_id_location" FOREIGN KEY ("id_location")
                 REFERENCES "cp_locations"("id") ON DELETE RESTRICT                            
             )');
         $this->addSql('CREATE UNIQUE INDEX "cp_solidcp_servers_unique_name" ON "cp_solidcp_servers" (lower("name"))');
-        $this->addSql('CREATE INDEX "cp_solidcp_servers_id_enterprise_idx" ON "cp_solidcp_servers" ("id_enterprise")');
+        $this->addSql('CREATE INDEX "cp_solidcp_servers_id_enterprise_dispatcher_idx" ON "cp_solidcp_servers" ("id_enterprise_dispatcher")');
         $this->addSql('CREATE INDEX "cp_solidcp_servers_id_location_idx" ON "cp_solidcp_servers" ("id_location")');
 
         $this->addSql('CREATE TABLE "cp_solidcp_hosting_spaces" (

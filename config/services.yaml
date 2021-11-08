@@ -37,7 +37,7 @@ services:
     App\Model\ControlPanel\Entity\Location\LocationRepository: ~
     App\Model\ControlPanel\Entity\Package\PackageRepository: ~
     App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository: ~
-    App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServerRepository: ~
+    App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository: ~
     App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServerRepository: ~
     App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceRepository: ~
 

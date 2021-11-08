@@ -13,7 +13,7 @@ class Command
      * @Assert\Positive()
      * @Assert\NotBlank()
      */
-    public int $id_enterprise = 0;
+    public int $id_enterprise_dispatcher = 0;
     /**
      * @Assert\Positive()
      * @Assert\NotBlank()
@@ -35,7 +35,7 @@ class Command
     public static function fromHostingSpace(SolidcpHostingSpace $hostingSpace): self
     {
         $command = new self($hostingSpace->getId());
-        $command->id_enterprise = $hostingSpace->getSolidcpServer()->getEnterprise()->getId();
+        $command->id_enterprise_dispatcher = $hostingSpace->getSolidcpServer()->getEnterprise()->getId();
         $command->packageId = $hostingSpace->getSolidCpIdHostingSpace();
 
         return $command;

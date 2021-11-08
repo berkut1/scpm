@@ -17,7 +17,7 @@ class Command
      * @Assert\NotBlank()
      * @Assert\Positive()
      */
-    public int $id_enterprise;
+    public int $id_enterprise_dispatcher;
     /**
      * @Assert\NotBlank()
      * @Assert\Positive()
@@ -51,7 +51,7 @@ class Command
     public static function fromSolidcpServer(SolidcpServer $solidcpServer): self
     {
         $command = new self($solidcpServer->getId());
-        $command->id_enterprise = $solidcpServer->getEnterprise()->getId();
+        $command->id_enterprise_dispatcher = $solidcpServer->getEnterprise()->getId();
         $command->id_location = $solidcpServer->getLocation()->getId();
         $command->name = $solidcpServer->getName();
         $command->cores = $solidcpServer->getCores();

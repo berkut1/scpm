@@ -25,7 +25,7 @@ class Form extends AbstractType
                 'entry_type' => Collection\Form::class,
                 'entry_options' => [
                     'label' => false,
-                    'id_enterprise' => $data->id_enterprise,
+                    'id_enterprise_dispatcher' => $data->id_enterprise_dispatcher,
                     'packageId' => $data->packageId,
                 ],
                 'by_reference' => false,

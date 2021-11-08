@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer
 
 use App\Model\ControlPanel\Service\SolidCP\VirtualizationServer2012Service;
 use App\ReadModel\ControlPanel\Package\VirtualMachine\VirtualMachinePackageFetcher;
-use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseServer\EnterpriseServerFetcher;
+use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanFetcher;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
@@ -17,15 +17,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Form extends AbstractType
 {
-    private EnterpriseServerFetcher $enterpriseServerFetcher;
+    private EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher;
     private VirtualizationServer2012Service $virtualizationServer2012Service;
     private VirtualMachinePackageFetcher $virtualMachinePackageFetcher;
 
-    public function __construct(EnterpriseServerFetcher $enterpriseServerFetcher,
+    public function __construct(EnterpriseDispatcherFetcher     $enterpriseDispatcherFetcher,
                                 VirtualizationServer2012Service $virtualizationServer2012Service,
-                                VirtualMachinePackageFetcher $virtualMachinePackageFetcher)
+                                VirtualMachinePackageFetcher    $virtualMachinePackageFetcher)
     {
-        $this->enterpriseServerFetcher = $enterpriseServerFetcher;
+        $this->enterpriseDispatcherFetcher = $enterpriseDispatcherFetcher;
         $this->virtualizationServer2012Service = $virtualizationServer2012Service;
         $this->virtualMachinePackageFetcher = $virtualMachinePackageFetcher;
     }
@@ -39,13 +39,13 @@ class Form extends AbstractType
     protected function addElements(FormInterface $form, array $data, Command $modelOriginalData): void
     {
         $form
-            ->add('id_enterprise', Type\ChoiceType::class,
+            ->add('id_enterprise_dispatcher', Type\ChoiceType::class,
                 [
                     'label' => 'Enterprise server',
                     'placeholder' => 'Select an Enterprise server or use default',
-                    'choices' => array_flip($this->enterpriseServerFetcher->allList()),
+                    'choices' => array_flip($this->enterpriseDispatcherFetcher->allList()),
                     'required' => false,
-                    //'data' => isset($data['id_enterprise']) ?? $data['id_enterprise'],
+                    //'data' => isset($data['id_enterprise_dispatcher']) ?? $data['id_enterprise_dispatcher'],
                 ])
             ->add('packageId', Type\IntegerType::class,
                 [
@@ -68,7 +68,7 @@ class Form extends AbstractType
                     'placeholder' => 'Select a Package',
                     'choices' => array_flip($this->virtualMachinePackageFetcher->allList()),
                     'required' => true,
-                    //'data' => isset($data['id_enterprise']) ?? $data['id_enterprise'],
+                    //'data' => isset($data['id_enterprise_dispatcher']) ?? $data['id_enterprise_dispatcher'],
                 ])
 //            ->add('cpuCores', Type\IntegerType::class,
 //                [
@@ -158,10 +158,10 @@ class Form extends AbstractType
 
         $templates = [];
         if (!empty($data['packageId'])) {
-            if(empty($data['id_enterprise'])){
-                $data['id_enterprise'] = $this->enterpriseServerFetcher->getDefault()->getId();
+            if(empty($data['id_enterprise_dispatcher'])){
+                $data['id_enterprise_dispatcher'] = $this->enterpriseDispatcherFetcher->getDefault()->getId();
             }
-            $templates = array_flip($this->virtualizationServer2012Service->allOsTemplateListFrom((int)$data['id_enterprise'], (int)$data['packageId']));
+            $templates = array_flip($this->virtualizationServer2012Service->allOsTemplateListFrom((int)$data['id_enterprise_dispatcher'], (int)$data['packageId']));
         }
         $form->add('osTemplateFile', Type\ChoiceType::class,
             [

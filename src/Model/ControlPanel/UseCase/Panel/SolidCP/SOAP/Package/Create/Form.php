@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\Package\Create;
 
-use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseServer\EnterpriseServerFetcher;
+use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanFetcher;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
@@ -12,21 +12,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Form extends AbstractType
 {
-    private EnterpriseServerFetcher $enterpriseServerFetcher;
+    private EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher;
     private SolidcpHostingPlanFetcher $solidcpHostingPlanFetcher;
 
-    public function __construct(EnterpriseServerFetcher $enterpriseServerFetcher, SolidcpHostingPlanFetcher $solidcpHostingPlanFetcher)
+    public function __construct(EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher, SolidcpHostingPlanFetcher $solidcpHostingPlanFetcher)
     {
-        $this->enterpriseServerFetcher = $enterpriseServerFetcher;
+        $this->enterpriseDispatcherFetcher = $enterpriseDispatcherFetcher;
         $this->solidcpHostingPlanFetcher = $solidcpHostingPlanFetcher;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('id_enterprise', Type\ChoiceType::class,
+            ->add('id_enterprise_dispatcher', Type\ChoiceType::class,
                 [
-                    'choices' => array_flip($this->enterpriseServerFetcher->allList()),
+                    'choices' => array_flip($this->enterpriseDispatcherFetcher->allList()),
                     'placeholder' => 'Default',
                     'required' => false
                 ])

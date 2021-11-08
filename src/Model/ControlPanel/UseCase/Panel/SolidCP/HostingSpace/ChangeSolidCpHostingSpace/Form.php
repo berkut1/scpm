@@ -27,7 +27,7 @@ class Form extends AbstractType
             [
                 'label' => 'Hosting Space',
                 'required' => true,
-                'choices' => array_flip($this->hostingSpaceService->allNotAddedHostingSpacesExceptHostingSpaceIdFrom($data->id_enterprise, $data->id_solidcp_hosting_space)),
+                'choices' => array_flip($this->hostingSpaceService->allNotAddedHostingSpacesExceptHostingSpaceIdFrom($data->id_enterprise_dispatcher, $data->id_solidcp_hosting_space)),
                 //'data' => isset($data['id_hosting_space']) ?? $data['id_hosting_space'],
             ]);
     }

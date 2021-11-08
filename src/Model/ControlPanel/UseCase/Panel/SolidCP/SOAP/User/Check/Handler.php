@@ -9,17 +9,17 @@ use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServerRepository;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 
 class Handler
 {
-    private EnterpriseServerRepository $enterpriseServerRepository;
+    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
     private AuditLog\Add\SolidCP\Handler $auditLogHandler;
 
-    public function __construct(EnterpriseServerRepository $enterpriseServerRepository, AuditLog\Add\SolidCP\Handler $auditLogHandler)
+    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository, AuditLog\Add\SolidCP\Handler $auditLogHandler)
     {
-        $this->enterpriseServerRepository = $enterpriseServerRepository;
+        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
         $this->auditLogHandler = $auditLogHandler;
     }
 
@@ -28,12 +28,12 @@ class Handler
      */
     public function handle(Command $command): bool
     {
-        $enterpriseServer = $this->enterpriseServerRepository->getDefaultOrById($command->id_enterprise);
+        $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
 
-        $esUsers = EsUsers::createFromEnterpriseServer($enterpriseServer);
+        $esUsers = EsUsers::createFromEnterpriseDispatcher($enterpriseDispatcher);
         $entity = new Entity(EntityType::soapExecute(), Id::zeros()->getValue());
         $auditLogCommand = new AuditLog\Add\SolidCP\Command(
-            $enterpriseServer,
+            $enterpriseDispatcher,
             $entity,
             TaskName::checkSolidcpUser(),
             [

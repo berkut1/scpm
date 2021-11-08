@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Node;
 
 use App\Model\AggregateRoot;
 use App\Model\ControlPanel\Entity\Location\Location;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServer;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use App\Model\EventsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,7 +20,7 @@ use JetBrains\PhpStorm\Pure;
  *     name="cp_solidcp_servers",
  *     indexes={
  *          @ORM\Index(name="cp_solidcp_servers_id_location_idx", columns={"id_location"}),
- *          @ORM\Index(name="cp_solidcp_servers_id_enterprise_idx", columns={"id_enterprise"})
+ *          @ORM\Index(name="cp_solidcp_servers_id_enterprise_dispatcher_idx", columns={"id_enterprise_dispatcher"})
  *  })
  * @ORM\Entity
  */
@@ -35,12 +35,12 @@ class SolidcpServer implements AggregateRoot
     private int $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=EnterpriseServer::class, inversedBy="solidcpServers")
+     * @ORM\ManyToOne(targetEntity=EnterpriseDispatcher::class, inversedBy="solidcpServers")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_enterprise", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="id_enterprise_dispatcher", referencedColumnName="id", nullable=false)
      * })
      */
-    private EnterpriseServer $enterprise;
+    private EnterpriseDispatcher $enterprise;
 
     /**
      * @ORM\ManyToOne(targetEntity=Location::class, inversedBy="solidcpServers")
@@ -83,7 +83,7 @@ class SolidcpServer implements AggregateRoot
      */
     private array|Collection|ArrayCollection $hostingSpaces;
 
-    public function __construct(EnterpriseServer $enterprise, Location $location, string $name, int $cores, int $threads, int $memoryMb, bool $enabled = true)
+    public function __construct(EnterpriseDispatcher $enterprise, Location $location, string $name, int $cores, int $threads, int $memoryMb, bool $enabled = true)
     {
         $this->enterprise = $enterprise;
         $this->location = $location;
@@ -96,7 +96,7 @@ class SolidcpServer implements AggregateRoot
         $this->recordEvent(new Event\SolidcpServerCreated($this));
     }
 
-    public function edit(EnterpriseServer $enterprise, Location $location, string $name, int $cores, int $threads, int $memoryMb): void
+    public function edit(EnterpriseDispatcher $enterprise, Location $location, string $name, int $cores, int $threads, int $memoryMb): void
     {
         $this->enterprise = $enterprise;
         $this->location = $location;
@@ -141,7 +141,7 @@ class SolidcpServer implements AggregateRoot
         return $this->id;
     }
 
-    public function getEnterprise(): EnterpriseServer
+    public function getEnterprise(): EnterpriseDispatcher
     {
         return $this->enterprise;
     }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SOAP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServer;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Service\NotFoundException;
 
 class SoapExecute
@@ -30,12 +30,12 @@ class SoapExecute
 //
 //    }
 
-    public function initFromEnterpriseServer(EnterpriseServer $enterpriseServer, $caching = false, $compression = true): void
+    public function initFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher, $caching = false, $compression = true): void
     {
-//        if(!$enterpriseServer->isEnabled()){ //not good, we have to give a chance to finish service their work, better to prevent it from UseCases
-//            throw new \DomainException("The EnterpriseServer {$enterpriseServer->getName()} is disabled");
+//        if(!$enterpriseDispatcher->isEnabled()){ //not good, we have to give a chance to finish service their work, better to prevent it from UseCases
+//            throw new \DomainException("The EnterpriseDispatcher {$enterpriseDispatcher->getName()} is disabled");
 //        }
-        $this->initManual($enterpriseServer->getUrl(), $enterpriseServer->getLogin(), $enterpriseServer->getPassword(), $caching, $compression);
+        $this->initManual($enterpriseDispatcher->getUrl(), $enterpriseDispatcher->getLogin(), $enterpriseDispatcher->getPassword(), $caching, $compression);
     }
 
     public function initManual(string $url, string $login, string $password, bool $keepAlive = false, bool $caching = false, bool $compression = true): void

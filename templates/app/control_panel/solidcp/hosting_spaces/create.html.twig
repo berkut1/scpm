@@ -30,14 +30,14 @@
     {{ parent() }}
     <script>
 
-        $('#form_id_enterprise').change(function () {
+        $('#form_id_enterprise_dispatcher').change(function () {
             let firstSelector = $(this);
             $.ajax({
                 url: "{{ path('solidCpAjax.allServerArrayFromEnterprise') }}",
                 type: "GET",
                 dataType: "JSON",
                 data: {
-                    id_enterprise: firstSelector.val()
+                    id_enterprise_dispatcher: firstSelector.val()
                 },
                 success: function (items) {
                     onSuccess(items, $("#form_id_server"), 'Select a Node');
@@ -55,7 +55,7 @@
                 type: "GET",
                 dataType: "JSON",
                 data: {
-                    id_enterprise: firstSelector.val()
+                    id_enterprise_dispatcher: firstSelector.val()
                 },
                 success: function (items) {
                     onSuccess(items, $("#form_id_hosting_space"), 'Select a Hosting Space');

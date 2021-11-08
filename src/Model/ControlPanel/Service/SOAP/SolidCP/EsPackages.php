@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServer;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\Package\PackageStatus;
 use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
@@ -12,10 +12,10 @@ final class EsPackages extends SoapExecute
 {
     public const SERVICE = 'esPackages.asmx';
 
-    public static function createFromEnterpriseServer(EnterpriseServer $enterpriseServer): self //TODO: move to a facade?
+    public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
     {
         $soap = new self();
-        $soap->initFromEnterpriseServer($enterpriseServer);
+        $soap->initFromEnterpriseDispatcher($enterpriseDispatcher);
         return $soap;
     }
 

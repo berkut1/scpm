@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">{{ page_title }}</div>
+
+        <div class="card-body">
+            <div class="bd-row">
+                <a href="{{ path('enterpriseDispatchers.create') }}" class="btn btn-success">Add</a>
+            </div>
+            <hr>
+
+            <div class="box">
+                <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(pagination, 'Name', 'name') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Url', 'url') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Default', 'is_default') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'Enabled', 'enabled') }}</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for object in pagination %}
+                        <tr>
+                            <td><a href="#">{{ object.name }}</a></td>
+                            <td>{{ object.url }}</td>
+                            <td>{{ object.is_default ? 'Yes' : 'No' }}
+                            {% if object.is_default != true %}
+                                <form action="{{ path('enterpriseDispatchers.setDefault', {'id': object.id}) }}"
+                                      style="display: inline-block;" method="post"
+                                      onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('setDefault') }}"/>
+                                    <button type="submit" class="btn btn-sm btn-warning">Set Default
+                                    </button>
+                                </form>
+                            {% endif %}
+                            </td>
+
+                            <td>{{ object.enabled ? 'Yes' : 'No' }}
+                                {% if object.enabled != true %}
+                                    <form action="{{ path('enterpriseDispatchers.enable', {'id': object.id}) }}"
+                                          style="display: inline-block;" method="post"
+                                          onsubmit="return confirm('Are you sure?')">
+                                        <input type="hidden" name="token" value="{{ csrf_token('enable') }}"/>
+                                        <button type="submit" class="btn btn-sm btn-success">Enable
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <form action="{{ path('enterpriseDispatchers.disable', {'id': object.id}) }}"
+                                          style="display: inline-block;" method="post"
+                                          onsubmit="return confirm('Are you sure?')">
+                                        <input type="hidden" name="token" value="{{ csrf_token('disable') }}"/>
+                                        <button type="submit" class="btn btn-sm btn-warning">Disable
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                            <td><a class="btn btn-sm btn-success"
+                                   href="#">
+                                    <i class="fa fa-search-plus"></i>
+                                </a>
+                                <a class="btn btn-sm btn-info" href="{{ path('enterpriseDispatchers.edit', {'id': object.id}) }}">
+                                    <i class="fa fa-edit"></i> EDIT
+                                </a>
+                                <form action="{{ path('enterpriseDispatchers.remove', {'id':object.id}) }}"
+                                      style="display: inline-block;" method="post"
+                                      onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="token" value="{{ csrf_token('remove') }}"/>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-archive"></i>REMOVE
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

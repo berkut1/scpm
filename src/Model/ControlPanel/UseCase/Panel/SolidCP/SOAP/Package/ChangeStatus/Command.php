@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    public ?int $id_enterprise;
+    public ?int $id_enterprise_dispatcher;
     /**
      * @Assert\NotBlank()
      */
@@ -17,10 +17,10 @@ class Command
      */
     public string $solidcp_package_status;
 
-    public function __construct(int $solidcp_package_id, string $solidcp_package_status, ?int $id_enterprise = null)
+    public function __construct(int $solidcp_package_id, string $solidcp_package_status, ?int $id_enterprise_dispatcher = null)
     {
         $this->solidcp_package_id = $solidcp_package_id;
-        $this->id_enterprise = $id_enterprise;
+        $this->id_enterprise_dispatcher = $id_enterprise_dispatcher;
         $this->solidcp_package_status = $solidcp_package_status;
     }
 }

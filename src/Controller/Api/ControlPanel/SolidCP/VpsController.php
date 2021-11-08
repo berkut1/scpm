@@ -42,7 +42,7 @@ class VpsController extends AbstractController
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="id_enterprise", description="if not selected, the default is used. No need to choose if only one enterprise is used",
+     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
      *         in="query",
      *         required=false,
      *         @OA\Schema(type="integer"),
@@ -75,7 +75,7 @@ class VpsController extends AbstractController
      */
     public function vpsProvisioningStatus(int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsProvisioningStatus\Handler $handler): Response
     {
-        $command = new VirtualizationServer2012\Check\VpsProvisioningStatus\Command($solidcp_item_id, (int)$request->query->get('id_enterprise'));
+        $command = new VirtualizationServer2012\Check\VpsProvisioningStatus\Command($solidcp_item_id, (int)$request->query->get('id_enterprise_dispatcher'));
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {
@@ -105,7 +105,7 @@ class VpsController extends AbstractController
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="id_enterprise", description="if not selected, the default is used. No need to choose if only one enterprise is used",
+     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
      *         in="query",
      *         required=false,
      *         @OA\Schema(type="integer"),
@@ -140,7 +140,7 @@ class VpsController extends AbstractController
      */
     public function vpsState(int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsState\Handler $handler): Response
     {
-        $command = new VirtualizationServer2012\Check\VpsState\Command($solidcp_item_id, (int)$request->query->get('id_enterprise'));
+        $command = new VirtualizationServer2012\Check\VpsState\Command($solidcp_item_id, (int)$request->query->get('id_enterprise_dispatcher'));
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {
@@ -170,7 +170,7 @@ class VpsController extends AbstractController
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="id_enterprise", description="if not selected, the default is used. No need to choose if only one enterprise is used",
+     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
      *         in="query",
      *         required=false,
      *         @OA\Schema(type="integer"),
@@ -181,7 +181,7 @@ class VpsController extends AbstractController
      *             type="object",
      *             required={"vps_status"},
      *             @OA\Property(property="vps_status", type="string", enum={"Active", "Suspended", "Cancelled"}),
-     *             @OA\Property(property="id_enterprise", type="integer", description="if not selected, then use the default one"),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, then use the default one"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -211,7 +211,7 @@ class VpsController extends AbstractController
         /** @var VirtualizationServer2012\ChangeStatus\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), VirtualizationServer2012\ChangeStatus\Command::class, 'json');
         $command->vps_ip_address = $vps_ip_address;
-        $command->id_enterprise = (int)$request->query->get('id_enterprise');
+        $command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {
@@ -251,7 +251,7 @@ class VpsController extends AbstractController
      *         style="form"
      *     ),
      *     @OA\Parameter(
-     *         name="id_enterprise", description="if not selected, the default is used. No need to choose if only one enterprise is used",
+     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
      *         in="query",
      *         required=false,
      *         @OA\Schema(type="integer"),
@@ -305,7 +305,7 @@ class VpsController extends AbstractController
         /** @var VirtualizationServer2012\AvailableSpace\Command $command */
         $command = $this->denormalizer->denormalize($request->query->all(), VirtualizationServer2012\AvailableSpace\Command::class, 'array', [
             'object_to_populate' => $command, //got prop from AbstractObjectNormalizer::
-            //'ignored_attributes' => ['id_enterprise'],
+            //'ignored_attributes' => ['id_enterprise_dispatcher'],
             'disable_type_enforcement' => true //https://github.com/symfony/symfony/issues/32167#issuecomment-510241190
         ]);
 

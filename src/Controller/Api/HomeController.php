@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @OA\Info(
  *     version="1.0.0",
- *     title="SolidCP simple API",
+ *     title="SCPM API",
  *     description="HTTP JSON API",
  * ),
  * @OA\Server(

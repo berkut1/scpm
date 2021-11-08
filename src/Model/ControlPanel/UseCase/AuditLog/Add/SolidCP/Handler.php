@@ -19,9 +19,9 @@ class Handler
     {
         $records = [
             Record::create('SOLIDCP_USED_ENTERPRISE_URL_VIA_LOGIN_LOGIN_ID', [
-                $command->enterpriseServer->getUrl(),
-                $command->enterpriseServer->getLogin(),
-                $command->enterpriseServer->getSolidcpLoginId(),
+                $command->enterpriseDispatcher->getUrl(),
+                $command->enterpriseDispatcher->getLogin(),
+                $command->enterpriseDispatcher->getSolidcpLoginId(),
             ]),
         ];
         $records = array_merge($records, $command->records);

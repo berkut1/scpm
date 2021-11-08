@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\ChangeNode;
 
 use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
-use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseServer\EnterpriseServerFetcher;
+use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
@@ -16,13 +16,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Form extends AbstractType
 {
-    private EnterpriseServerFetcher $enterpriseServerFetcher;
+    private EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher;
     private SolidcpServerFetcher $serverFetcher;
     private HostingSpaceService $hostingSpaceService;
 
-    public function __construct(EnterpriseServerFetcher $enterpriseServerFetcher, SolidcpServerFetcher $serverFetcher, HostingSpaceService $hostingSpaceService)
+    public function __construct(EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher, SolidcpServerFetcher $serverFetcher, HostingSpaceService $hostingSpaceService)
     {
-        $this->enterpriseServerFetcher = $enterpriseServerFetcher;
+        $this->enterpriseDispatcherFetcher = $enterpriseDispatcherFetcher;
         $this->serverFetcher = $serverFetcher;
         $this->hostingSpaceService = $hostingSpaceService;
     }
@@ -36,18 +36,18 @@ class Form extends AbstractType
     protected function addElements(FormInterface $form, array $data, Command $modelOriginalData): void
     {
         $form
-            ->add('id_enterprise', Type\ChoiceType::class,
+            ->add('id_enterprise_dispatcher', Type\ChoiceType::class,
                 [
                     'label' => 'Enterprise server',
                     //'placeholder' => 'Select an Enterprise server',
-                    'choices' => array_flip($this->enterpriseServerFetcher->allList()),
+                    'choices' => array_flip($this->enterpriseDispatcherFetcher->allList()),
                     'required' => true,
-                    //'data' => isset($data['id_enterprise']) ?? $data['id_enterprise'],
+                    //'data' => isset($data['id_enterprise_dispatcher']) ?? $data['id_enterprise_dispatcher'],
                 ]);
 
         $servers = [];
-        if (!empty($data['id_enterprise'])) {
-            $servers = array_flip($this->serverFetcher->allListFrom((int)$data['id_enterprise']));
+        if (!empty($data['id_enterprise_dispatcher'])) {
+            $servers = array_flip($this->serverFetcher->allListFrom((int)$data['id_enterprise_dispatcher']));
         }
         $form->add('id_server', Type\ChoiceType::class,
             [
@@ -60,7 +60,7 @@ class Form extends AbstractType
 //
 //        $spaces = [];
 //        if (!empty($data['id_server'])) {
-//            $spaces = array_flip($this->hostingSpaceService->allNotAddedHostingSpacesExceptHostingSpaceIdFrom((int)$data['id_enterprise'], $modelOriginalData->id_solidcp_hosting_space));
+//            $spaces = array_flip($this->hostingSpaceService->allNotAddedHostingSpacesExceptHostingSpaceIdFrom((int)$data['id_enterprise_dispatcher'], $modelOriginalData->id_solidcp_hosting_space));
 //        }
 //        $form->add('id_solidcp_hosting_space', Type\ChoiceType::class,
 //            [

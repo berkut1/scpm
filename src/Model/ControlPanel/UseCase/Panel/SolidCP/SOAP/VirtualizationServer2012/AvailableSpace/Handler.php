@@ -12,17 +12,17 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace
 use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\Package;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseServer\EnterpriseServerRepository;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 
 class Handler
 {
-    private EnterpriseServerRepository $enterpriseServerRepository;
+    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
     private HostingSpaceService $hostingSpaceService;
     private AuditLog\Add\SolidCP\Handler $auditLogHandler;
 
-    public function __construct(EnterpriseServerRepository $enterpriseServerRepository, HostingSpaceService $hostingSpaceService, AuditLog\Add\SolidCP\Handler $auditLogHandler)
+    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository, HostingSpaceService $hostingSpaceService, AuditLog\Add\SolidCP\Handler $auditLogHandler)
     {
-        $this->enterpriseServerRepository = $enterpriseServerRepository;
+        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
         $this->hostingSpaceService = $hostingSpaceService;
         $this->auditLogHandler = $auditLogHandler;
     }
@@ -36,10 +36,10 @@ class Handler
      */
     public function handle(Command $command, array &$auditLogRecords = [], bool $saveAuditLog = true): array
     {
-        $enterpriseServer = $this->enterpriseServerRepository->getDefaultOrById($command->id_enterprise);
+        $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
 
         $possibleSpaces = $this->hostingSpaceService->possibleHostingSpacesForInstallation(
-            $enterpriseServer->getId(),
+            $enterpriseDispatcher->getId(),
             $command->server_location_name,
             $command->server_package_name,
             $command->server_ip_amount,
@@ -64,7 +64,7 @@ class Handler
         if ($saveAuditLog) {
             $entity = new Entity(EntityType::soapExecute(), Id::zeros()->getValue());
             $auditLogCommand = new AuditLog\Add\SolidCP\Command(
-                $enterpriseServer,
+                $enterpriseDispatcher,
                 $entity,
                 TaskName::checkSolidcpVpsAvailableSpaces(),
                 $records

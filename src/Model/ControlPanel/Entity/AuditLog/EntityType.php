@@ -11,7 +11,7 @@ class EntityType implements EntityTypeInterface
     public const ENTITY_CP_LOCATION = 'cp_location';
     public const ENTITY_CP_PACKAGE = 'cp_package';
     public const ENTITY_CP_PACKAGE_VIRTUAL_MACHINE = 'cp_package_virtual_machine';
-    public const ENTITY_CP_SOLIDCP_ENTERPRISE_SERVER = 'cp_solidcp_enterprise_server';
+    public const ENTITY_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'cp_solidcp_enterprise_dispatcher';
     public const ENTITY_CP_SOLIDCP_SERVER = 'cp_solidcp_server';
     public const ENTITY_CP_SOLIDCP_HOSTING_SPACE = 'cp_solidcp_hosting_space';
     public const ENTITY_CP_SOLIDCP_HOSTING_PLAN = 'cp_solidcp_hosting_plan';
@@ -25,7 +25,7 @@ class EntityType implements EntityTypeInterface
             self::ENTITY_CP_LOCATION,
             self::ENTITY_CP_PACKAGE,
             self::ENTITY_CP_PACKAGE_VIRTUAL_MACHINE,
-            self::ENTITY_CP_SOLIDCP_ENTERPRISE_SERVER,
+            self::ENTITY_CP_SOLIDCP_ENTERPRISE_DISPATCHER,
             self::ENTITY_CP_SOLIDCP_SERVER,
             self::ENTITY_CP_SOLIDCP_HOSTING_SPACE,
             self::ENTITY_CP_SOLIDCP_HOSTING_PLAN,
@@ -52,9 +52,9 @@ class EntityType implements EntityTypeInterface
         return self::create(self::ENTITY_CP_PACKAGE_VIRTUAL_MACHINE);
     }
 
-    public static function cpSolidcpEnterpriseServer(): self
+    public static function cpSolidcpEnterpriseDispatcher(): self
     {
-        return self::create(self::ENTITY_CP_SOLIDCP_ENTERPRISE_SERVER);
+        return self::create(self::ENTITY_CP_SOLIDCP_ENTERPRISE_DISPATCHER);
     }
 
     public static function cpSolidcpServer(): self
