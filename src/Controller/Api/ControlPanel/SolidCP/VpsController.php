@@ -295,15 +295,15 @@ class VpsController extends AbstractController
      * )
      * @Route("/solidCP/vps/available-spaces/count", name="vps.vpsAvailableSpacesCount", methods={"GET"})
      * @param Request $request
-     * @param VirtualizationServer2012\AvailableSpace\Handler $handler
+     * @param VirtualizationServer2012\AvailableSpacePlan\Handler $handler
      * @return Response
      * @throws \Exception|\Symfony\Component\Serializer\Exception\ExceptionInterface
      */
-    public function vpsAvailableSpacesCount(Request $request, VirtualizationServer2012\AvailableSpace\Handler $handler): Response
+    public function vpsAvailableSpacesCount(Request $request, VirtualizationServer2012\AvailableSpacePlan\Handler $handler): Response
     {
-        $command = new VirtualizationServer2012\AvailableSpace\Command();
-        /** @var VirtualizationServer2012\AvailableSpace\Command $command */
-        $command = $this->denormalizer->denormalize($request->query->all(), VirtualizationServer2012\AvailableSpace\Command::class, 'array', [
+        $command = new VirtualizationServer2012\AvailableSpacePlan\Command();
+        /** @var VirtualizationServer2012\AvailableSpacePlan\Command $command */
+        $command = $this->denormalizer->denormalize($request->query->all(), VirtualizationServer2012\AvailableSpacePlan\Command::class, 'array', [
             'object_to_populate' => $command, //got prop from AbstractObjectNormalizer::
             //'ignored_attributes' => ['id_enterprise_dispatcher'],
             'disable_type_enforcement' => true //https://github.com/symfony/symfony/issues/32167#issuecomment-510241190

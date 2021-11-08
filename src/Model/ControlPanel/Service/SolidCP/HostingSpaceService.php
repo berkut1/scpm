@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Service\SolidCP;
 
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServerRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsServers;
@@ -88,10 +88,10 @@ class HostingSpaceService
      * @param int $ip_amount
      * @param int[] $ignore_node_ids
      * @param int[] $ignore_hosting_space_ids
-     * @return SolidcpHostingSpace[]
+     * @return SolidcpHostingPlan[]
      * @throws \Exception
      */
-    public function possibleHostingSpacesForInstallation(int $id_enterprise_dispatcher, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
+    public function possibleHostingSpacesWithPlansForInstallation(int $id_enterprise_dispatcher, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);
         if (!$enterpriseDispatcher->isEnabled()) {
@@ -106,9 +106,9 @@ class HostingSpaceService
         $possiblePlans = $package->getPackage()->getSolidcpHostingPlans();
 
         $esServers = EsServers::createFromEnterpriseDispatcher($enterpriseDispatcher);
-        $possibleSpaces = [];
+        $possibleSpacesAndPlans = [];
         $esPackages = EsPackages::createFromEnterpriseDispatcher($enterpriseDispatcher);
-        //searching possible spaces for installation
+        //searching possible spaces with plans for installation
         foreach ($possiblePlans as $possiblePlan) {
             $solidcpHostingSpace = $possiblePlan->getHostingSpace();
             $ignoreHostingSpace = false;
@@ -122,7 +122,7 @@ class HostingSpaceService
                 continue;
             }
             $ips = $esServers->getPackageUnassignedIPAddressesVpsExternalNetwork($possiblePlan->getHostingSpace()->getSolidCpIdHostingSpace());
-            /*thanks for that terribly code for SolidCP returning data*/
+            /*thanks for this awful code - data return SolidCP*/
             if(!isset($ips['PackageIPAddress'])){
                 continue;
             }
@@ -144,31 +144,34 @@ class HostingSpaceService
                 $freeMemory = (int)$memory['FreePhysicalMemoryKB'] - ($package->getRamMb() * 1024);
                 if ($freeMemory >= $possiblePlan->getHostingSpace()->getMaxReservedMemoryKb()) {
                     //Get current active spaces
-                    $summary = $esPackages->getNestedPackagesSummary($solidcpHostingSpace->getSolidCpIdHostingSpace())['NewDataSet']['Table1'];
+                    $packageDataSet = $esPackages->getNestedPackagesSummary($solidcpHostingSpace->getSolidCpIdHostingSpace());
                     $countOfActivePackage = 0;
-                    /*thanks for that terribly code for SolidCP returning data*/
-                    if (isset($summary[0])) { //we can get different arrays from getNestedPackagesSummary
-                        foreach ($summary as $one) {
-                            if ($one['StatusID'] === 1) {
-                                $countOfActivePackage = $one['PackagesNumber'];
-                                break;
+                    if($packageDataSet['NewDataSet']['Table']['PackagesNumber'] > 0){ //if we have packages, then get number of Active Packages
+                        $summary = $esPackages->getNestedPackagesSummary($solidcpHostingSpace->getSolidCpIdHostingSpace())['NewDataSet']['Table1'];
+                        /*thanks for this awful code - data return SolidCP*/
+                        if (isset($summary[0])) { //we can get different arrays from getNestedPackagesSummary
+                            foreach ($summary as $one) {
+                                if ($one['StatusID'] === 1) {
+                                    $countOfActivePackage = $one['PackagesNumber'];
+                                    break;
+                                }
                             }
-                        }
-                        unset($one);
-                    } else {
-                        if ($summary['StatusID'] === 1) {
-                            $countOfActivePackage = $summary['PackagesNumber'];
+                            unset($one);
+                        } else {
+                            if ($summary['StatusID'] === 1) {
+                                $countOfActivePackage = $summary['PackagesNumber'];
+                            }
                         }
                     }
 
                     if ($countOfActivePackage < $solidcpHostingSpace->getMaxActiveNumber() + 1) {
-                        $possibleSpaces[] = $solidcpHostingSpace;
+                        $possibleSpacesAndPlans[] = $possiblePlan;
                     }
                 }
             }
         }
 
-        return $possibleSpaces;
+        return $possibleSpacesAndPlans;
     }
 
     private function getSolidCpHostingSpaceIdsFromNodeIds(array $ignore_node_ids): array

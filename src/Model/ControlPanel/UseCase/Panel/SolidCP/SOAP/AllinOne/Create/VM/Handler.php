@@ -27,20 +27,20 @@ class Handler
     private EnterpriseDispatcher $enterpriseDispatcher;
     private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
     private VirtualMachinePackageRepository $virtualMachinePackageRepository;
-    private SOAPVirtualizationServer2012\AvailableSpace\Handler $soapVpsAvailableSpaceHandler;
+    private SOAPVirtualizationServer2012\AvailableSpacePlan\Handler $soapVpsAvailableSpaceHandler;
     private SOAPUserCreate\Handler $soapUserCreateHandler;
     private SOAPPackage\Create\Handler $soapCreatePackageHandler;
     private SOAPVirtualizationServer2012\CreateVM\Handler $soapCreateVmHandler;
     private AuditLog\Add\SolidCP\Handler $auditLogHandler;
 
     public function __construct(
-        EnterpriseDispatcherRepository                      $enterpriseDispatcherRepository,
-        VirtualMachinePackageRepository                     $virtualMachinePackageRepository,
-        SOAPVirtualizationServer2012\AvailableSpace\Handler $soapVpsAvailableSpaceHandler,
-        SOAPUserCreate\Handler                              $soapUserCreateHandler,
-        SOAPPackage\Create\Handler                          $soapCreatePackageHandler,
-        SOAPVirtualizationServer2012\CreateVM\Handler       $soapCreateVmHandler,
-        AuditLog\Add\SolidCP\Handler                        $auditLogHandler
+        EnterpriseDispatcherRepository                          $enterpriseDispatcherRepository,
+        VirtualMachinePackageRepository                         $virtualMachinePackageRepository,
+        SOAPVirtualizationServer2012\AvailableSpacePlan\Handler $soapVpsAvailableSpaceHandler,
+        SOAPUserCreate\Handler                                  $soapUserCreateHandler,
+        SOAPPackage\Create\Handler                              $soapCreatePackageHandler,
+        SOAPVirtualizationServer2012\CreateVM\Handler           $soapCreateVmHandler,
+        AuditLog\Add\SolidCP\Handler                            $auditLogHandler
     )
     {
         $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
@@ -69,28 +69,29 @@ class Handler
         /** @var Record[] $records */
         $records = [];
 
-        $commandPossibleSpace = SOAPVirtualizationServer2012\AvailableSpace\Command::create(
+        $commandPossibleSpace = SOAPVirtualizationServer2012\AvailableSpacePlan\Command::create(
             $command->server_location_name,
             $command->server_package_name,
             $command->server_ip_amount,
             $command->ignore_node_ids,
             $command->ignore_hosting_space_ids,
             $this->enterpriseDispatcher->getId());
-        $possibleSpaces = $this->soapVpsAvailableSpaceHandler->handle($commandPossibleSpace, $records, false);
-        if(count($possibleSpaces) === 0){
+        $possiblePlans = $this->soapVpsAvailableSpaceHandler->handle($commandPossibleSpace, $records, false);
+        if(count($possiblePlans) === 0){
             $this->saveAuditLogAndThrowDomainException($records, "No free spaces for VMs or was not assigned plants to VM packages");
         }
 
-
-        //get a random space from $possibleSpace
-        $maxIdxVal = count($possibleSpaces) - 1;
-        $possibleSpace = $possibleSpaces[random_int(0, $maxIdxVal)];
-        $records[] = Record::create('SOLIDCP_SELECTED_POSSIBLE_SPACE_NAME_AND_ID', [
-                $possibleSpace->getName(),
-                $possibleSpace->getSolidCpIdHostingSpace()
+        //get a random space from $possiblePlan
+        $maxIdxVal = count($possiblePlans) - 1;
+        $possiblePlan = $possiblePlans[random_int(0, $maxIdxVal)];
+        $records[] = Record::create('SOLIDCP_SELECTED_POSSIBLE_SPACE_NAME_AND_ID_WITH_PLAN_NAME_AND_ID', [
+                $possiblePlan->getName(),
+                $possiblePlan->getHostingSpace()->getSolidCpIdHostingSpace(),
+                $possiblePlan->getName(),
+                $possiblePlan->getSolidcpIdPlan(),
             ]);
 
-        if (!$osTemplate = $possibleSpace->getOsTemplateByName($command->server_os_name)) {
+        if (!$osTemplate = $possiblePlan->getHostingSpace()->getOsTemplateByName($command->server_os_name)) {
             $this->saveAuditLogAndThrowDomainException($records, "The OS $command->server_os_name was not found");
         }
 
@@ -119,7 +120,7 @@ class Handler
 
         $commandPackage = SOAPPackage\Create\Command::create(
             $userId,
-            $possibleSpace->getDefaultHostingPlan()->getSolidcpIdPlan() ?? 0, //if 0 get exception
+            $possiblePlan->getSolidcpIdPlan(),
             null,
             $this->enterpriseDispatcher->getId()
         );
@@ -128,7 +129,7 @@ class Handler
         $esServers = EsServers::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
         $result = $esServers->allocatePackageIPAddressesVpsExternalNetwork($packageId, true, $command->server_ip_amount);
         $esPackages = EsPackages::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
-        $this->guardResultAndRenameProblemPackage($result, $esPackages, $packageId, $possibleSpace->getDefaultHostingPlan()->getName(), $records);
+        $this->guardResultAndRenameProblemPackage($result, $esPackages, $packageId, $possiblePlan->getName(), $records);
         $records[] = Record::create('SOLIDCP_ASSIGNED_IP_AMOUNT_TO_PACKAGE_ID', [$command->server_ip_amount, $packageId]);
 
         $package = $this->virtualMachinePackageRepository->getByName($command->server_package_name);
@@ -141,7 +142,7 @@ class Handler
             $this->enterpriseDispatcher->getId()
         );
         $vmResultArray = $this->soapCreateVmHandler->handle($commandVm, $records, false);
-        $this->guardResultAndRenameProblemPackage($vmResultArray, $esPackages, $packageId, $possibleSpace->getDefaultHostingPlan()->getName(), $records);
+        $this->guardResultAndRenameProblemPackage($vmResultArray, $esPackages, $packageId, $possiblePlan->getName(), $records);
 
 
         $esVirtualizationServer2012 = EsVirtualizationServer2012::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
@@ -177,7 +178,7 @@ class Handler
         }
 
         if (empty($mainIp)) {
-            $this->renamePackageAndCancel($esPackages, $packageId, $possibleSpace->getDefaultHostingPlan()->getName());
+            $this->renamePackageAndCancel($esPackages, $packageId, $possiblePlan->getName());
             $this->saveAuditLogAndThrowDomainException($records, "Can not get the VM main ip.");
         }
 
@@ -197,8 +198,8 @@ class Handler
                 )
             ],
             'solidcp_server_node' => [
-                'node_id' => $possibleSpace->getSolidcpServer()->getId(),  //SolidCP server aka node
-                'solidcp_hosting_space_id' => $possibleSpace->getSolidCpIdHostingSpace(), //hdd in SolidCP
+                'node_id' => $possiblePlan->getHostingSpace()->getSolidcpServer()->getId(),  //SolidCP server aka node
+                'solidcp_hosting_space_id' => $possiblePlan->getHostingSpace()->getSolidCpIdHostingSpace(), //hdd/ssd aka storage in SolidCP
             ],
         ];
     }

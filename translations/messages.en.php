@@ -44,7 +44,7 @@ return [
     'SOLIDCP_CREATED_FOR_USER_ID_PACKAGE_NAME_WITH_ID' => 'Created for User ID: %s Package Name: %s (ID: %s)',
     'SOLIDCP_CHECKED_AVAILABLE_VPS_SPACES_FOR_SERVER_PACKAGE_NAME_IN_LOCATION_NAME_INT_RESULT' => 'Check available VPS Spaces for Package: %s In location: %s. Result: %s spaces',
     'SOLIDCP_IGNORED_POSSIBLE_SPACE_IDS' => 'Ignored possible available VPS Spaces: %s (IDs)',
-    'SOLIDCP_SELECTED_POSSIBLE_SPACE_NAME_AND_ID' => 'Selected possible SolidCP space: %s (ID: %s)',
+    'SOLIDCP_SELECTED_POSSIBLE_SPACE_NAME_AND_ID_WITH_PLAN_NAME_AND_ID' => 'Selected possible SolidCP space: %s (ID: %s) and Plan %s (ID: %s)',
     'SOLIDCP_CREATED_VM_WITH_ITEM_ID_ON_PACKAGE_ID' => 'Created SolidCP VM ID: %s in Package ID: %s',
     'SOLIDCP_ASSIGNED_IP_AMOUNT_TO_PACKAGE_ID' => 'Created Assigned IP amount: %s to Package ID: %s',
     'SOLIDCP_RENAMED_PACKAGE_WITH_ID_TO_NAME' => 'Renamed a package with ID: %s to: %s',

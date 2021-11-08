@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer2012\AvailableSpace;
+namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer2012\AvailableSpacePlan;
 
 use App\Model\AuditLog\Entity\Entity;
 use App\Model\AuditLog\Entity\Id;
 use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
 use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\Package;
@@ -31,14 +31,14 @@ class Handler
      * @param Command $command
      * @param array $auditLogRecords
      * @param bool $saveAuditLog
-     * @return SolidcpHostingSpace[]
+     * @return SolidcpHostingPlan[]
      * @throws \Exception
      */
     public function handle(Command $command, array &$auditLogRecords = [], bool $saveAuditLog = true): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
 
-        $possibleSpaces = $this->hostingSpaceService->possibleHostingSpacesForInstallation(
+        $possibleSpaces = $this->hostingSpaceService->possibleHostingSpacesWithPlansForInstallation(
             $enterpriseDispatcher->getId(),
             $command->server_location_name,
             $command->server_package_name,
