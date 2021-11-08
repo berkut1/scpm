@@ -171,7 +171,6 @@ class UserController extends AbstractController
      *             type="object",
      *             required={"new_email"},
      *             @OA\Property(property="new_email", type="string"),
-     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, then use the default one"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -239,7 +238,6 @@ class UserController extends AbstractController
      *             type="object",
      *             required={"new_password"},
      *             @OA\Property(property="new_password", type="string"),
-     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, then use the default one"),
      *         ),
      *     ),
      *     @OA\Response(

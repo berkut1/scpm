@@ -589,10 +589,6 @@
                                 "properties": {
                                     "new_email": {
                                         "type": "string"
-                                    },
-                                    "id_enterprise_dispatcher": {
-                                        "description": "if not selected, then use the default one",
-                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -669,10 +665,6 @@
                                 "properties": {
                                     "new_password": {
                                         "type": "string"
-                                    },
-                                    "id_enterprise_dispatcher": {
-                                        "description": "if not selected, then use the default one",
-                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -872,7 +864,7 @@
                     {
                         "name": "vps_ip_address",
                         "in": "path",
-                        "description": "Main IPv4 address",
+                        "description": "VM IPv4 address",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -905,10 +897,6 @@
                                             "Suspended",
                                             "Cancelled"
                                         ]
-                                    },
-                                    "id_enterprise_dispatcher": {
-                                        "description": "if not selected, then use the default one",
-                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"

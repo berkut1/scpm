@@ -163,7 +163,7 @@ class VpsController extends AbstractController
      *     description="Change VPS and its packet status over IPv4. Active/Suspend/Cancel",
      *     @OA\Parameter(
      *         in="path",
-     *         name="vps_ip_address", description="Main IPv4 address",
+     *         name="vps_ip_address", description="VM IPv4 address",
      *         required=true,
      *         @OA\Schema(
      *             type="string",
@@ -182,7 +182,6 @@ class VpsController extends AbstractController
      *             type="object",
      *             required={"vps_status"},
      *             @OA\Property(property="vps_status", type="string", enum={"Active", "Suspended", "Cancelled"}),
-     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, then use the default one"),
      *         ),
      *     ),
      *     @OA\Response(
