@@ -25,48 +25,41 @@ class Handler
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
         $esVirtualizationServer2012 = EsVirtualizationServer2012::createFromEnterpriseDispatcher($enterpriseDispatcher);
-        $result = $esVirtualizationServer2012->getVirtualMachineItem($command->solidcp_item_id);
-        $provisioningStatus = [
-            'ProvisioningStatus' => $result['ProvisioningStatus'],
+        $virtualMachineItem = $esVirtualizationServer2012->getVirtualMachineItem($command->solidcp_item_id);
+        $provisioningStatus = $virtualMachineItem['ProvisioningStatus'];
+        $percentComplete = 0;
+        $creationTime = $virtualMachineItem['CreationTime'];
+        $Status = null;
+
+        if(!empty($virtualMachineItem['CurrentTaskId'])){
+            $esTask = EsTasks::createFromEnterpriseDispatcher($enterpriseDispatcher);
+            $taskResult = $esTask->getTask($virtualMachineItem['CurrentTaskId']);
+            $percentComplete = $taskResult['IndicatorCurrent']; //the earliest value can be -1 or 0, as well as the last value... Only hdd converting shows correct value.
+            //I have no idea how to set early for example value 2, because we don't know what time zone is in CreationTime.
+            if ($percentComplete < 1 || $percentComplete > 80){ //TODO: SolidCP 1.4.8 has bugged indicator, just don't show 100, until not get ProvisioningStatus OK
+                $percentComplete = 80;
+            }
+            $Status = $taskResult['Status'];
+        }
+
+        if(!empty($virtualMachineItem['CurrentTaskId']) && $provisioningStatus === 'Error'){ //can get ERROR before OK status (that how works solidcp)
+            $provisioningStatus = 'InProgress';
+            $percentComplete = 95;
+            $Status = 'Run';
+        }
+
+        if(empty($virtualMachineItem['CurrentTaskId']) && $provisioningStatus === 'OK'){
+            $percentComplete = 100;
+            $Status = 'Complete';
+        }
+
+        return [
+            'ProvisioningStatus' => $provisioningStatus,
             'task' => [
-                'PercentComplete' => 2,
-                'CreationTime' => $result['CreationTime'],
-                'Status' => null,
+                'PercentComplete' => $percentComplete,
+                'CreationTime' => $creationTime,
+                'Status' => $Status,
             ],
         ];
-
-        if(!empty($result['CurrentTaskId'])){
-            $esTask = EsTasks::createFromEnterpriseDispatcher($enterpriseDispatcher);
-            $taskResult = $esTask->getTask($result['CurrentTaskId']);
-            $PercentComplete = $taskResult['IndicatorCurrent']; //the earliest value can be -1 or 0, as well as the last value... Only hdd converting shows correct value.
-            //I have no idea how to set early for example value 2, because we don't know what time zone is in CreationTime.
-            if ($PercentComplete < 1 || $PercentComplete > 80){ //TODO: SolidCP 1.4.8 has bugged indicator, just don't show 100, until not get ProvisioningStatus OK
-                $PercentComplete = 80;
-            }
-            $provisioningStatus['task'] = [
-                'PercentComplete' => $PercentComplete,
-                'CreationTime' => $result['CreationTime'],
-                'Status' => $taskResult['Status'],
-            ];
-        }
-
-        if(!empty($result['CurrentTaskId']) && $result['ProvisioningStatus'] === 'Error'){ //can get ERROR before OK status (that how works solidcp)
-            $provisioningStatus['ProvisioningStatus'] = 'InProgress';
-            $provisioningStatus['task'] = [
-                'PercentComplete' => 95,
-                'CreationTime' => $result['CreationTime'],
-                'Status' => 'Run',
-            ];
-        }
-
-        if(empty($result['CurrentTaskId']) && $result['ProvisioningStatus'] === 'OK'){
-            $provisioningStatus['task'] = [
-                'PercentComplete' => 100,
-                'CreationTime' => $result['CreationTime'],
-                'Status' => 'Complete',
-            ];
-        }
-
-        return $provisioningStatus;
     }
 }
