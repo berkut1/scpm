@@ -83,7 +83,7 @@ class EnterpriseDispatchersController extends AbstractController
      *         description="Success response",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="isEnable", type="boolean"),
+     *             @OA\Property(property="is_enable", type="boolean"),
      *         )
      *     ),
      *     @OA\Response(
@@ -115,7 +115,7 @@ class EnterpriseDispatchersController extends AbstractController
 
         $isEnable = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
 
-        return $this->json(['isEnable' => $isEnable], Response::HTTP_OK);
+        return $this->json(['is_enable' => $isEnable], Response::HTTP_OK);
     }
 
     /**
@@ -136,7 +136,7 @@ class EnterpriseDispatchersController extends AbstractController
      *         description="Success response",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="isEnable", type="boolean"),
+     *             @OA\Property(property="is_enable", type="boolean"),
      *         )
      *     ),
      *     @OA\Response(
@@ -168,7 +168,7 @@ class EnterpriseDispatchersController extends AbstractController
 
         $isEnable = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
 
-        return $this->json(['isEnable' => $isEnable], Response::HTTP_OK);
+        return $this->json(['is_enable' => $isEnable], Response::HTTP_OK);
     }
 
 }

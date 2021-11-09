@@ -55,9 +55,9 @@ class VpsController extends AbstractController
      *             type="object",
      *             @OA\Property(property="provisioning_status", type="string", description="OK, Error, InProgress"),
      *             @OA\Property(property="task", type="object",
-     *                 @OA\Property(property="PercentComplete", type="integer"),
-     *                 @OA\Property(property="CreationTime", type="string"),
-     *                 @OA\Property(property="Status", type="string"),
+     *                 @OA\Property(property="percent_complete", type="integer"),
+     *                 @OA\Property(property="creation_time", type="string"),
+     *                 @OA\Property(property="status", type="string"),
      *             ),
      *             @OA\Property(property="link", type="object", nullable=true,
      *                 @OA\Property(property="rel", type="string"),
@@ -95,7 +95,7 @@ class VpsController extends AbstractController
         }
 
         $result = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
-        if($result['ProvisioningStatus'] === 'OK'){
+        if($result['provisioning_status'] === 'OK'){
             $link = [
                 'rel' => 'state',
                 'action' => 'GET',

@@ -48,7 +48,7 @@ class UserController extends AbstractController
      *         description="Success response",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="userId", type="integer"),
+     *             @OA\Property(property="user_id", type="integer"),
      *         )
      *     ),
      *     @OA\Response(
@@ -81,7 +81,7 @@ class UserController extends AbstractController
 
         $userId = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
 
-        return $this->json(['userId' => $userId], Response::HTTP_CREATED);
+        return $this->json(['user_id' => $userId], Response::HTTP_CREATED);
     }
 
     /**
@@ -109,7 +109,7 @@ class UserController extends AbstractController
      *         description="Success response",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="isUserExists", type="boolean"),
+     *             @OA\Property(property="is_user_exists", type="boolean"),
      *         )
      *     ),
      *     @OA\Response(
@@ -143,7 +143,7 @@ class UserController extends AbstractController
 
         $isExists = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
 
-        return $this->json(['isUserExists' => $isExists], Response::HTTP_OK);
+        return $this->json(['is_user_exists' => $isExists], Response::HTTP_OK);
     }
 
     /**

@@ -18,7 +18,7 @@ class Handler
     }
 
     #[ArrayShape([
-        'ProvisioningStatus' => "string",
+        'provisioning_status' => "string",
         'task' => "array",
     ])]
     public function handle(Command $command): array
@@ -54,11 +54,11 @@ class Handler
         }
 
         return [
-            'ProvisioningStatus' => $provisioningStatus,
+            'provisioning_status' => $provisioningStatus,
             'task' => [
-                'PercentComplete' => $percentComplete,
-                'CreationTime' => $creationTime,
-                'Status' => $Status,
+                'percent_complete' => $percentComplete,
+                'creation_time' => $creationTime,
+                'status' => $Status,
             ],
         ];
     }
