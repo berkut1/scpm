@@ -54,6 +54,16 @@ class VpsController extends AbstractController
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="provisioning_status", type="string", description="OK, Error, InProgress"),
+     *             @OA\Property(property="task", type="object",
+     *                 @OA\Property(property="PercentComplete", type="integer"),
+     *                 @OA\Property(property="CreationTime", type="string"),
+     *                 @OA\Property(property="Status", type="string"),
+     *             ),
+     *             @OA\Property(property="link", type="object", nullable=true,
+     *                 @OA\Property(property="rel", type="string"),
+     *                 @OA\Property(property="action", type="string"),
+     *                 @OA\Property(property="href", type="string"),
+     *             ),
      *         )
      *     ),
      *     @OA\Response(
@@ -85,9 +95,23 @@ class VpsController extends AbstractController
         }
 
         $result = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
+        if($result['ProvisioningStatus'] === 'OK'){
+            $link = [
+                'rel' => 'state',
+                'action' => 'GET',
+                'href' => '/api'.$this->generateUrl('vps.vpsState', ['solidcp_item_id' => $solidcp_item_id]),
+            ];
+        }else{
+            $link = [
+                'rel' => 'self',
+                'action' => 'GET',
+                'href' => '/api'.$this->generateUrl('vps.vpsProvisioningStatus', ['solidcp_item_id' => $solidcp_item_id]),
+            ];
+        }
+        $result['link'] = $link;
 
         return $this->json([
-            'provisioning_status' => $result,
+            $result,
         ]);
     }
 
@@ -170,18 +194,12 @@ class VpsController extends AbstractController
      *             format="ipv4"
      *         )
      *     ),
-     *     @OA\Parameter(
-     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="integer"),
-     *         style="form"
-     *     ),
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             type="object",
      *             required={"vps_status"},
      *             @OA\Property(property="vps_status", type="string", enum={"Active", "Suspended", "Cancelled"}),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, the default is used. No need to choose if only one enterprise is used"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -211,7 +229,7 @@ class VpsController extends AbstractController
         /** @var VirtualizationServer2012\ChangeStatus\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), VirtualizationServer2012\ChangeStatus\Command::class, 'json');
         $command->vps_ip_address = $vps_ip_address;
-        $command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
+        //$command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {

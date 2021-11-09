@@ -159,18 +159,12 @@ class UserController extends AbstractController
      *             type="string"
      *         )
      *     ),
-     *     @OA\Parameter(
-     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="integer"),
-     *         style="form"
-     *     ),
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             type="object",
      *             required={"new_email"},
      *             @OA\Property(property="new_email", type="string"),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, the default is used. No need to choose if only one enterprise is used"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -200,7 +194,6 @@ class UserController extends AbstractController
         /** @var SOAPUserEdit\Email\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), SOAPUserEdit\Email\Command::class, 'json');
         $command->username = $username;
-        $command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {
@@ -226,18 +219,12 @@ class UserController extends AbstractController
      *             type="string"
      *         )
      *     ),
-     *     @OA\Parameter(
-     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(type="integer"),
-     *         style="form"
-     *     ),
      *     @OA\RequestBody(
      *         @OA\JsonContent(
      *             type="object",
      *             required={"new_password"},
      *             @OA\Property(property="new_password", type="string"),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, the default is used. No need to choose if only one enterprise is used"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -267,7 +254,6 @@ class UserController extends AbstractController
         /** @var SOAPUserEdit\Password\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), SOAPUserEdit\Password\Command::class, 'json');
         $command->username = $username;
-        $command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {

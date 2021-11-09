@@ -36,8 +36,8 @@ use Symfony\Component\Routing\Annotation\Route;
  *         type="object",
  *         @OA\Property(property="propertyPath", type="string"),
  *         @OA\Property(property="title", type="string"),
- *     ))
- * )
+ *     )),
+ * ),
  * @OA\Schema(
  *     schema="SimpleError",
  *     type="object",

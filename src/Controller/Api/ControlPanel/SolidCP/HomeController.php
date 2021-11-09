@@ -56,8 +56,8 @@ class HomeController extends AbstractController
      *         ),
      *     ),
      *     @OA\Response(
-     *         response=201,
-     *         description="Success response",
+     *         response=202,
+     *         description="Accepted response",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="is_user_exists", type="boolean", description="if false, this user was not created, but the old one with the same login was used (the password was not changed)"),
@@ -76,7 +76,12 @@ class HomeController extends AbstractController
      *                 @OA\Property(property="node_id", type="integer", description="SolidCP HyperV node"),
      *                 @OA\Property(property="solidcp_hosting_space_id", type="integer", description="SolidCP hosting space aka Storage HDD/SSD/NAS/etc"),
      *             ),
-     *         )
+     *             @OA\Property(property="link", type="object", description="Get VPS Provisioning Status. Whether the server is prepared or not, until returns OK or Error",
+     *                 @OA\Property(property="rel", type="string"),
+     *                 @OA\Property(property="action", type="string"),
+     *                 @OA\Property(property="href", type="string"),
+     *            ),
+     *         ),
      *     ),
      *     @OA\Response(
      *         response=400,
@@ -108,7 +113,12 @@ class HomeController extends AbstractController
         }
 
         $arrayResult = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
+        $arrayResult['link'] = [
+            'rel' => 'provisioningStatus',
+            'action' => 'GET',
+            'href' => '/api'.$this->generateUrl('vps.vpsProvisioningStatus', ['solidcp_item_id' => $arrayResult['vps']['solidcp_item_id']]),
+        ];
 
-        return $this->json([$arrayResult], Response::HTTP_CREATED);
+        return $this->json([$arrayResult], Response::HTTP_ACCEPTED);
     }
 }

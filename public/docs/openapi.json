@@ -360,8 +360,8 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Success response",
+                    "202": {
+                        "description": "Accepted response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -416,6 +416,21 @@
                                                 "solidcp_hosting_space_id": {
                                                     "description": "SolidCP hosting space aka Storage HDD/SSD/NAS/etc",
                                                     "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "link": {
+                                            "description": "Get VPS Provisioning Status. Whether the server is prepared or not, until returns OK or Error",
+                                            "properties": {
+                                                "rel": {
+                                                    "type": "string"
+                                                },
+                                                "action": {
+                                                    "type": "string"
+                                                },
+                                                "href": {
+                                                    "type": "string"
                                                 }
                                             },
                                             "type": "object"
@@ -628,16 +643,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "id_enterprise_dispatcher",
-                        "in": "query",
-                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
-                        "required": false,
-                        "style": "form",
-                        "schema": {
-                            "type": "integer"
-                        }
                     }
                 ],
                 "requestBody": {
@@ -650,6 +655,10 @@
                                 "properties": {
                                     "new_email": {
                                         "type": "string"
+                                    },
+                                    "id_enterprise_dispatcher": {
+                                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -704,16 +713,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "id_enterprise_dispatcher",
-                        "in": "query",
-                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
-                        "required": false,
-                        "style": "form",
-                        "schema": {
-                            "type": "integer"
-                        }
                     }
                 ],
                 "requestBody": {
@@ -726,6 +725,10 @@
                                 "properties": {
                                     "new_password": {
                                         "type": "string"
+                                    },
+                                    "id_enterprise_dispatcher": {
+                                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -804,6 +807,35 @@
                                         "provisioning_status": {
                                             "description": "OK, Error, InProgress",
                                             "type": "string"
+                                        },
+                                        "task": {
+                                            "properties": {
+                                                "PercentComplete": {
+                                                    "type": "integer"
+                                                },
+                                                "CreationTime": {
+                                                    "type": "string"
+                                                },
+                                                "Status": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "link": {
+                                            "nullable": true,
+                                            "properties": {
+                                                "rel": {
+                                                    "type": "string"
+                                                },
+                                                "action": {
+                                                    "type": "string"
+                                                },
+                                                "href": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -931,16 +963,6 @@
                             "type": "string",
                             "format": "ipv4"
                         }
-                    },
-                    {
-                        "name": "id_enterprise_dispatcher",
-                        "in": "query",
-                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
-                        "required": false,
-                        "style": "form",
-                        "schema": {
-                            "type": "integer"
-                        }
                     }
                 ],
                 "requestBody": {
@@ -958,6 +980,10 @@
                                             "Suspended",
                                             "Cancelled"
                                         ]
+                                    },
+                                    "id_enterprise_dispatcher": {
+                                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
