@@ -63,7 +63,7 @@ class UserController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users", name="user.create", methods={"POST"})
+     * @Route("/solidCP/users", name="apiUser.create", methods={"POST"})
      * @param Request $request
      * @param SOAPUserCreate\Handler $handler
      * @return Response
@@ -124,7 +124,7 @@ class UserController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users/{username}/is-exists", name="user.isExists", methods={"GET"})
+     * @Route("/solidCP/users/{username}/is-exists", name="apiUser.isExists", methods={"GET"})
      * @param string $username
      * @param Request $request
      * @param SOAPUserCheck\Handler $handler
@@ -183,7 +183,7 @@ class UserController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users/{username}/email", name="user.changeEmail", methods={"PUT"})
+     * @Route("/solidCP/users/{username}/email", name="apiUser.changeEmail", methods={"PUT"})
      * @param string $username
      * @param Request $request
      * @param SOAPUserEdit\Email\Handler $handler
@@ -243,7 +243,7 @@ class UserController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users/{username}/password", name="user.changePassword", methods={"PUT"})
+     * @Route("/solidCP/users/{username}/password", name="apiUser.changePassword", methods={"PUT"})
      * @param string $username
      * @param Request $request
      * @param SOAPUserEdit\Password\Handler $handler

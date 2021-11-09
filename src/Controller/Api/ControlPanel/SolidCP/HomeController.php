@@ -95,7 +95,7 @@ class HomeController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/all-in-one/user/package/vps", name="createAllInOneVm", methods={"POST"})
+     * @Route("/solidCP/all-in-one/user/package/vps", name="apiCreateAllInOneVm", methods={"POST"})
      * @param Request $request
      * @param AllinOne\Create\VM\Handler $handler
      * @return Response
@@ -116,7 +116,7 @@ class HomeController extends AbstractController
         $arrayResult['link'] = [
             'rel' => 'provisioningStatus',
             'action' => 'GET',
-            'href' => '/api'.$this->generateUrl('vps.vpsProvisioningStatus', ['solidcp_item_id' => $arrayResult['vps']['solidcp_item_id']]),
+            'href' => '/api'.$this->generateUrl('apiVps.vpsProvisioningStatus', ['solidcp_item_id' => $arrayResult['vps']['solidcp_item_id']]),
         ];
 
         return $this->json([$arrayResult], Response::HTTP_ACCEPTED);

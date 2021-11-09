@@ -7,7 +7,7 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseD
 use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
-class EsTasks extends SoapExecute
+final class EsTasks extends SoapExecute
 {
     public const SERVICE = 'esTasks.asmx';
 

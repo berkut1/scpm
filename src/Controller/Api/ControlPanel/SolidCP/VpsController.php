@@ -78,7 +78,7 @@ class VpsController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/vps/{solidcp_item_id}/provisioning-status", name="vps.vpsProvisioningStatus", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
+     * @Route("/solidCP/vps/{solidcp_item_id}/provisioning-status", name="apiVps.vpsProvisioningStatus", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
      * @param int $solidcp_item_id
      * @param Request $request
      * @param VirtualizationServer2012\Check\VpsProvisioningStatus\Handler $handler
@@ -99,13 +99,13 @@ class VpsController extends AbstractController
             $link = [
                 'rel' => 'state',
                 'action' => 'GET',
-                'href' => '/api'.$this->generateUrl('vps.vpsState', ['solidcp_item_id' => $solidcp_item_id]),
+                'href' => '/api'.$this->generateUrl('apiVps.vpsState', ['solidcp_item_id' => $solidcp_item_id]),
             ];
         }else{
             $link = [
                 'rel' => 'self',
                 'action' => 'GET',
-                'href' => '/api'.$this->generateUrl('vps.vpsProvisioningStatus', ['solidcp_item_id' => $solidcp_item_id]),
+                'href' => '/api'.$this->generateUrl('apiVps.vpsProvisioningStatus', ['solidcp_item_id' => $solidcp_item_id]),
             ];
         }
         $result['link'] = $link;
@@ -157,7 +157,7 @@ class VpsController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/vps/{solidcp_item_id}/state", name="vps.vpsState", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
+     * @Route("/solidCP/vps/{solidcp_item_id}/state", name="apiVps.vpsState", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
      * @param int $solidcp_item_id
      * @param Request $request
      * @param VirtualizationServer2012\Check\VpsState\Handler $handler
@@ -218,7 +218,7 @@ class VpsController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/vps/{vps_ip_address}/status", name="vps.changeStatusByIpAddress", methods={"PUT"})
+     * @Route("/solidCP/vps/{vps_ip_address}/status", name="apiVps.changeStatusByIpAddress", methods={"PUT"})
      * @param string $vps_ip_address
      * @param Request $request
      * @param VirtualizationServer2012\ChangeStatus\Handler $handler
@@ -311,7 +311,7 @@ class VpsController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/vps/available-spaces/count", name="vps.vpsAvailableSpacesCount", methods={"GET"})
+     * @Route("/solidCP/vps/available-spaces/count", name="apiVps.vpsAvailableSpacesCount", methods={"GET"})
      * @param Request $request
      * @param VirtualizationServer2012\AvailableSpacePlan\Handler $handler
      * @return Response
