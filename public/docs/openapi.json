@@ -381,6 +381,10 @@
                                                     "description": "VM SolidCP ID",
                                                     "type": "integer"
                                                 },
+                                                "hostname": {
+                                                    "description": "VM hostname and name of SolidCP item",
+                                                    "type": "string"
+                                                },
                                                 "provisioning_status": {
                                                     "type": "string"
                                                 },

@@ -64,6 +64,7 @@ class HomeController extends AbstractController
      *             @OA\Property(property="solidcp_package_id", type="integer", description="The package in which the virtual machine is installed"),
      *             @OA\Property(property="vps", type="object", description="The VPS details",
      *                 @OA\Property(property="solidcp_item_id", type="integer", description="VM SolidCP ID"),
+     *                 @OA\Property(property="hostname", type="string", description="VM hostname and name of SolidCP item"),
      *                 @OA\Property(property="provisioning_status", type="string"),
      *                 @OA\Property(property="main_ip", type="string", example="192.168.0.2"),
      *                 @OA\Property(property="secondary_ips", type="array",

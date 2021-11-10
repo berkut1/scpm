@@ -55,7 +55,12 @@ class Handler
     /**
      * @throws \Exception
      */
-    #[ArrayShape(['is_user_exists' => "bool", 'solidcp_package_id' => "int", 'vps' => "array", 'solidcp_server_node' => "array"])]
+    #[ArrayShape([
+        'is_user_exists' => "bool",
+        'solidcp_package_id' => "int",
+        'vps' => "array",
+        'solidcp_server_node' => "array"
+    ])]
     public function handle(Command $command): array
     {
         if ($command->server_ip_amount < 1) {
@@ -144,9 +149,10 @@ class Handler
         $vmResultArray = $this->soapCreateVmHandler->handle($commandVm, $records, false);
         $this->guardResultAndRenameProblemPackage($vmResultArray, $esPackages, $packageId, $possiblePlan->getName(), $records);
 
-
         $esVirtualizationServer2012 = EsVirtualizationServer2012::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
         $vmItemResult = $esVirtualizationServer2012->getVirtualMachines($packageId)['Items']['VirtualMachineMetaItem'];
+        $hostname = $vmItemResult['ItemName'];
+
         if ($vmItemResult['ItemID'] !== $vmResultArray['Value']) { //check that we get correct item, maybe useless check, but with SolidCP we can't be sure
             $newItemIDResult = $vmResultArray['Value'];
             $getItemIDResult = $vmItemResult['ItemID'];
@@ -193,6 +199,7 @@ class Handler
             'solidcp_package_id' => $packageId,
             'vps' => [
                 'solidcp_item_id' => $vmResultArray['Value'],
+                'hostname' => $hostname,
                 'provisioning_status' => 'InProgress', //this is default value when a server starts to create
                 'main_ip' => $mainIp, //$vmItemResult['ExternalIP']
                 'secondary_ips' => array_values( //rebuild array to start it from 0 index
