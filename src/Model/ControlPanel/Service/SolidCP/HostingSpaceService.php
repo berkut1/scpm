@@ -91,7 +91,7 @@ class HostingSpaceService
      * @return SolidcpHostingPlan[]
      * @throws \Exception
      */
-    public function possibleHostingSpacesWithPlansForInstallation(int $id_enterprise_dispatcher, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
+    public function possibleHostingSpacesWithPlansForVPS2012Installation(int $id_enterprise_dispatcher, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);
         if (!$enterpriseDispatcher->isEnabled()) {
@@ -143,28 +143,13 @@ class HostingSpaceService
                 $memory = $esServers->getMemoryPackageId($solidcpHostingSpace->getSolidCpIdHostingSpace());
                 $freeMemory = (int)$memory['FreePhysicalMemoryKB'] - ($package->getRamMb() * 1024);
                 if ($freeMemory >= $possiblePlan->getHostingSpace()->getMaxReservedMemoryKb()) {
-                    //Get current active spaces
-                    $packageDataSet = $esPackages->getNestedPackagesSummary($solidcpHostingSpace->getSolidCpIdHostingSpace());
-                    $countOfActivePackage = 0;
-                    if($packageDataSet['NewDataSet']['Table']['PackagesNumber'] > 0){ //if we have packages, then get number of Active Packages
-                        $summary = $esPackages->getNestedPackagesSummary($solidcpHostingSpace->getSolidCpIdHostingSpace())['NewDataSet']['Table1'];
-                        /*thanks for this awful code - data return SolidCP*/
-                        if (isset($summary[0])) { //we can get different arrays from getNestedPackagesSummary
-                            foreach ($summary as $one) {
-                                if ($one['StatusID'] === 1) {
-                                    $countOfActivePackage = $one['PackagesNumber'];
-                                    break;
-                                }
-                            }
-                            unset($one);
-                        } else {
-                            if ($summary['StatusID'] === 1) {
-                                $countOfActivePackage = $summary['PackagesNumber'];
-                            }
-                        }
-                    }
+                    $countOfActivePackages = $esPackages->getNumberOfActivePackages($solidcpHostingSpace->getSolidCpIdHostingSpace());
+                    $storageUsageGB = $esPackages->getPackageVPS2012StorageUsageGB($solidcpHostingSpace->getSolidCpIdHostingSpace());
 
-                    if ($countOfActivePackage < $solidcpHostingSpace->getMaxActiveNumber() + 1) {
+                    $isHasStorageSpace = (($storageUsageGB + $package->getSpaceGb()) <= $possiblePlan->getHostingSpace()->getSpaceQuotaGb());
+                    $isActivePackagesNotOverQuota = ($countOfActivePackages < $solidcpHostingSpace->getMaxActiveNumber() + 1);
+
+                    if ($isHasStorageSpace && $isActivePackagesNotOverQuota) {
                         $possibleSpacesAndPlans[] = $possiblePlan;
                     }
                 }

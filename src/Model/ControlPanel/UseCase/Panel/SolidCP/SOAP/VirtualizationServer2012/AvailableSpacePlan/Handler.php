@@ -38,7 +38,7 @@ class Handler
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
 
-        $possibleSpaces = $this->hostingSpaceService->possibleHostingSpacesWithPlansForInstallation(
+        $possibleSpaces = $this->hostingSpaceService->possibleHostingSpacesWithPlansForVPS2012Installation(
             $enterpriseDispatcher->getId(),
             $command->server_location_name,
             $command->server_package_name,

@@ -180,6 +180,15 @@ final class EsPackages extends SoapExecute
         }
     }
 
+    public function getPackageVPS2012StorageUsageGB(int $packageId): int
+    {
+        $packageContext = $this->getPackageContext($packageId);
+        $packageQuotaValues = $packageContext['QuotasArray']['QuotaValueInfo'];
+        $VPS2012hddQuotaId = 559; //SolidCP DB id value.
+        $VPS2012hddQuotaIndex = array_search($VPS2012hddQuotaId, array_column($packageQuotaValues, 'QuotaId')); //search the index of array where the column has QuotaId = 559
+        return $packageQuotaValues[$VPS2012hddQuotaIndex]['QuotaUsedValue'];
+    }
+
     public function getNestedPackagesSummary(int $packageId): array
     {
         try {
@@ -194,6 +203,32 @@ final class EsPackages extends SoapExecute
         } catch (\Exception $e) {
             throw new \Exception("GetNestedPackagesSummary Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
         }
+    }
+
+    public function getNumberOfActivePackages(int $packageId): int
+    {
+        $packageDataSet = $this->getNestedPackagesSummary($packageId);
+        $countOfActivePackages = 0;
+
+        if($packageDataSet['NewDataSet']['Table']['PackagesNumber'] > 0){ //if we have packages, then get number of Active Packages
+            $summary = $packageDataSet['NewDataSet']['Table1']; //in Table1 we have separated packages to Active/Suspended/Canceled
+            /*thanks for this awful code - data return SolidCP*/
+            if (isset($summary[0])) { //we can get different arrays from getNestedPackagesSummary
+                foreach ($summary as $one) {
+                    if ($one['StatusID'] === 1) {
+                        $countOfActivePackages = $one['PackagesNumber'];
+                        break;
+                    }
+                }
+                unset($one);
+            } else {
+                if ($summary['StatusID'] === 1) {
+                    $countOfActivePackages = $summary['PackagesNumber'];
+                }
+            }
+        }
+
+        return $countOfActivePackages;
     }
 
     public function getPackageQuotas(int $packageId): array
