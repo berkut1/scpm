@@ -235,7 +235,7 @@ class NodesController extends AbstractController
      */
     public function changeNode(int $id, SolidcpHostingSpace $solidcpHostingSpace, Request $request, ChangeNode\Handler $handler): Response
     {
-        $command = ChangeNode\Command::fromServer($solidcpHostingSpace);
+        $command = ChangeNode\Command::fromHostingSpace($solidcpHostingSpace);
 
         $form = $this->createForm(ChangeNode\Form::class, $command);
         $form->handleRequest($request);

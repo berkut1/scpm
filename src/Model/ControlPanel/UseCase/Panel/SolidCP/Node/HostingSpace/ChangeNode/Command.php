@@ -29,7 +29,7 @@ class Command
         $this->id_hosting_space = $id_hosting_space;
     }
 
-    public static function fromServer(SolidcpHostingSpace $solidcpHostingSpace): self
+    public static function fromHostingSpace(SolidcpHostingSpace $solidcpHostingSpace): self
     {
         $command = new self($solidcpHostingSpace->getId());
         $command->id_enterprise_dispatcher = $solidcpHostingSpace->getSolidcpServer()->getEnterprise()->getId();
