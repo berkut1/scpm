@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace App\Controller\ControlPanel\SolidCP;
 
+use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Create;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\Create as CreateHostingSpace;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Edit;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Enable;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Disable;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Remove;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\ChangeNode;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\{Edit, Enable, Disable, Remove};
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\HostingSpace\SolidcpHostingSpaceFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
@@ -222,6 +222,39 @@ class NodesController extends AbstractController
                 'spaceFromNode' => $spaceFromNode,
             ]
         );
+    }
+
+    /**
+     * @Route("/{id}/hosting-spaces/{id_hosting_space}/change-node", name=".changeNode")
+     * @ParamConverter("solidcpHostingSpace", options={"mapping": {"id_hosting_space": "id"}})
+     * @param int $id
+     * @param SolidcpHostingSpace $solidcpHostingSpace
+     * @param Request $request
+     * @param ChangeNode\Handler $handler
+     * @return Response
+     */
+    public function changeNode(int $id, SolidcpHostingSpace $solidcpHostingSpace, Request $request, ChangeNode\Handler $handler): Response
+    {
+        $command = ChangeNode\Command::fromServer($solidcpHostingSpace);
+
+        $form = $this->createForm(ChangeNode\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+                return $this->redirectToRoute('solidCpServers.show', ['id' => $id]);
+            } catch (\DomainException $e) {
+                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+        return $this->render('app/control_panel/solidcp/nodes/hosting_spaces/change_node.html.twig', [
+            'page_title' => 'Change Hosting Space Node',
+            'main_title' => self::MAIN_TITLE,
+            'form' => $form->createView(),
+            'solidcpHostingSpace' => $solidcpHostingSpace,
+        ]);
     }
 
     /**

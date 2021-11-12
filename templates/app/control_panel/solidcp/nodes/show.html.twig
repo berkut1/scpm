@@ -118,6 +118,10 @@
 {#                                            {% endif %}#}
                                         </td>
                                         <td>
+                                            <a class="btn btn-sm btn-success"
+                                               href="{{ path('solidCpServers.changeNode', {'id': solidcpServer.id, 'id_hosting_space': object.id}) }}">
+                                                <i class="fa fa-search-plus"></i>CHANGE NODE
+                                            </a>
                                             <form action="#"
                                                   style="display: inline-block;" method="post"
                                                   onsubmit="return confirm('Are you sure?')">

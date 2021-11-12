@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\ChangeNode;
+namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\ChangeNode;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServerRepository;
@@ -22,7 +22,7 @@ class Handler
 
     public function handle(Command $command): void
     {
-        $hostingSpace = $this->solidcpHostingSpaceRepository->get($command->id);
+        $hostingSpace = $this->solidcpHostingSpaceRepository->get($command->getIdHostingSpace());
         $server = $this->solidcpServerRepository->get($command->id_server);
 
         $hostingSpace->changeServer($server);

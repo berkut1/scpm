@@ -8,7 +8,6 @@ use App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\OsTemplate\OsTemplateFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceFetcher;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
