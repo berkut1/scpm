@@ -45,6 +45,13 @@ use Symfony\Component\Routing\Annotation\Route;
  *            @OA\Property(property="code", type="integer"),
  *            @OA\Property(property="message", type="string"),
  *      ),
+ * ),
+ * @OA\Schema(
+ *     schema="InternalError",
+ *     type="object",
+ *        @OA\Property(property="title", type="string"),
+ *        @OA\Property(property="code", type="integer"),
+ *        @OA\Property(property="detail", type="string"),
  * )
  */
 class HomeController extends AbstractController

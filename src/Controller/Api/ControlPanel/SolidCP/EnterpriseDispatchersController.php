@@ -52,6 +52,11 @@ class EnterpriseDispatchersController extends AbstractController
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
      *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
      *     security={{"bearerAuth":{}}}
      * )
      * @Route("/solidCP/enterprise-dispatchers", name="apiEnterpriseDispatchers.allList", methods={"GET"})
@@ -95,6 +100,11 @@ class EnterpriseDispatchersController extends AbstractController
      *         response=401,
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
@@ -148,6 +158,11 @@ class EnterpriseDispatchersController extends AbstractController
      *         response=401,
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
      *     ),
      *     security={{"bearerAuth":{}}}
      * )

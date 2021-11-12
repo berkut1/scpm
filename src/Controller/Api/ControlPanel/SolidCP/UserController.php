@@ -61,6 +61,11 @@ class UserController extends AbstractController
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
      *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
      *     security={{"bearerAuth":{}}}
      * )
      * @Route("/solidCP/users", name="apiUser.create", methods={"POST"})
@@ -122,6 +127,11 @@ class UserController extends AbstractController
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
      *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
      *     security={{"bearerAuth":{}}}
      * )
      * @Route("/solidCP/users/{username}/is-exists", name="apiUser.isExists", methods={"GET"})
@@ -180,6 +190,11 @@ class UserController extends AbstractController
      *         response=401,
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
@@ -240,6 +255,11 @@ class UserController extends AbstractController
      *         response=401,
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
      *     ),
      *     security={{"bearerAuth":{}}}
      * )

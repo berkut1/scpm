@@ -94,6 +94,11 @@ class HomeController extends AbstractController
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
      *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
      *     security={{"bearerAuth":{}}}
      * )
      * @Route("/solidCP/all-in-one/user/package/vps", name="apiCreateAllInOneVm", methods={"POST"})

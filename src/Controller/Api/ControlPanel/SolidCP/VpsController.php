@@ -76,6 +76,11 @@ class VpsController extends AbstractController
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
      *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
      *     security={{"bearerAuth":{}}}
      * )
      * @Route("/solidCP/vps/{solidcp_item_id}/provisioning-status", name="apiVps.vpsProvisioningStatus", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
@@ -155,6 +160,11 @@ class VpsController extends AbstractController
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
      *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
      *     security={{"bearerAuth":{}}}
      * )
      * @Route("/solidCP/vps/{solidcp_item_id}/state", name="apiVps.vpsState", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
@@ -182,9 +192,17 @@ class VpsController extends AbstractController
 
     /**
      * @OA\Put(
-     *     path="/solidCP/vps/{vps_ip_address}/status",
+     *     path="/solidCP/users/{client_login}/vps/{vps_ip_address}/status",
      *     tags={"VPS"},
-     *     description="Change VPS and its packet status over IPv4. Active/Suspend/Cancel",
+     *     description="Change VPS and its packet status over IPv4, that assigned to the client client_login. Active/Suspended/Cancelled",
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="client_login", description="SolidCP client login",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
      *     @OA\Parameter(
      *         in="path",
      *         name="vps_ip_address", description="VM IPv4 address",
@@ -216,18 +234,25 @@ class VpsController extends AbstractController
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
      *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/vps/{vps_ip_address}/status", name="apiVps.changeStatusByIpAddress", methods={"PUT"})
+     * @Route("/solidCP/users/{client_login}/vps/{vps_ip_address}/status", name="apiVps.changeStatusByIpAddress", methods={"PUT"})
+     * @param string $client_login
      * @param string $vps_ip_address
      * @param Request $request
      * @param VirtualizationServer2012\ChangeStatus\Handler $handler
      * @return Response
      */
-    public function changeStatusByIpAddress(string $vps_ip_address, Request $request, VirtualizationServer2012\ChangeStatus\Handler $handler): Response
+    public function changeStatusByIpAddress(string $client_login, string $vps_ip_address, Request $request, VirtualizationServer2012\ChangeStatus\Handler $handler): Response
     {
         /** @var VirtualizationServer2012\ChangeStatus\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), VirtualizationServer2012\ChangeStatus\Command::class, 'json');
+        $command->client_login = $client_login;
         $command->vps_ip_address = $vps_ip_address;
         //$command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
 
@@ -308,6 +333,11 @@ class VpsController extends AbstractController
      *         response=401,
      *         description="Error",
      *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
      *     ),
      *     security={{"bearerAuth":{}}}
      * )

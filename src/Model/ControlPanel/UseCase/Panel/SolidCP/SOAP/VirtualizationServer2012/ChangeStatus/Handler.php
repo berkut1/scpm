@@ -28,6 +28,9 @@ class Handler
         if($ip['UserName'] === $enterpriseDispatcher->getLogin()){
             throw new \LogicException("You can not change status of yourself package");
         }
+        if($ip['UserName'] !== $command->client_login){
+            throw new \DomainException("This IP is currently owned by client {$ip['UserName']}, not client {$command->client_login}");
+        }
 
         $changeStatusCommand = new Package\ChangeStatus\Command($ip['PackageId'], $command->vps_status, $enterpriseDispatcher->getId());
         $this->changeStatusHandler->handle($changeStatusCommand);

@@ -127,6 +127,16 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -190,6 +200,16 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -248,6 +268,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
                                 }
                             }
                         }
@@ -464,6 +494,16 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -552,6 +592,16 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -620,6 +670,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
                                 }
                             }
                         }
@@ -693,6 +753,16 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -760,6 +830,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
                                 }
                             }
                         }
@@ -866,6 +946,16 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -941,6 +1031,16 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -950,14 +1050,23 @@
                 ]
             }
         },
-        "/solidCP/vps/{vps_ip_address}/status": {
+        "/solidCP/users/{client_login}/vps/{vps_ip_address}/status": {
             "put": {
                 "tags": [
                     "VPS"
                 ],
-                "description": "Change VPS and its packet status over IPv4. Active/Suspend/Cancel",
-                "operationId": "c2b983dae2e8e2df8418895803e497a1",
+                "description": "Change VPS and its packet status over IPv4, that assigned to the client client_login. Active/Suspended/Cancelled",
+                "operationId": "c7e35f0183da702b1a85fc7e13a6c69d",
                 "parameters": [
+                    {
+                        "name": "client_login",
+                        "in": "path",
+                        "description": "SolidCP client login",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "vps_ip_address",
                         "in": "path",
@@ -1015,6 +1124,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
                                 }
                             }
                         }
@@ -1136,6 +1255,16 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1219,6 +1348,20 @@
                             }
                         },
                         "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "InternalError": {
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "integer"
+                    },
+                    "detail": {
+                        "type": "string"
                     }
                 },
                 "type": "object"
