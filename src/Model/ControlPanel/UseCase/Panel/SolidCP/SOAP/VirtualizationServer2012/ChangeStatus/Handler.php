@@ -23,6 +23,9 @@ class Handler
     public function handle(Command $command): void
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
+        if(!$enterpriseDispatcher->isEnabled()){
+            throw new \DomainException("The EnterpriseDispatcher {$enterpriseDispatcher->getName()} is disabled");
+        }
 
         $ip = $this->serverService->ipAddressVpsExternalNetworkDetails($enterpriseDispatcher->getId(), $command->vps_ip_address);
         if($ip['UserName'] === $enterpriseDispatcher->getLogin()){
