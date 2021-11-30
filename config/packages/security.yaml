@@ -34,7 +34,7 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
         main:
-#            anonymous: lazy
+#            lazy: true
 #            provider: users_in_memory
             anonymous: true
             user_checker: App\Security\UserChecker
