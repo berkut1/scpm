@@ -5,10 +5,12 @@ namespace App\Model\User\UseCase\SignUp\Manual;
 
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Role;
+use App\Model\User\Entity\User\Status;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\Flusher;
 use App\Model\User\Service\PasswordHasher;
+use App\Security\UserIdentity;
 
 class Handler
 {
@@ -25,12 +27,21 @@ class Handler
 
     public function handle(Command $command): void
     {
+        $userIdentity = new UserIdentity(
+            Id::next()->getValue(),
+            $command->login,
+            '',
+            $command->role,
+            Status::active()->getName()
+        );
+        $hash = $this->hashing->hash($userIdentity, $command->password);
+
         $user = User::create(
-            Id::next(),
+            new Id($userIdentity->getId()),
             new \DateTimeImmutable(),
             $command->login,
-            $this->hashing->hash($command->password),
-            new Role($command->role)
+            $hash,
+            new Role($command->role),
         );
 
         $this->users->add($user);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 return [
     'LOGIN_USER_FROM_IP' => 'Logged the user %s, from IP: %s',
+    'LOGIN_USER_FAILED_FROM_IP' => 'Tried to login via user %s, from IP: %s',
     'CREATE_USER_USER' => 'The user %s, created a user: %s',
     'CREATED_LOCATION_WITH_NAME' => 'Created Location: %s',
     'REMOVED_LOCATION_WITH_NAME' => 'Removed Location: %s',

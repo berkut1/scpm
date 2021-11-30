@@ -21,7 +21,7 @@ class UserSubscriber implements EventSubscriberInterface
     private UserRepository $userRepository;
     private RequestStack $requestStack;
     private AuditLog\Add\Handler $auditLogHandler;
-    private string $clientIP = '127.0.0.1';
+    private string $clientIP;
 
     public function __construct(Security $security, UserRepository $userRepository, RequestStack $requestStack, AuditLog\Add\Handler $auditLogHandler)
     {
@@ -29,8 +29,8 @@ class UserSubscriber implements EventSubscriberInterface
         $this->userRepository = $userRepository;
         $this->requestStack = $requestStack;
         $this->auditLogHandler = $auditLogHandler;
-        if($this->requestStack->getMasterRequest() !== null){
-            $this->clientIP = $this->requestStack->getMasterRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
+        if($this->requestStack->getMainRequest() !== null){
+            $this->clientIP = $this->requestStack->getMainRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
         }
     }
     #[ArrayShape([UserCreated::class => "string"])]
@@ -58,7 +58,7 @@ class UserSubscriber implements EventSubscriberInterface
         }else{
             $records = [
                 Record::create('CREATE_USER_USER', [
-                    $executor->getUsername(),
+                    $executor->getUserIdentifier(),
                     $user->getLogin()
                 ]),
             ];

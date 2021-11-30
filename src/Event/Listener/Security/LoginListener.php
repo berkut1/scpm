@@ -12,10 +12,10 @@ use App\Model\Flusher;
 use App\Model\User\Entity\AuditLog\AuditLogRepository;
 use App\Model\User\Entity\AuditLog\EntityType;
 use App\Model\User\Entity\AuditLog\TaskName;
+use App\Security\LoginFormAuthenticator;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 
 class LoginListener
 {
@@ -29,19 +29,20 @@ class LoginListener
         $this->flusher = $flusher;
         $this->auditLogRepository = $auditLogRepository;
         $this->requestStack = $requestStack;
-        if($this->requestStack->getMasterRequest() !== null){
-            $this->clientIP = $this->requestStack->getMasterRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
+        if($this->requestStack->getMainRequest() !== null){
+            $this->clientIP = $this->requestStack->getMainRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
         }
     }
 
-    public function onAuthenticationFailure(AuthenticationFailureEvent $event): void
+    public function onAuthenticationFailure(LoginFailureEvent $event): void
     {
-        $authenticationToken = $event->getAuthenticationToken();
+        $authenticationToken = $event->getAuthenticator();
+        $request = $event->getRequest();
         $login = 'n/a';
-        if($authenticationToken instanceof UsernamePasswordToken){
-            $login = $authenticationToken->getUser();
+        if($authenticationToken instanceof LoginFormAuthenticator){
+            $login = $request->get('login');
         }else{
-            $login = $authenticationToken->getCredentials()['login'];
+            $login = json_decode($request->getContent(), true)['username'];
         }
 
         $entity = new Entity(EntityType::userUser(), UserId::systemUserId()->getValue());
@@ -69,7 +70,7 @@ class LoginListener
         $log = AuditLog::createAsSystem(Id::next(),
             $this->clientIP, $entity, TaskName::loginUser(), [
                 Record::create('LOGIN_USER_FROM_IP', [
-                    $user->getUsername(),
+                    $user->getUserIdentifier(),
                     $this->clientIP
                 ])
             ]);

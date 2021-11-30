@@ -5,9 +5,10 @@ namespace App\Security;
 
 use App\Model\User\Entity\User\Status;
 use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class UserIdentity implements UserInterface, EquatableInterface
+class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
 {
     private string $id;
     private string $username;
@@ -40,11 +41,22 @@ class UserIdentity implements UserInterface, EquatableInterface
         return $this->status === Status::STATUS_ACTIVE;
     }
 
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
     public function getUsername(): string
     {
         return $this->username;
     }
 
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
     public function getPassword(): string
     {
         return $this->password;
@@ -55,6 +67,9 @@ class UserIdentity implements UserInterface, EquatableInterface
         return [$this->role];
     }
 
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
     public function getSalt(): ?string
     {
         return null;

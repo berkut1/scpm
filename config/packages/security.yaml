@@ -1,5 +1,8 @@
 security:
-    encoders:
+    enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\Security\UserIdentity:
             algorithm: auto
         # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
@@ -17,7 +20,7 @@ security:
         login: #this use only for json_login moved from main, because for API login need provider witch get query to a DB
             pattern: ^/api/login
             stateless: true
-            anonymous: true
+            #anonymous: true -> lazy: true?
             json_login:
                 check_path: /api/login/authentication_token
                 username_path: username
@@ -30,28 +33,32 @@ security:
 #            anonymous: true
             stateless: true
             provider: jwt #this is a database-less user provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
+#            custom_authenticators:
+#                - lexik_jwt_authentication.jwt_token_authenticator
         main:
 #            lazy: true
 #            provider: users_in_memory
-            anonymous: true
+            #anonymous: true -> lazy: true?
             user_checker: App\Security\UserChecker
             provider: fetcher
-            guard:
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
-                entry_point: App\Security\LoginFormAuthenticator
+            custom_authenticators:
+                - App\Security\LoginFormAuthenticator
+            entry_point: App\Security\AuthenticationEntryPoint
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
-            form_login: true
+            form_login:
+                login_path: app_login
+                check_path: app_login
             logout:
                 path: app_logout
+#        secured_area:
+#            form_login:
+#                enable_csrf: true
 
     role_hierarchy:
         ROLE_ADMIN:

@@ -5,10 +5,12 @@ namespace App\Model\User\UseCase\Create;
 
 use App\Model\Flusher;
 use App\Model\User\Entity\User\Role;
+use App\Model\User\Entity\User\Status;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Service\PasswordHasher;
+use App\Security\UserIdentity;
 
 class Handler
 {
@@ -34,11 +36,20 @@ class Handler
             throw new \DomainException('User with this login already exists.');
         }
 
+        $userIdentity = new UserIdentity(
+            Id::next()->getValue(),
+            $command->login,
+            '',
+            $command->role,
+            Status::active()->getName()
+        );
+        $hash = $this->hasher->hash($userIdentity, $command->password);
+
         $user = User::create(
-            Id::next(),
+            new Id($userIdentity->getId()),
             new \DateTimeImmutable(),
             $command->login,
-            $this->hasher->hash($command->password),
+            $hash,
             new Role($command->role),
         );
 

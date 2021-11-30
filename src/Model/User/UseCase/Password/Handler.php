@@ -7,6 +7,7 @@ use App\Model\Flusher;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Service\PasswordHasher;
+use App\Security\UserIdentity;
 
 class Handler
 {
@@ -24,7 +25,15 @@ class Handler
     public function handle(Command $command): void
     {
         $user = $this->users->get(new Id($command->id));
-        $hash = $this->hasher->hash($command->password);
+        $userIdentity = new UserIdentity(
+            Id::next()->getValue(),
+            $user->getLogin(),
+            '',
+            $user->getRole()->getName(),
+            $user->getStatus()->getName()
+        );
+
+        $hash = $this->hasher->hash($userIdentity, $command->password);
         $user->changePassword($hash);
 
 

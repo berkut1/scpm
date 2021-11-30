@@ -44,17 +44,31 @@ class JWTUser implements JWTUserInterface
         return $this->roles;
     }
 
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
     public function getPassword()
     {
         return null;
     }
 
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
     public function getSalt()
     {
         return null;
     }
 
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
     public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getUserIdentifier(): string
     {
         return $this->username;
     }

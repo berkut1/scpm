@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Model\User\Entity\User\Role;
+use App\Model\User\Entity\User\Status;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Service\PasswordHasher;
+use App\Security\UserIdentity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -21,25 +23,32 @@ class UserFixture extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $hash = $this->hasher->hash('password');
-
-        $admin = $this->createUser('berkut', $hash);
+        $textPassword = 'password';
+        $admin = $this->createUser('berkut', $textPassword);
         $admin->changeRole(Role::admin());
         $manager->persist($admin);
 
-        $user = $this->createUser('user', $hash);
+        $user = $this->createUser('user', $textPassword);
         $manager->persist($user);
 
         $manager->flush();
     }
 
 
-    private function createUser(string $login, string $hash): User
+    private function createUser(string $login, string $textPassword): User
     {
-        return User::create(
-            Id::next(),
-            new \DateTimeImmutable(),
+        $userIdentity = new UserIdentity(
+            Id::next()->getValue(),
             $login,
+            '',
+            Role::user()->getName(),
+            Status::active()->getName()
+        );
+        $hash = $this->hasher->hash($userIdentity,$textPassword);
+        return User::create(
+            new Id($userIdentity->getId()),
+            new \DateTimeImmutable(),
+            $userIdentity->getUserIdentifier(),
             $hash
         );
     }
