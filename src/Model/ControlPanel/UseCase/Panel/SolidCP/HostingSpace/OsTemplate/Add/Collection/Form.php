@@ -7,6 +7,9 @@ use App\Model\ControlPanel\Service\SolidCP\VirtualizationServer2012Service;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Form extends AbstractType
@@ -34,6 +37,35 @@ class Form extends AbstractType
                 'attr' => ['placeholder' => 'Os Name'],
                 'required' => true,
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
+    }
+
+    protected function disableElements(FormInterface $form, array $data, Command $modelOriginalData): void
+    {
+        $this->disableAndOverrideFormField($form, 'path');
+        $this->disableAndOverrideFormField($form, 'name');
+    }
+
+    private function disableAndOverrideFormField(FormInterface $form, string $fieldName): void
+    {
+        $field = $form->get($fieldName);
+        $options = $field->getConfig()->getOptions();
+        $options['disabled'] = true;
+        $type = get_class($field->getConfig()->getType()->getInnerType()); //type of field
+        $form->add($fieldName, $type, $options);
+    }
+
+    public function onPreSetData(FormEvent $event): void
+    {
+        $form = $event->getForm();
+        $modelOriginalData = $event->getData(); //object
+        $data = json_decode(json_encode($modelOriginalData), true); //convert object to assoc array
+        if(empty($data)){
+            return;
+        }
+
+        $this->disableElements($form, $data, $modelOriginalData);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

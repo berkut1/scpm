@@ -15,4 +15,12 @@ class Command
      * @Assert\NotBlank()
      */
     public string $name = '';
+
+    public static function create(string $path, string $name): self
+    {
+        $command = new self();
+        $command->path = $path;
+        $command->name = $name;
+        return $command;
+    }
 }

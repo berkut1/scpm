@@ -33,12 +33,12 @@ services:
         depends_on:
             - scpsc-postgres
     scpsc-node:
-        image: node:15.13-alpine
+        image: node:17-alpine
         volumes:
           - ./:/app
         working_dir: /app
     scpsc-postgres:
-        image: postgres:12.3-alpine
+        image: postgres:14.1-alpine
         volumes:
             - scpsc-postgres:/var/lib/postgresql/data
         environment:

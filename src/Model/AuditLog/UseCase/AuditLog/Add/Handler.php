@@ -24,8 +24,8 @@ class Handler
         $this->flusher = $flusher;
         $this->security = $security;
         $this->requestStack = $requestStack;
-        if($this->requestStack->getMasterRequest() !== null){
-            $this->clientIP = $this->requestStack->getMasterRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
+        if($this->requestStack->getMainRequest() !== null){
+            $this->clientIP = $this->requestStack->getMainRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
         }
         $this->auditLogRepository = $auditLogRepository;
     }

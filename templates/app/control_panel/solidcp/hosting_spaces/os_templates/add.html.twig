@@ -3,7 +3,7 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ol class="breadcrumb border-0 m-0">
+    <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
         <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces') }}">{{ main_title }}</a></li>
         <li class="breadcrumb-item"><a
@@ -28,8 +28,10 @@
                             {{ include('app/control_panel/solidcp/hosting_spaces/os_templates/prototype.html.twig', { 'form': form.osTemplates.vars.prototype }) }}
                         {% endapply %}">
                         {% for row in form.osTemplates %}
-                            <div class="panel form-row">
+{#                            <div class="panel"></div>#}
+                            <div class="panel input-group mb-3">
                                 <div class="form-group col-sm-3">
+{#                                    {{ form_widget(row.path, { 'attr':{'disabled':'disabled'} }) }}#}
                                     {{ form_widget(row.path) }}
                                 </div>
                                 <div class="form-group col-sm-3">
@@ -38,9 +40,10 @@
                             </div>
                         {% endfor %}
                     </div>
+                    <div id="after_prototype_templates"></div>
                 </div>
             </div>
-
+            <hr>
             <button type="submit" class="btn btn-primary">Save</button>
             {{ form_end(form) }}
 
@@ -53,6 +56,7 @@
     {# <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
     <script>
         let $collectionHolder;
+        let $afterCollectionHolder;
         let $card;
 
         let $addNew = $('<a href="#" class="btn btn-sm btn-primary">Add</a>');
@@ -60,14 +64,17 @@
         $(document).ready(function () {
             // get the collectionHolder, initilize the var by getting the list;
             $collectionHolder = $('#prototype_templates');
+            $afterCollectionHolder = $('#after_prototype_templates');
             $card = $('#templates_card');
-            addAllButtonsAndEventsToCollection($card, $addNew, $collectionHolder);
+            addAllButtonsAndEventsToCollection($card, $addNew, $collectionHolder, $afterCollectionHolder);
         });
 
-        function addAllButtonsAndEventsToCollection($card, $button, $collection) {
+        function addAllButtonsAndEventsToCollection($card, $button, $collection, $afterCollection) {
+            // add an index property to the collectionHolder which helps track the count of forms we have in the list
+            $collection.data('index', $collection.find('.panel').length);
             addAddButtonToForm($card, $button);
-            addRemoveButtonToForm($collection);
-            addClickEventToButtonAndAddFormInCollection($button, $collection);
+            //addRemoveButtonToForm($collection); //not need cause we only add
+            addClickEventToButtonAndAddFormInCollection($button, $collection, $afterCollection);
         }
 
         function addAddButtonToForm($card, $button) {
@@ -76,16 +83,17 @@
             $card.append($cardFooter);
         }
 
-        function addClickEventToButtonAndAddFormInCollection($button, $collection) {
+        function addClickEventToButtonAndAddFormInCollection($button, $collection, $afterCollection) {
             $button.click(function (e) {
                 e.preventDefault();
-                addNewForm($collection);
+                addNewForm($collection, $afterCollection);
             });
         }
 
         function addRemoveButtonToForm($collection) {
             // add an index property to the collectionHolder which helps track the count of forms we have in the list
-            $collection.data('index', $collection.find('.panel').length);
+            //$collection.data('index', $collection.find('.panel').length);
+
             // finds all the panels in the list and foreach one of them we add a remove button to it
             // add remove button to existing items
             $collection.find('.panel').each(function () {
@@ -96,7 +104,7 @@
         /**
          * creates a new form and appends it to the collectionHolder
          */
-        function addNewForm($collection) {
+        function addNewForm($collection, $afterCollection) {
             // getting the prototype
             // the prototype is the form itself, plain html
             let prototype = $collection.data('prototype');
@@ -108,14 +116,15 @@
             $collection.data('index', index + 1);
             // create the panel
             let $panel = $('<div class="panel"></div>');
-            let $panelBody = $('<div class="form-row"></div>').append(newForm);
+            let $panelBody = $('<div class="input-group mb-3"></div>').append(newForm);
 
             $panel.append($panelBody);
             addRemoveButton($panelBody);
             // append the panel to the addNewItem
             // we are doing it this way to that the link is always at the bottom of the collectionHolder
             //$addNew.before($panel);
-            $collection.before($panel);
+            //$collection.before($panel);
+            $afterCollection.before($panel);
         }
 
         /**

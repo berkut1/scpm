@@ -38,7 +38,7 @@
                             <td>{{ object.entity_type }}</td>
                             <td>{{ object.task_name }}</td>
 {#                            <td>{{ object.records }}</td>#}
-                            <td><a class="btn btn-sm btn-success" role="button" data-toggle="modal" data-target="#showRecordsN{{ object.id }}"
+                            <td><a class="btn btn-sm btn-success" role="button" data-bs-toggle="modal" data-bs-target="#showRecordsN{{ object.id }}"
                                    href="#">
                                     Detail Records
                                 </a>
@@ -48,20 +48,18 @@
 
                         <!-- Modal -->
                         <div class="modal fade" id="showRecordsN{{ object.id }}" tabindex="-1" role="dialog" aria-labelledby="showRecordsLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
+                            <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="addSocketLabel">Records ID:
                                             {{ object.id }}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         {{ audit_log_records(object.records) }}
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>

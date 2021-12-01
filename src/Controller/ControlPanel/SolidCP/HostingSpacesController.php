@@ -308,7 +308,7 @@ class HostingSpacesController extends AbstractController
             }
         }
 
-        return $this->render('app/control_panel/solidcp/hosting_spaces/os_templates/edit.html.twig', [
+        return $this->render('app/control_panel/solidcp/hosting_spaces/os_templates/add.html.twig', [
             'page_title' => 'Add Os Template',
             'main_title' => self::MAIN_TITLE,
             'hostingSpace' => $solidcpHostingSpace,

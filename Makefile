@@ -56,3 +56,9 @@ apidocs:
 #make cli p="composer install"
 cli:
 	docker-compose run --rm scpsc-php-cli $(p)
+
+node:
+	docker-compose run --rm scpsc-node $(p)
+
+devbuild:
+	docker-compose run --rm scpsc-node yarn encore dev

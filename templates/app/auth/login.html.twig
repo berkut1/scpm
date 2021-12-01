@@ -20,15 +20,11 @@
                             <form method="post">
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                                 <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="icon-user"></i></span>
-                                    </div>
+                                    <span class="input-group-text"><i class="fas fa-user fa-mb-3"></i></span>
                                     <input class="form-control" type="text" name="login" value="{{ login }}" placeholder="Login" />
                                 </div>
                                 <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="icon-lock"></i></span>
-                                    </div>
+                                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                     <input class="form-control" type="password" name="password" placeholder="Password" />
                                 </div>
                                 <div class="form-group">

@@ -20,7 +20,7 @@ class Handler
     public function handle(Command $command): void
     {
         $hostingSpace = $this->hostingSpaceRepository->get($command->id_hosting_space);
-        foreach ($command->osTemplates as $template){
+        foreach ($command->osTemplates as $template){ //disabled (Collection/Form) form do not get to array $command->osTemplates, so we can ignore check of existing elements.
             $hostingSpace->addOsTemplate($template->path, $template->name);
         }
         $this->flusher->flush($hostingSpace);

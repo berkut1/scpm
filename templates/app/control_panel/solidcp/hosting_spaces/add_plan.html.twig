@@ -3,7 +3,7 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ol class="breadcrumb border-0 m-0">
+    <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
         <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces') }}">{{ main_title }}</a></li>
         <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces.show', {'id':hostingSpace.id}) }}">{{ hostingSpace.name }}</a></li>

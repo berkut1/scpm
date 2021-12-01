@@ -2,7 +2,7 @@
 {% block title %}{{ hostingSpace.name }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ol class="breadcrumb border-0 m-0">
+    <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
         <li class="breadcrumb-item"><a href="{{ path('solidCpHostingSpaces') }}">{{ main_title }}</a></li>
         <li class="breadcrumb-item active">Show {{ hostingSpace.name }} </li>
@@ -29,10 +29,12 @@
                     </tr>
                     <tr>
                         <th style="width:20%;">Node:</th>
-                        <td><a href="{{ path('solidCpServers.show', {'id': hostingSpace.solidcpServer.id}) }}"> {{ hostingSpace.solidcpServer.name }}</a>
+                        <td>
+                            <a href="{{ path('solidCpServers.show', {'id': hostingSpace.solidcpServer.id}) }}"> {{ hostingSpace.solidcpServer.name }}</a>
+
                             {% if hostingSpace.hostingPlans|length == 0 %}
                                 <a href="{{ path('solidCpHostingSpaces.changeNode', {'id': hostingSpace.id}) }}"
-                                   class="btn-sm btn-primary" role="button">Change</a>
+                                   class="btn btn-primary btn-sm" role="button">Change</a>
                             {% endif %}</td>
                     </tr>
                     <tr>
@@ -40,7 +42,7 @@
                         <td>{{ hostingSpace.solidCpIdHostingSpace }}
                             {% if hostingSpace.hostingPlans|length == 0 %}
                                 <a href="{{ path('solidCpHostingSpaces.changeSolidCpHostingSpaceId', {'id': hostingSpace.id}) }}"
-                                   class="btn-sm btn-primary" role="button">Change</a>
+                                   class="btn btn-primary btn-sm" role="button">Change</a>
                             {% endif %}
                         </td>
                     </tr>
