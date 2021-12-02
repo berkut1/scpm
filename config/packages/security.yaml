@@ -5,7 +5,7 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\Security\UserIdentity:
             algorithm: auto
-        # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+        # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         fetcher:
             id: App\Security\UserProvider
@@ -47,7 +47,7 @@ security:
             entry_point: App\Security\AuthenticationEntryPoint
 
             # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
+            # https://symfony.com/doc/current/security.html#the-firewall
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
