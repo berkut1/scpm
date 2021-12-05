@@ -2,8 +2,8 @@ doctrine:
     dbal:
         # configure these for your database server
         driver: 'pdo_pgsql'
-        server_version: '14.1'
-        charset: utf8
+#        server_version: '14.1' #in .env
+#        charset: utf8          #in .env
         default_table_options:
             charset: utf8
             collate: utf8_unicode_ci

@@ -11,7 +11,7 @@ class RecordType extends JsonType
 {
     public const NAME = 'audit_log_record_type';
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         if ($value instanceof ArrayCollection) {
             $data = $value->toArray();
@@ -22,7 +22,7 @@ class RecordType extends JsonType
         return parent::convertToDatabaseValue($data, $platform);
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): mixed
     {
         if (!is_array($data = parent::convertToPHPValue($value, $platform))) {
             return $data;

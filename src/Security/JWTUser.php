@@ -20,7 +20,7 @@ class JWTUser implements JWTUserInterface
         $this->roles = $roles;
     }
 
-    public static function createFromPayload($username, array $payload)
+    public static function createFromPayload($username, array $payload): self
     {
         if (isset($payload['roles'])) {
             return new static($username, $payload['id'], $payload['ip'], (array) $payload['roles']);
