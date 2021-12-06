@@ -20,12 +20,9 @@ services:
             - '../src/Model/AuditLog/Entity/'
             - '../src/Model/User/Entity/'
             - '../src/Model/ControlPanel/Entity/'
-            - '../src/migrations/'
+#            - '../src/migrations/'
             - '../src/Kernel.php'
             - '../src/Tests/'
-
-
-#    App\Model\ControlPanel\Service\SOAP\SoapExecute: ~
 
     #for autowiring Entity Repositories
     App\Model\AuditLog\Entity\AuditLogRepository: ~
