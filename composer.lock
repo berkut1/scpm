@@ -1946,43 +1946,42 @@
         },
         {
             "name": "laminas/laminas-code",
-            "version": "4.4.3",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-code.git",
-                "reference": "bb324850d09dd437b6acb142c13e64fdc725b0e1"
+                "reference": "c99ef8e5629c33bfaa3a8f1df773e916af564cd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/bb324850d09dd437b6acb142c13e64fdc725b0e1",
-                "reference": "bb324850d09dd437b6acb142c13e64fdc725b0e1",
+                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/c99ef8e5629c33bfaa3a8f1df773e916af564cd6",
+                "reference": "c99ef8e5629c33bfaa3a8f1df773e916af564cd6",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ~8.0.0"
-            },
-            "conflict": {
-                "phpspec/prophecy": "<1.9.0"
+                "php": ">=7.4, <8.2"
             },
             "require-dev": {
-                "doctrine/annotations": "^1.10.4",
+                "doctrine/annotations": "^1.13.2",
                 "ext-phar": "*",
-                "laminas/laminas-coding-standard": "^2.1.4",
-                "laminas/laminas-stdlib": "^3.3.0",
-                "phpunit/phpunit": "^9.4.2",
-                "psalm/plugin-phpunit": "^0.14.0",
-                "vimeo/psalm": "^4.3.1"
+                "laminas/laminas-coding-standard": "^2.3.0",
+                "laminas/laminas-stdlib": "^3.6.1",
+                "phpunit/phpunit": "^9.5.10",
+                "psalm/plugin-phpunit": "^0.16.1",
+                "vimeo/psalm": "^4.13.1"
             },
             "suggest": {
                 "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
-                "laminas/laminas-stdlib": "Laminas\\Stdlib component",
-                "laminas/laminas-zendframework-bridge": "A bridge with Zend Framework"
+                "laminas/laminas-stdlib": "Laminas\\Stdlib component"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Laminas\\Code\\": "src/"
-                }
+                },
+                "files": [
+                    "polyfill/ReflectionEnumPolyfill.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2009,7 +2008,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-09-21T13:40:23+00:00"
+            "time": "2021-12-07T06:00:32+00:00"
         },
         {
             "name": "lcobucci/clock",
@@ -2792,30 +2791,30 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.4",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+                "reference": "ef29f6d262798707a9edd554e2b82517ef3a9376"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/ef29f6d262798707a9edd554e2b82517ef3a9376",
+                "reference": "ef29f6d262798707a9edd554e2b82517ef3a9376",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=8.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
+                    "Psr\\Log\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2836,9 +2835,9 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/1.1.4"
+                "source": "https://github.com/php-fig/log/tree/2.0.0"
             },
-            "time": "2021-05-03T11:20:27+00:00"
+            "time": "2021-07-14T16:41:46+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -8580,23 +8579,23 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "4.0.0",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "dd5f1b7b84ffa86527e984b292c5223aeac5f50f"
+                "reference": "7e9ba95c97715b24176caaa00cba0423dc1e87dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/dd5f1b7b84ffa86527e984b292c5223aeac5f50f",
-                "reference": "dd5f1b7b84ffa86527e984b292c5223aeac5f50f",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/7e9ba95c97715b24176caaa00cba0423dc1e87dd",
+                "reference": "7e9ba95c97715b24176caaa00cba0423dc1e87dd",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "^1.7",
                 "ext-json": "*",
                 "php": ">=7.2",
-                "psr/log": "^1.1",
+                "psr/log": "^1.1 || ^2.0 || 3.0",
                 "symfony/finder": ">=2.2",
                 "symfony/yaml": ">=3.3"
             },
@@ -8649,9 +8648,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/4.0.0"
+                "source": "https://github.com/zircote/swagger-php/tree/4.0.1"
             },
-            "time": "2021-11-28T00:58:14+00:00"
+            "time": "2021-12-06T08:08:01+00:00"
         }
     ],
     "packages-dev": [
