@@ -36,12 +36,9 @@ class LoginListener
 
     public function onAuthenticationFailure(LoginFailureEvent $event): void
     {
-        $authenticationToken = $event->getAuthenticator();
         $request = $event->getRequest();
-        $login = 'n/a';
-        if($authenticationToken instanceof LoginFormAuthenticator){
-            $login = $request->get('login');
-        }else{
+        $login = $request->get('login');
+        if($login == null){
             $login = json_decode($request->getContent(), true)['username'];
         }
 

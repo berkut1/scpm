@@ -86,18 +86,28 @@ class Handler
             $this->saveAuditLogAndThrowDomainException($records, "No free spaces for VMs or was not assigned plants to VM packages");
         }
 
+        $possiblePlan = null;
+        $osTemplate = null;
         //get a random space from $possiblePlan
-        $maxIdxVal = count($possiblePlans) - 1;
-        $possiblePlan = $possiblePlans[random_int(0, $maxIdxVal)];
-        $records[] = Record::create('SOLIDCP_SELECTED_POSSIBLE_SPACE_NAME_AND_ID_WITH_PLAN_NAME_AND_ID', [
-                $possiblePlan->getName(),
-                $possiblePlan->getHostingSpace()->getSolidCpIdHostingSpace(),
-                $possiblePlan->getName(),
-                $possiblePlan->getSolidcpIdPlan(),
-            ]);
+        while(count($possiblePlans) > 0){
+            $maxIdxVal = count($possiblePlans) - 1;
+            $index = random_int(0, $maxIdxVal);
+            $possiblePlan = $possiblePlans[$index];
+            //if $possiblePlan has $osTemplate then take that hosting space
+            if ($osTemplate = $possiblePlan->getHostingSpace()->getOsTemplateByName($command->server_os_name)) {
+                $records[] = Record::create('SOLIDCP_SELECTED_POSSIBLE_SPACE_NAME_AND_ID_WITH_PLAN_NAME_AND_ID', [
+                    $possiblePlan->getName(),
+                    $possiblePlan->getHostingSpace()->getSolidCpIdHostingSpace(),
+                    $possiblePlan->getName(),
+                    $possiblePlan->getSolidcpIdPlan(),
+                ]);
+                break;
+            }
+            \array_splice($possiblePlans, $index, 1); // remove from array and reindex it.
+        }
 
-        if (!$osTemplate = $possiblePlan->getHostingSpace()->getOsTemplateByName($command->server_os_name)) {
-            $this->saveAuditLogAndThrowDomainException($records, "The OS $command->server_os_name was not found");
+        if (!$osTemplate) {
+            $this->saveAuditLogAndThrowDomainException($records, "The OS $command->server_os_name was not found in any Hosting Spaces");
         }
 
         $esUsers = EsUsers::createFromEnterpriseDispatcher($this->enterpriseDispatcher);
