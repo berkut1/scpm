@@ -60,5 +60,8 @@ cli:
 node:
 	docker-compose run --rm scpsc-node $(p)
 
-devbuild:
+devassets:
 	docker-compose run --rm scpsc-node yarn encore dev
+
+prodassets:
+	docker-compose run --rm scpsc-node yarn encore production
