@@ -64,10 +64,6 @@ class NavbarMenu
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
 
-//        $menu->addChild('Debug', ['route' => 'solidcpDebug'])
-//            ->setAttribute('class', 'nav-item')
-//            ->setLinkAttribute('class', 'nav-link');
-
         $menu->addChild('Users', ['route' => 'users'])
             ->setExtra('routes', [
                 ['route' => 'users'],
