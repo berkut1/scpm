@@ -36,10 +36,17 @@ class LoginListener
 
     public function onAuthenticationFailure(LoginFailureEvent $event): void
     {
+        $authenticator = $event->getException();
         $request = $event->getRequest();
-        $login = $request->get('login');
-        if($login == null){
-            $login = json_decode($request->getContent(), true)['username'];
+        $login = 'n\a';
+//        if($authenticator instanceof \Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException){
+//
+//        }
+        if($authenticator instanceof \Symfony\Component\Security\Core\Exception\BadCredentialsException){
+            $login = $request->get('login');
+            if($login == null){
+                $login = json_decode($request->getContent(), true)['username'];
+            }
         }
 
         $entity = new Entity(EntityType::userUser(), UserId::systemUserId()->getValue());
