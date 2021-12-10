@@ -1,4 +1,4 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Controller\Api\ControlPanel\SolidCP;
@@ -83,12 +83,8 @@ class VpsController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/vps/{solidcp_item_id}/provisioning-status", name="apiVps.vpsProvisioningStatus", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
-     * @param int $solidcp_item_id
-     * @param Request $request
-     * @param VirtualizationServer2012\Check\VpsProvisioningStatus\Handler $handler
-     * @return Response
      */
+    #[Route('/solidCP/vps/{solidcp_item_id}/provisioning-status', name: 'apiVps.vpsProvisioningStatus', requirements: ['solidcp_item_id' => '\d+'], methods: ['GET'])]
     public function vpsProvisioningStatus(int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsProvisioningStatus\Handler $handler): Response
     {
         $command = new VirtualizationServer2012\Check\VpsProvisioningStatus\Command($solidcp_item_id, (int)$request->query->get('id_enterprise_dispatcher'));
@@ -100,17 +96,17 @@ class VpsController extends AbstractController
         }
 
         $result = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
-        if($result['provisioning_status'] === 'OK'){
+        if ($result['provisioning_status'] === 'OK') {
             $link = [
                 'rel' => 'state',
                 'action' => 'GET',
-                'href' => '/api'.$this->generateUrl('apiVps.vpsState', ['solidcp_item_id' => $solidcp_item_id]),
+                'href' => '/api' . $this->generateUrl('apiVps.vpsState', ['solidcp_item_id' => $solidcp_item_id]),
             ];
-        }else{
+        } else {
             $link = [
                 'rel' => 'self',
                 'action' => 'GET',
-                'href' => '/api'.$this->generateUrl('apiVps.vpsProvisioningStatus', ['solidcp_item_id' => $solidcp_item_id]),
+                'href' => '/api' . $this->generateUrl('apiVps.vpsProvisioningStatus', ['solidcp_item_id' => $solidcp_item_id]),
             ];
         }
         $result['link'] = $link;
@@ -167,12 +163,8 @@ class VpsController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/vps/{solidcp_item_id}/state", name="apiVps.vpsState", methods={"GET"}, requirements={"solidcp_item_id"="\d+"})
-     * @param int $solidcp_item_id
-     * @param Request $request
-     * @param VirtualizationServer2012\Check\VpsState\Handler $handler
-     * @return Response
      */
+    #[Route('/solidCP/vps/{solidcp_item_id}/state', name: 'apiVps.vpsState', requirements: ['solidcp_item_id' => '\d+'], methods: ['GET'])]
     public function vpsState(int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsState\Handler $handler): Response
     {
         $command = new VirtualizationServer2012\Check\VpsState\Command($solidcp_item_id, (int)$request->query->get('id_enterprise_dispatcher'));
@@ -241,13 +233,8 @@ class VpsController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users/{client_login}/vps/{vps_ip_address}/status", name="apiVps.changeStatusByIpAddress", methods={"PUT"})
-     * @param string $client_login
-     * @param string $vps_ip_address
-     * @param Request $request
-     * @param VirtualizationServer2012\ChangeStatus\Handler $handler
-     * @return Response
      */
+    #[Route('/solidCP/users/{client_login}/vps/{vps_ip_address}/status', name: 'apiVps.changeStatusByIpAddress', methods: ['PUT'])]
     public function changeStatusByIpAddress(string $client_login, string $vps_ip_address, Request $request, VirtualizationServer2012\ChangeStatus\Handler $handler): Response
     {
         /** @var VirtualizationServer2012\ChangeStatus\Command $command */
@@ -341,12 +328,8 @@ class VpsController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/vps/available-spaces/count", name="apiVps.vpsAvailableSpacesCount", methods={"GET"})
-     * @param Request $request
-     * @param VirtualizationServer2012\AvailableSpacePlan\Handler $handler
-     * @return Response
-     * @throws \Exception|\Symfony\Component\Serializer\Exception\ExceptionInterface
      */
+    #[Route('/solidCP/vps/available-spaces/count', name: 'apiVps.vpsAvailableSpacesCount', methods: ['GET'])]
     public function vpsAvailableSpacesCount(Request $request, VirtualizationServer2012\AvailableSpacePlan\Handler $handler): Response
     {
         $command = new VirtualizationServer2012\AvailableSpacePlan\Command();

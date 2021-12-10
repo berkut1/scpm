@@ -70,9 +70,8 @@ class HomeController extends AbstractController
      *         )
      *     )
      * )
-     * @Route("", name="home", methods={"GET"})
-     * @return Response
      */
+    #[Route('/', name: 'home', methods: ['GET'])]
     public function index(): Response
     {
         return $this->json([

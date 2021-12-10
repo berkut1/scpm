@@ -101,12 +101,8 @@ class HomeController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/all-in-one/user/package/vps", name="apiCreateAllInOneVm", methods={"POST"})
-     * @param Request $request
-     * @param AllinOne\Create\VM\Handler $handler
-     * @return Response
-     * @throws \Exception
      */
+    #[Route('/solidCP/all-in-one/user/package/vps', name: 'apiCreateAllInOneVm', methods: ['POST'])]
     public function createAllInOneVm(Request $request, AllinOne\Create\VM\Handler $handler): Response
     {
         /** @var AllinOne\Create\VM\Command $command */
