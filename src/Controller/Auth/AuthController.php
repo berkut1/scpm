@@ -10,11 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AuthController extends AbstractController
 {
-    /**
-     * @Route("/login", name="app_login")
-     * @param AuthenticationUtils $authenticationUtils
-     * @return Response
-     */
+    #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -23,9 +19,7 @@ class AuthController extends AbstractController
         return $this->render('app/auth/login.html.twig', ['login' => $login, 'error' => $error]);
     }
 
-    /**
-     * @Route("/logout", name="app_logout", methods={"GET"})
-     */
+    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(): Response
     {
         // controller can be blank: it will never be executed!

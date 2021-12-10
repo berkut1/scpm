@@ -12,10 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/audit-logs", name="auditLogs")
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route('/audit-logs', name: 'auditLogs')]
+#[IsGranted('ROLE_ADMIN')]
 class AuditLogsController extends AbstractController
 {
     private const PER_PAGE = 25;
@@ -28,12 +26,7 @@ class AuditLogsController extends AbstractController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route("", name="")
-     * @param Request $request
-     * @param AuditLogFetcher $fetcher
-     * @return Response
-     */
+    #[Route('', name: '')]
     public function index(Request $request, AuditLogFetcher $fetcher): Response
     {
         $pagination = $fetcher->all(
@@ -49,11 +42,7 @@ class AuditLogsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name=".show")
-     * @param AuditLog $auditLog
-     * @return Response
-     */
+    #[Route('/{id}', name: '.show')]
     public function show(AuditLog $auditLog): Response
     {
         return $this->render('app/audit_logs/show.html.twig', [

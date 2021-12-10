@@ -5,10 +5,9 @@ namespace App\Controller\ControlPanel\SolidCP;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Create;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\Create as CreateHostingSpace;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\ChangeNode;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\{Edit, Enable, Disable, Remove};
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\{Create, Edit, Enable, Disable, Remove};
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\HostingSpace\SolidcpHostingSpaceFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
 use Psr\Log\LoggerInterface;
@@ -19,10 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @Route("/panel/solidcp/node-servers", name="solidCpServers")
- * @IsGranted("ROLE_MODERATOR")
- */
+#[Route('/panel/solidcp/node-servers', name: 'solidCpServers')]
+#[IsGranted('ROLE_MODERATOR')]
 class NodesController extends AbstractController
 {
     private const PER_PAGE = 25;
@@ -35,12 +32,7 @@ class NodesController extends AbstractController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route("", name="")
-     * @param Request $request
-     * @param SolidcpServerFetcher $fetcher
-     * @return Response
-     */
+    #[Route('', name: '')]
     public function index(Request $request, SolidcpServerFetcher $fetcher): Response
     {
         $pagination = $fetcher->all(
@@ -56,12 +48,7 @@ class NodesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/create", name=".create")
-     * @param Request $request
-     * @param Create\Handler $handler
-     * @return Response
-     */
+    #[Route('/create', name: '.create')]
     public function create(Request $request, Create\Handler $handler): Response
     {
         $command = new Create\Command();
@@ -86,13 +73,7 @@ class NodesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/create-hosting-space", name=".createHostingSpace")
-     * @param SolidcpServer $solidcpServer
-     * @param Request $request
-     * @param CreateHostingSpace\Handler $handler
-     * @return Response
-     */
+    #[Route('/create-hosting-space', name: '.createHostingSpace')]
     public function createHostingSpace(SolidcpServer $solidcpServer, Request $request, CreateHostingSpace\Handler $handler): Response
     {
         $command = CreateHostingSpace\Command::fromServer($solidcpServer);
@@ -118,13 +99,7 @@ class NodesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name=".edit")
-     * @param SolidcpServer $solidcpServer
-     * @param Request $request
-     * @param Edit\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/edit', name: '.edit')]
     public function edit(SolidcpServer $solidcpServer, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromSolidcpServer($solidcpServer);
@@ -149,13 +124,7 @@ class NodesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/enable", name=".enable", methods={"POST"})
-     * @param int $id
-     * @param Request $request
-     * @param Enable\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/enable', name: '.enable', methods: ['POST'])]
     public function enable(int $id, Request $request, Enable\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('enable', $request->request->get('token'))) {
@@ -174,13 +143,7 @@ class NodesController extends AbstractController
         return $this->redirectToRoute('solidCpServers');
     }
 
-    /**
-     * @Route("/{id}/disable", name=".disable", methods={"POST"})
-     * @param int $id
-     * @param Request $request
-     * @param Disable\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/disable', name: '.disable', methods: ['POST'])]
     public function disable(int $id, Request $request, Disable\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('disable', $request->request->get('token'))) {
@@ -199,13 +162,7 @@ class NodesController extends AbstractController
         return $this->redirectToRoute('solidCpServers');
     }
 
-    /**
-     * @Route("/{id}/show", name=".show")
-     * @param Request $request
-     * @param SolidcpServer $solidcpServer
-     * @param SolidcpHostingSpaceFetcher $hostingSpaceFetcher
-     * @return Response
-     */
+    #[Route('/{id}', name: '.show')]
     public function show(Request $request, SolidcpServer $solidcpServer, SolidcpHostingSpaceFetcher $hostingSpaceFetcher): Response
     {
         $spaceFromNode = $hostingSpaceFetcher->allHostingSpaceFromNode(
@@ -224,15 +181,8 @@ class NodesController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/{id}/hosting-spaces/{id_hosting_space}/change-node", name=".changeNode")
-     * @ParamConverter("solidcpHostingSpace", options={"mapping": {"id_hosting_space": "id"}})
-     * @param int $id
-     * @param SolidcpHostingSpace $solidcpHostingSpace
-     * @param Request $request
-     * @param ChangeNode\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/hosting-spaces/{id_hosting_space}/change-node', name: '.changeNode')]
+    #[ParamConverter('solidcpHostingSpace', options: ['mapping' => ['id_hosting_space' => 'id']])]
     public function changeNode(int $id, SolidcpHostingSpace $solidcpHostingSpace, Request $request, ChangeNode\Handler $handler): Response
     {
         $command = ChangeNode\Command::fromHostingSpace($solidcpHostingSpace);
@@ -257,13 +207,7 @@ class NodesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/remove", name=".remove", methods={"POST"})
-     * @param int $id ,
-     * @param Request $request
-     * @param Remove\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
     public function remove(int $id, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {

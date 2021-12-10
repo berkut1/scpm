@@ -1,12 +1,10 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Controller\ControlPanel;
 
 use App\Model\ControlPanel\Entity\Location\Location;
-use App\Model\ControlPanel\UseCase\Location\Create;
-use App\Model\ControlPanel\UseCase\Location\Edit;
-use App\Model\ControlPanel\UseCase\Location\Remove;
+use App\Model\ControlPanel\UseCase\Location\{Create, Edit, Remove};
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,10 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @Route("/locations", name="locations")
- * @IsGranted("ROLE_MODERATOR")
- */
+#[Route('/locations', name: 'locations')]
+#[IsGranted('ROLE_MODERATOR')]
 class LocationsController extends AbstractController
 {
     private const PER_PAGE = 25;
@@ -31,12 +27,7 @@ class LocationsController extends AbstractController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route("", name="")
-     * @param Request $request
-     * @param LocationFetcher $fetcher
-     * @return Response
-     */
+    #[Route('', name: '')]
     public function index(Request $request, LocationFetcher $fetcher): Response
     {
 
@@ -53,12 +44,7 @@ class LocationsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/create", name=".create")
-     * @param Request $request
-     * @param Create\Handler $handler
-     * @return Response
-     */
+    #[Route('/create', name: '.create')]
     public function create(Request $request, Create\Handler $handler): Response
     {
         $command = new Create\Command();
@@ -83,13 +69,7 @@ class LocationsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name=".edit")
-     * @param Location $location
-     * @param Request $request
-     * @param Edit\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/edit', name: '.edit')]
     public function edit(Location $location, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromLocation($location);
@@ -113,13 +93,7 @@ class LocationsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/remove", name=".remove", methods={"POST"})
-     * @param Location $location
-     * @param Request $request
-     * @param Remove\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
     public function remove(Location $location, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {

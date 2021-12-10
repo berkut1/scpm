@@ -4,12 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\ControlPanel\Package\VirtualMachine;
 
 use App\Model\ControlPanel\Entity\Package\Package;
-use App\Model\ControlPanel\UseCase\Package\ChangePlans;
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackage;
-use App\Model\ControlPanel\UseCase\Package\VirtualMachine\Create;
-use App\Model\ControlPanel\UseCase\Package\Remove;
-use App\Model\ControlPanel\UseCase\Package\Rename;
-use App\Model\ControlPanel\UseCase\Package\VirtualMachine\Edit;
+use App\Model\ControlPanel\UseCase\Package\VirtualMachine\{Create, Edit};
+use App\Model\ControlPanel\UseCase\Package\{ChangePlans, Remove, Rename};
 use App\ReadModel\ControlPanel\Package\VirtualMachine\VirtualMachinePackageFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanFetcher;
 use Psr\Log\LoggerInterface;
@@ -19,10 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @Route("/packages/virtual-machines", name="virtualMachinePackages")
- * @IsGranted("ROLE_MODERATOR")
- */
+#[Route('/packages/virtual-machines', name: 'virtualMachinePackages')]
+#[IsGranted('ROLE_MODERATOR')]
 class VirtualMachinePackagesController extends AbstractController
 {
     private const PER_PAGE = 25;
@@ -35,12 +30,7 @@ class VirtualMachinePackagesController extends AbstractController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route("", name="")
-     * @param Request $request
-     * @param VirtualMachinePackageFetcher $fetcher
-     * @return Response
-     */
+    #[Route('', name: '')]
     public function index(Request $request, VirtualMachinePackageFetcher $fetcher): Response
     {
 
@@ -57,12 +47,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/create", name=".create")
-     * @param Request $request
-     * @param Create\Handler $handler
-     * @return Response
-     */
+    #[Route('/create', name: '.create')]
     public function create(Request $request, Create\Handler $handler): Response
     {
         $command = new Create\Command();
@@ -87,13 +72,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/rename", name=".rename")
-     * @param VirtualMachinePackage $virtualMachinePackage
-     * @param Request $request
-     * @param Rename\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/rename', name: '.rename')]
     public function rename(VirtualMachinePackage $virtualMachinePackage, Request $request, Rename\Handler $handler): Response
     {
         $command = Rename\Command::fromPackage($virtualMachinePackage->getPackage());
@@ -118,13 +97,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name=".edit")
-     * @param VirtualMachinePackage $virtualMachinePackage
-     * @param Request $request
-     * @param Edit\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/edit', name: '.edit')]
     public function edit(VirtualMachinePackage $virtualMachinePackage, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromVirtualMachine($virtualMachinePackage);
@@ -149,13 +122,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/show", name=".show")
-     * @param Request $request
-     * @param VirtualMachinePackage $virtualMachinePackage
-     * @param SolidcpHostingPlanFetcher $planFetcher
-     * @return Response
-     */
+    #[Route('/{id}', name: '.show')]
     public function show(Request $request, VirtualMachinePackage $virtualMachinePackage, SolidcpHostingPlanFetcher $planFetcher): Response
     {
         $plansFromPackage = $planFetcher->allPlansFromPackage(
@@ -173,13 +140,7 @@ class VirtualMachinePackagesController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/{id}/change-solidcp-plans", name=".changeSolidCpPlans")
-     * @param Request $request
-     * @param VirtualMachinePackage $virtualMachinePackage
-     * @param ChangePlans\SolidCP\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/change-solidcp-plans', name: '.changeSolidCpPlans')]
     public function changeSolidCpPlans(Request $request, VirtualMachinePackage $virtualMachinePackage, ChangePlans\SolidCP\Handler $handler): Response
     {
         $command = ChangePlans\SolidCP\Command::fromPackage($virtualMachinePackage->getPackage());
@@ -205,13 +166,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/remove", name=".remove", methods={"POST"})
-     * @param Package $location
-     * @param Request $request
-     * @param Remove\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
     public function remove(Package $location, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {
