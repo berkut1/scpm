@@ -4,12 +4,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\User\Entity\User\User;
-use App\Model\User\UseCase\Activate;
-use App\Model\User\UseCase\Suspend;
+use App\Model\User\UseCase\{Create, Role, Password, Activate, Suspend};
 use App\Model\User\UseCase\Remove\Archive;
-use App\Model\User\UseCase\Create;
-use App\Model\User\UseCase\Role;
-use App\Model\User\UseCase\Password;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
@@ -19,10 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/users", name="users")
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route('/users', name: 'users')]
+#[IsGranted('ROLE_ADMIN')]
 class UsersController extends AbstractController
 {
     private const PER_PAGE = 10;
@@ -34,12 +28,7 @@ class UsersController extends AbstractController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route("", name="")
-     * @param Request $request
-     * @param UserFetcher $fetcher
-     * @return Response
-     */
+    #[Route('', name: '')]
     public function index(Request $request, UserFetcher $fetcher): Response
     {
         $filter = new Filter\Filter();
@@ -61,12 +50,7 @@ class UsersController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/create", name=".create")
-     * @param Request $request
-     * @param Create\Handler $handler
-     * @return Response
-     */
+    #[Route('/create', name: '.create')]
     public function create(Request $request, Create\Handler $handler): Response
     {
         $command = new Create\Command();
@@ -89,13 +73,7 @@ class UsersController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/password", name=".password")
-     * @param User $user
-     * @param Request $request
-     * @param Password\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/password', name: '.password')]
     public function password(User $user, Request $request, Password\Handler $handler): Response
     {
         $command = new Password\Command($user->getId()->getValue());
@@ -118,14 +96,8 @@ class UsersController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/role", name=".role")
-     * @IsGranted("ROLE_ADMIN")
-     * @param User $user
-     * @param Request $request
-     * @param Role\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/role', name: '.role')]
+    #[IsGranted('ROLE_ADMIN')]
     public function role(User $user, Request $request, Role\Handler $handler): Response
     {
         if ($user->getId()->getValue() === $this->getUser()->getId()) {
@@ -154,13 +126,7 @@ class UsersController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/activate", name=".activate", methods={"POST"})
-     * @param User $user
-     * @param Request $request
-     * @param Activate\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/activate', name: '.activate', methods: ['POST'])]
     public function activate(User $user, Request $request, Activate\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('activate', $request->request->get('token'))) {
@@ -179,13 +145,7 @@ class UsersController extends AbstractController
         return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
     }
 
-    /**
-     * @Route("/{id}/suspend", name=".suspend", methods={"POST"})
-     * @param User $user
-     * @param Request $request
-     * @param Suspend\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/suspend', name: '.suspend', methods: ['POST'])]
     public function suspend(User $user, Request $request, Suspend\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('suspend', $request->request->get('token'))) {
@@ -209,13 +169,7 @@ class UsersController extends AbstractController
         return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
     }
 
-    /**
-     * @Route("/{id}/remove", name=".remove", methods={"POST"})
-     * @param User $user
-     * @param Request $request
-     * @param Archive\Handler $handler
-     * @return Response
-     */
+    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
     public function remove(User $user, Request $request, Archive\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {
@@ -239,11 +193,7 @@ class UsersController extends AbstractController
         return $this->redirectToRoute('users', ['id' => $user->getId()]);
     }
 
-    /**
-     * @Route("/{id}", name=".show")
-     * @param User $user
-     * @return Response
-     */
+    #[Route('/{id}', name: '.show')]
     public function show(User $user): Response
     {
         return $this->render('app/users/show.html.twig', compact('user'));

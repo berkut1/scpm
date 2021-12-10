@@ -13,55 +13,32 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @Route("/panel/solidcp/ajax", name="solidCpAjax")
- * @IsGranted("ROLE_USER")
- */
+#[Route('/panel/solidcp/ajax', name: 'solidCpAjax')]
+#[IsGranted('ROLE_MODERATOR')]
 class AjaxController extends AbstractController
 {
-    /**
-     * @Route("/all-server-array-from-enterprise", name=".allServerArrayFromEnterprise", condition="request.isXmlHttpRequest()"), methods={"GET"}
-     * @param Request $request
-     * @param SolidcpServerFetcher $fetcher
-     * @return JsonResponse
-     */
+    #[Route('/all-server-array-from-enterprise', name: '.allServerArrayFromEnterprise', methods: ['GET'], condition: 'request.isXmlHttpRequest()')]
     public function allServerArrayFromEnterprise(Request $request, SolidcpServerFetcher $fetcher): JsonResponse
     {
         $arr = $fetcher->allListFrom((int)$request->query->get('id_enterprise_dispatcher'));
         return new JsonResponse($arr);
     }
 
-    /**
-     * @Route("/all-non-added-hosting-space-array-from-enterprise", name=".allNonAddedHostingSpaceArrayFromEnterprise", condition="request.isXmlHttpRequest()"), methods={"GET"}
-     * @param Request $request
-     * @param HostingSpaceService $fetcher
-     * @return JsonResponse
-     */
+    #[Route('/all-non-added-hosting-space-array-from-enterprise', name: '.allNonAddedHostingSpaceArrayFromEnterprise', methods: ['GET'], condition: 'request.isXmlHttpRequest()')]
     public function allNonAddedHostingSpaceArrayFromEnterprise(Request $request, HostingSpaceService $fetcher): JsonResponse
     {
         $arr = $fetcher->allNotAddedHostingSpacesFrom((int)$request->query->get('id_enterprise_dispatcher'));
         return new JsonResponse($arr);
     }
 
-    /**
-     * @Route("/all-non-added-hosting-space-array-except-hosting-space-id-from-enterprise", name=".allNotAddedHostingSpacesArrayExceptHostingSpaceIdFromEnterprise", condition="request.isXmlHttpRequest()"), methods={"GET"}
-     * @param Request $request
-     * @param HostingSpaceService $fetcher
-     * @return JsonResponse
-     */
+    #[Route('/all-non-added-hosting-space-array-except-hosting-space-id-from-enterprise', name: '.allNotAddedHostingSpacesArrayExceptHostingSpaceIdFromEnterprise', methods: ['GET'], condition: 'request.isXmlHttpRequest()')]
     public function allNotAddedHostingSpacesArrayExceptHostingSpaceIdFromEnterprise(Request $request, HostingSpaceService $fetcher): JsonResponse
     {
         $arr = $fetcher->allNotAddedHostingSpacesExceptHostingSpaceIdFrom((int)$request->query->get('id_enterprise_dispatcher'), (int)$request->query->get('id_solidcp_hosting_space'));
         return new JsonResponse($arr);
     }
 
-    /**
-     * @Route("/all-os-templates-array-from-enterprise-and-packageid", name=".allOsTempaltesArrayFromEnterpriseAndPackageId", condition="request.isXmlHttpRequest()"), methods={"GET"}
-     * @param Request $request
-     * @param VirtualizationServer2012Service $fetcher
-     * @param EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher
-     * @return JsonResponse
-     */
+    #[Route('/all-os-templates-array-from-enterprise-and-packageid', name: '.allOsTempaltesArrayFromEnterpriseAndPackageId', methods: ['GET'], condition: 'request.isXmlHttpRequest()')]
     public function allOsTempaltesArrayFromEnterpriseAndPackageId(Request $request, VirtualizationServer2012Service $fetcher, EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher): JsonResponse
     {
         $id_enterprise_dispatcher = $request->query->get('id_enterprise_dispatcher');
