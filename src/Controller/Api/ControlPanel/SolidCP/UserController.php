@@ -68,11 +68,8 @@ class UserController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users", name="apiUser.create", methods={"POST"})
-     * @param Request $request
-     * @param SOAPUserCreate\Handler $handler
-     * @return Response
      */
+    #[Route('/solidCP/users', name: 'apiUser.create', methods: ['POST'])]
     public function create(Request $request, SOAPUserCreate\Handler $handler): Response
     {
         /** @var SOAPUserCreate\Command $command */
@@ -134,13 +131,8 @@ class UserController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users/{username}/is-exists", name="apiUser.isExists", methods={"GET"})
-     * @param string $username
-     * @param Request $request
-     * @param SOAPUserCheck\Handler $handler
-     * @return Response
-     * @throws \Exception
      */
+    #[Route('/solidCP/users/{username}/is-exists', name: 'apiUser.isExists', methods: ['GET'])]
     public function isExists(string $username, Request $request, SOAPUserCheck\Handler $handler): Response
     {
         $command = SOAPUserCheck\Command::create($username, (int)$request->query->get('id_enterprise_dispatcher'));
@@ -198,12 +190,8 @@ class UserController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users/{username}/email", name="apiUser.changeEmail", methods={"PUT"})
-     * @param string $username
-     * @param Request $request
-     * @param SOAPUserEdit\Email\Handler $handler
-     * @return Response
      */
+    #[Route('/solidCP/users/{username}/email', name: 'apiUser.changeEmail', methods: ['PUT'])]
     public function changeEmail(string $username, Request $request, SOAPUserEdit\Email\Handler $handler): Response
     {
         /** @var SOAPUserEdit\Email\Command $command */
@@ -263,12 +251,8 @@ class UserController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/users/{username}/password", name="apiUser.changePassword", methods={"PUT"})
-     * @param string $username
-     * @param Request $request
-     * @param SOAPUserEdit\Password\Handler $handler
-     * @return Response
      */
+    #[Route('/solidCP/users/{username}/password', name: 'apiUser.changePassword', methods: ['PUT'])]
     public function changePassword(string $username, Request $request, SOAPUserEdit\Password\Handler $handler): Response
     {
         /** @var SOAPUserEdit\Password\Command $command */

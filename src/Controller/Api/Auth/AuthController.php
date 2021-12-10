@@ -42,9 +42,8 @@ class AuthController extends AbstractController
      *         ),
      *     ),
      * )
-     * @Route("/login/authentication_token", name="authentication_token", methods={"POST"})
-     * @return Response
      */
+    #[Route('/login/authentication_token', name: 'authentication_token', methods: ['POST'])]
     public function login_check(): Response
     {
         //jwt catch it - look in security.yaml

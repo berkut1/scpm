@@ -59,10 +59,8 @@ class EnterpriseDispatchersController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/enterprise-dispatchers", name="apiEnterpriseDispatchers.allList", methods={"GET"})
-     * @param EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher
-     * @return Response
      */
+    #[Route('/solidCP/enterprise-dispatchers', name: 'apiEnterpriseDispatchers.allList', methods: ['GET'])]
     public function allList(EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher): Response
     {
         $enterpriseDispatchers = $enterpriseDispatcherFetcher->allList();
@@ -108,11 +106,8 @@ class EnterpriseDispatchersController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/enterprise-dispatchers/default/is-enable", name="apiEnterpriseDispatchers.isEnableDefault", methods={"GET"})
-     * @param IsEnable\Handler $handler
-     * @return Response
-     * @throws \Exception
      */
+    #[Route('/solidCP/enterprise-dispatchers/default/is-enable', name: 'apiEnterpriseDispatchers.isEnableDefault', methods: ['GET'])]
     public function isEnableDefault(IsEnable\Handler $handler): Response
     {
         $command = new IsEnable\Command();
@@ -166,11 +161,8 @@ class EnterpriseDispatchersController extends AbstractController
      *     ),
      *     security={{"bearerAuth":{}}}
      * )
-     * @Route("/solidCP/enterprise-dispatchers/{id_enterprise_dispatcher}/is-enable", name="apiEnterpriseDispatchers.isEnable", methods={"GET"})
-     * @param int $id_enterprise_dispatcher
-     * @param IsEnable\Handler $handler
-     * @return Response
      */
+    #[Route('/solidCP/enterprise-dispatchers/{id_enterprise_dispatcher}/is-enable', name: 'apiEnterpriseDispatchers.isEnable', methods: ['GET'])]
     public function isEnable(int $id_enterprise_dispatcher, IsEnable\Handler $handler): Response
     {
         $command = new IsEnable\Command($id_enterprise_dispatcher);
