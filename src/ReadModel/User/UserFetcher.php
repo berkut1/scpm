@@ -42,8 +42,8 @@ class UserFetcher
                 'status'
             )
             ->from('user_users')
-            ->where('login = :login')
-            ->setParameter('login', $login) //deprecated colon prefix for parameters -  :logon -> logon
+            ->where('LOWER(login) = :login')
+            ->setParameter('login', mb_strtolower($login)) //deprecated colon prefix for parameters -  :logon -> logon
             //->execute(); //deprecated https://github.com/doctrine/dbal/pull/4578'
             ->executeQuery();
 
