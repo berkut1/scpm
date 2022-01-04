@@ -14,6 +14,27 @@ Requirements
 - PHP >= 8.0
 - PostgreSQL (not tested with other DBMS)
 
+Installation
+------------
+apache or nginx (https://symfony.com/doc/5.4/setup/web_server_configuration.html#nginx)
+`sudo apt install php8.0-soap php8.0-xml php8.0-mbstring php8.0-intl` - php libs
+`git clone --branch builded https://github.com/berkut1/scpm.git`
+`composer dump-env prod` after in the file .env.local.php update APP_SECRET, DATABASE_URL and JWT_PASSPHRASE variables
+`composer install`
+`composer install --no-dev --optimize-autoloader`
+`APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear`
+More information here - https://symfony.com/doc/5.4/deployment.html
+`php bin/console lexik:jwt:generate-keypair` - generate jwt key
+`php bin/console doctrine:migrations:migrate` - create sql tables
+`php bin/console user:create` - create a panel user
+
+Update
+------------
+`git pull`
+`composer sefl-update`
+`composer install --no-dev --optimize-autoloader`
+`APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear`
+
 Descriptions (true for HyperV SolidCP module)
 ------------
 1. Enterprise Dispatchers - SolidCP an Enterprise server with a reseller account. Normally you should have only one Enterprise 
