@@ -53,7 +53,7 @@ doctrine:
                 alias: AuditLog
             User:
                 is_bundle: false
-                type: annotation
+                type: attribute
                 dir: '%kernel.project_dir%/src/Model/User/Entity'
                 prefix: 'App\Model\User\Entity'
                 alias: User

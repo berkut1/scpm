@@ -7,45 +7,30 @@ use App\Model\AggregateRoot;
 use App\Model\EventsTrait;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * User
- *
- * @ORM\Table(name="user_users")
- * @ORM\Entity
- */
+#[ORM\Table(name: "user_users")]
+#[ORM\Entity]
 class User implements AggregateRoot
 {
     use EventsTrait;
-    /**
-     * @ORM\Column(name="id", type="user_user_id", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "user_user_id", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "NONE")]
     private Id $id;
 
-    /**
-     * @ORM\Column(name="login", type="string", length=64, nullable=false)
-     */
+    #[ORM\Column(name: "login", type: "string", length: 64, nullable: false)]
     private string $login;
 
-    /**
-     * @ORM\Column(name="password", type="string", length=512, nullable=false)
-     */
+    #[ORM\Column(name: "password", type: "string", length: 512, nullable: false)]
     private string $password;
 
-    /**
-     * @ORM\Column(name="date", type="datetime_immutable", nullable=false, options={"default"="now()"})
-     */
+    #[ORM\Column(name: "date", type: "datetime_immutable", nullable: false, options: ["default" => "now()"])]
     private \DateTimeImmutable $date;
 
-    /**
-     * @ORM\Column(name="role", type="user_user_role", length=32, nullable=false)
-     */
+    #[ORM\Column(name: "role", type: "user_user_role", length: 32, nullable: false)]
     private Role $role;
 
-    /**
-     * @ORM\Column(name="status", type="user_user_status", length=32, nullable=false)
-     */
+    #[ORM\Column(name: "status", type: "user_user_status", length: 32, nullable: false)]
     private Status $status;
 
     private function __construct(Id $id, \DateTimeImmutable $date, string $login, Role $role)
