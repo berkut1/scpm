@@ -10,18 +10,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public Entity $entity;
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public TaskNameInterface $taskName;
-    /**
-     * @Assert\NotBlank()
-     * @var Record[]
-     */
+
+    /** @var Record[] */
+    #[Assert\NotBlank]
     public array $records;
 
     /**

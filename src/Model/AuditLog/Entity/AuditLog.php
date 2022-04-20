@@ -7,54 +7,33 @@ use App\Model\AuditLog\Entity\Record\Record;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * AuditLogs
- *
- * @ORM\Table(
- *     name="audit_logs",
- *     indexes={
- *          @ORM\Index(name="audit_logs_entity_type_id_idx", columns={"entity_type", "entity_id"})
- *  })
- * @ORM\Entity
- */
+#[ORM\Table(name: "audit_logs")]
+#[ORM\Index(columns: ["entity_type", "entity_id"], name: "audit_logs_entity_type_id_idx")]
+#[ORM\Entity]
 class AuditLog
 {
-    /**
-     * @ORM\Column(name="id", type="audit_log_id", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "audit_log_id", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "NONE")]
     private Id $id;
 
-    /**
-     * @ORM\Column(name="id_user", type="audit_log_user_id", nullable=false)
-     */
+    #[ORM\Column(name: "id_user", type: "audit_log_user_id", nullable: false)]
     private UserId $idUser;
 
-    /**
-     * @ORM\Column(name="date", type="datetime_immutable", nullable=false, options={"default"="now()"})
-     */
+    #[ORM\Column(name: "date", type: "datetime_immutable", nullable: false, options: ["default" => "now()"])]
     private \DateTimeImmutable $date;
 
-    /**
-     * @ORM\Column(name="ip_inet", type="string", nullable=false)
-     */
+    #[ORM\Column(name: "ip_inet", type: "string", nullable: false)]
     private string $ipInet;
 
-    /**
-     * @ORM\Embedded(class="Entity")
-     */
+    #[ORM\Embedded(class: Entity::class)]
     private Entity $entity;
 
-    /**
-     * @ORM\Column(name="task_name", type="audit_log_task_name_type", nullable=false)
-     */
+    #[ORM\Column(name: "task_name", type: "audit_log_task_name_type", nullable: false)]
     private TaskNameInterface $taskName;
 
-    /**
-     * @var ArrayCollection|Record[]
-     * @ORM\Column(name="records", type="audit_log_record_type", nullable=false, options={"jsonb"=true})
-     */
+    /** @var ArrayCollection|Record[] */
+    #[ORM\Column(name: "records", type: "audit_log_record_type", nullable: false, options: ["jsonb" => true])]
     private array|ArrayCollection $records;
 
     private function __construct(Id $id, UserId $idUser, string $ip, Entity $entity, TaskNameInterface $taskName)
@@ -69,7 +48,6 @@ class AuditLog
         $this->entity = $entity;
         $this->taskName = $taskName;
     }
-
 
     /**
      * @param Id $id

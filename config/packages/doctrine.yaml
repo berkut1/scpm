@@ -47,7 +47,7 @@ doctrine:
 #                alias: App
             AuditLog:
                 is_bundle: false
-                type: annotation
+                type: attribute
                 dir: '%kernel.project_dir%/src/Model/AuditLog/Entity'
                 prefix: 'App\Model\AuditLog\Entity'
                 alias: AuditLog
