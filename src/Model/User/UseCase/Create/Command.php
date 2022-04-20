@@ -8,19 +8,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $login = '';
-    /**
-     * @Assert\NotCompromisedPassword()
-     * @Assert\Length(
-     *     min = 8,
-     *     allowEmptyString = false)
-     */
+
+    #[Assert\NotCompromisedPassword]
+    #[Assert\Length(min: 8)]
     public string $password = '';
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public string $role = '';
 }

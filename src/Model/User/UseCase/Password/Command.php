@@ -6,16 +6,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $id;
-    /**
-     * @Assert\NotCompromisedPassword()
-     * @Assert\Length(
-     *     min = 8,
-     *     allowEmptyString = false)
-     */
+
+    #[Assert\NotCompromisedPassword]
+    #[Assert\Length(min: 8)]
     public string $password = '';
 
     public function __construct(string $id)
