@@ -22,7 +22,6 @@ services:
             - '../src/Model/ControlPanel/Entity/'
 #            - '../src/migrations/'
             - '../src/Kernel.php'
-            - '../src/Tests/'
 
     #for autowiring Entity Repositories
     App\Model\AuditLog\Entity\AuditLogRepository: ~
