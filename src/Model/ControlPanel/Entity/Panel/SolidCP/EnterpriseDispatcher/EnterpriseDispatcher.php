@@ -12,66 +12,41 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
-/**
- * EnterpriseDispatcher
- *
- * @ORM\Table(
- *     name="cp_solidcp_enterprise_dispatchers",
- *     uniqueConstraints={
- *          @ORM\UniqueConstraint(name="cp_solidcp_enterprise_dispatchers_unique_default", columns={"id"}, options={"where":"is_default"})
- *  })
- * @ORM\Entity
- */
+#[ORM\Table(name: "cp_solidcp_enterprise_dispatchers")]
+#[ORM\UniqueConstraint(name: "cp_solidcp_enterprise_dispatchers_unique_default", columns: ["id"], options: ["where" => "is_default"])]
+#[ORM\Entity]
 class EnterpriseDispatcher implements AggregateRoot
 {
     use EventsTrait;
-    /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=128, nullable=false)
-     */
+    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
     private string $name;
 
-    /**
-     * @ORM\Column(name="url", type="string", length=1024, nullable=false)
-     */
+    #[ORM\Column(name: "url", type: "string", length: 1024, nullable: false)]
     private string $url;
 
-    /**
-     * @ORM\Column(name="login", type="string", length=64, nullable=false)
-     */
+    #[ORM\Column(name: "login", type: "string", length: 64, nullable: false)]
     private string $login;
 
-    /**
-     * @ORM\Column(name="password", type="string", length=512, nullable=false)
-     */
+    #[ORM\Column(name: "password", type: "string", length: 512, nullable: false)]
     private string $password;
 
-    /**
-     * @ORM\Column(name="solidcp_login_id", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: "solidcp_login_id", type: "integer", nullable: false)]
     private int $solidcpLoginId;
 
-    /**
-     * @ORM\Column(name="is_default", type="boolean", nullable=false, options={"default"="0"})
-     */
+    #[ORM\Column(name: "is_default", type: "boolean", nullable: false, options: ["default" => 0])]
     private bool $isDefault;
 
-    /**
-     * @ORM\Column(name="enabled", type="boolean", nullable=false, options={"default"="1"})
-     */
+    #[ORM\Column(name: "enabled", type: "boolean", nullable: false, options: ["default" => 1])]
     private bool $enabled;
 
-    /**
-     * @var Collection|SolidcpServer[]
-     *
-     * @ORM\OneToMany(targetEntity=SolidcpServer::class, mappedBy="enterprise")
-     */
+    /** @var Collection|SolidcpServer[] */
+    #[ORM\OneToMany(mappedBy: "enterprise", targetEntity: SolidcpServer::class)]
     private array|Collection|ArrayCollection $solidcpServers;
 
     public function __construct(EnterpriseDispatcherService $service, string $name, string $url, string $login, string $password, bool $enabled = true)
@@ -100,7 +75,7 @@ class EnterpriseDispatcher implements AggregateRoot
 
     public function disable(): void
     {
-        if(!$this->isEnabled()){
+        if (!$this->isEnabled()) {
             throw new \DomainException("The Enterprise Dispatcher {$this->getName()} is already disable");
         }
         $this->enabled = false;
@@ -109,7 +84,7 @@ class EnterpriseDispatcher implements AggregateRoot
 
     public function enable(): void
     {
-        if($this->isEnabled()){
+        if ($this->isEnabled()) {
             throw new \DomainException("The Enterprise Dispatcher {$this->getName()} is already enable");
         }
         $this->enabled = true;

@@ -12,62 +12,36 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * SolidcpHostingPlan
- *
- * @ORM\Table(
- *     name="cp_solidcp_hosting_plans",
- *     indexes={
- *          @ORM\Index(name="cp_solidcp_hosting_plans_id_hosting_space_idx", columns={"id_hosting_space"})
- *  })
- * @ORM\Entity
- */
+#[ORM\Table(name: "cp_solidcp_hosting_plans")]
+#[ORM\Index(columns: ["id_hosting_space"], name: "cp_solidcp_hosting_plans_id_hosting_space_idx")]
+#[ORM\Entity]
 class SolidcpHostingPlan implements AggregateRoot
 {
     use EventsTrait;
-    /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=SolidcpHostingSpace::class, inversedBy="hostingPlans")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_hosting_space", referencedColumnName="id", nullable=false)
-     * })
-     */
+    #[ORM\ManyToOne(targetEntity: SolidcpHostingSpace::class, inversedBy: "hostingPlans")]
+    #[ORM\JoinColumn(name: "id_hosting_space", referencedColumnName: "id", nullable: false)]
     private SolidcpHostingSpace $hostingSpace;
 
-    /**
-     * @ORM\Column(name="solidcp_id_plan", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: "solidcp_id_plan", type: "integer", nullable: false)]
     private int $solidcpIdPlan;
 
-    /**
-     * @ORM\Column(name="solidcp_id_server", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: "solidcp_id_server", type: "integer", nullable: false)]
     private int $solidcpIdServer;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=128, nullable=false)
-     */
+    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
     private string $name;
 
-    /**
-     * @var Collection|Package[]
-     *
-     * @ORM\ManyToMany(targetEntity=Package::class, inversedBy="solidcpHostingPlans")
-     * @ORM\JoinTable(name="cp_package_assigned_scp_hosting_plans",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="id_plan", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="id_package", referencedColumnName="id_package", nullable=false)
-     *   }
-     * )
-     */
+    /** @var Collection|Package[] */
+    #[ORM\ManyToMany(targetEntity: Package::class, inversedBy: "solidcpHostingPlans")]
+    #[ORM\JoinTable(name: "cp_package_assigned_scp_hosting_plans")]
+    #[ORM\JoinColumn(name: "id_plan", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[ORM\InverseJoinColumn(name: "id_package", referencedColumnName: "id_package", nullable: false)]
     private array|Collection|ArrayCollection $assignedPackages;
 
     public function __construct(SolidcpHostingSpace $hostingSpace, int $solidcpIdPlan, HostingPlanService $hostingPlanService, string $name)

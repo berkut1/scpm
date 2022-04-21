@@ -10,63 +10,39 @@ use App\Model\ControlPanel\Entity\Package\PackageType;
 use App\Model\EventsTrait;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * VirtualMachinePackage
- *
- * @ORM\Table(
- *     name="cp_package_virtual_machines",
- *     indexes={
- *          @ORM\Index(name="cp_package_virtual_machines_id_package_idx", columns={"id_package"})
- *  })
- * @ORM\Entity
- */
+#[ORM\Table(name: "cp_package_virtual_machines")]
+#[ORM\Index(columns: ["id_package"], name: "cp_package_virtual_machines_id_package_idx")]
+#[ORM\Entity]
 class VirtualMachinePackage implements AggregateRoot
 {
     use EventsTrait;
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(name="id_package", type="cp_package_id", nullable=false)
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "id_package", type: "cp_package_id", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "NONE")]
     private Id $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Package::class, cascade={"persist"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_package", referencedColumnName="id_package", nullable=false, onDelete="CASCADE")
-     * })
-     */
+    #[ORM\OneToOne(targetEntity: Package::class, cascade: ["persist"])]
+    #[ORM\JoinColumn(name: "id_package", referencedColumnName: "id_package", nullable: false, onDelete: "CASCADE")]
     private Package $package;
 
-    /**
-     * @ORM\Column(name="cores", type="integer", nullable=false, options={"default"="1"})
-     */
-    private int $cores = 1;
+    #[ORM\Column(name: "cores", type: "integer", nullable: false, options: ["default" => 1])]
+    private int $cores;
 
-    /**
-     * @ORM\Column(name="threads", type="integer", nullable=false, options={"default"="1"})
-     */
-    private int $threads = 1;
+    #[ORM\Column(name: "threads", type: "integer", nullable: false, options: ["default" => 1])]
+    private int $threads;
 
-    /**
-     * @ORM\Column(name="ram_mb", type="integer", nullable=false, options={"default"="1024"})
-     */
-    private int $ramMb = 1024;
+    #[ORM\Column(name: "ram_mb", type: "integer", nullable: false, options: ["default" => 1024])]
+    private int $ramMb;
 
-    /**
-     * @ORM\Column(name="space_gb", type="integer", nullable=false, options={"default"="32"})
-     */
-    private int $spaceGb = 32;
+    #[ORM\Column(name: "space_gb", type: "integer", nullable: false, options: ["default" => 32])]
+    private int $spaceGb;
 
-    /**
-     * @ORM\Column(name="iops_min", type="integer", nullable=false, options={"default"="0"})
-     */
-    private int $iopsMin = 0;
+    #[ORM\Column(name: "iops_min", type: "integer", nullable: false, options: ["default" => 0])]
+    private int $iopsMin;
 
-    /**
-     * @ORM\Column(name="iops_max", type="integer", nullable=false, options={"default"="0"})
-     */
-    private int $iopsMax = 0;
+    #[ORM\Column(name: "iops_max", type: "integer", nullable: false, options: ["default" => 0])]
+    private int $iopsMax;
 
     public function __construct(Id $id, string $name, int $cores, int $threads, int $ramMb, int $spaceGb, int $iopsMin, int $iopsMax)
     {

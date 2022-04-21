@@ -13,74 +13,44 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
-/**
- * SolidcpServer
- *
- * @ORM\Table(
- *     name="cp_solidcp_servers",
- *     indexes={
- *          @ORM\Index(name="cp_solidcp_servers_id_location_idx", columns={"id_location"}),
- *          @ORM\Index(name="cp_solidcp_servers_id_enterprise_dispatcher_idx", columns={"id_enterprise_dispatcher"})
- *  })
- * @ORM\Entity
- */
+#[ORM\Table(name: "cp_solidcp_servers")]
+#[ORM\Index(columns: ["id_location"], name: "cp_solidcp_servers_id_location_idx")]
+#[ORM\Index(columns: ["id_enterprise_dispatcher"], name: "cp_solidcp_servers_id_enterprise_dispatcher_idx")]
+#[ORM\Entity]
 class SolidcpServer implements AggregateRoot
 {
     use EventsTrait;
-    /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=EnterpriseDispatcher::class, inversedBy="solidcpServers")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_enterprise_dispatcher", referencedColumnName="id", nullable=false)
-     * })
-     */
+    #[ORM\ManyToOne(targetEntity: EnterpriseDispatcher::class, inversedBy: "solidcpServers")]
+    #[ORM\JoinColumn(name: "id_enterprise_dispatcher", referencedColumnName: "id", nullable: false)]
     private EnterpriseDispatcher $enterprise;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Location::class, inversedBy="solidcpServers")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_location", referencedColumnName="id", nullable=false)
-     * })
-     */
+    #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: "solidcpServers")]
+    #[ORM\JoinColumn(name: "id_location", referencedColumnName: "id", nullable: false)]
     private Location $location;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=128, nullable=false)
-     */
+    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
     private string $name;
 
-    /**
-     * @ORM\Column(name="cores", type="integer", nullable=false, options={"default"="1"})
-     */
-    private int $cores = 1;
+    #[ORM\Column(name: "cores", type: "integer", nullable: false, options: ["default" => 1])]
+    private int $cores;
 
-    /**
-     * @ORM\Column(name="threads", type="integer", nullable=false, options={"default"="1"})
-     */
-    private int $threads = 1;
+    #[ORM\Column(name: "threads", type: "integer", nullable: false, options: ["default" => 1])]
+    private int $threads;
 
-    /**
-     * @ORM\Column(name="memory_mb", type="bigint", nullable=false, options={"default"="1024"})
-     */
+    #[ORM\Column(name: "memory_mb", type: "bigint", nullable: false, options: ["default" => 1024])]
     private int $memoryMb = 1024;
 
-    /**
-     * @ORM\Column(name="enabled", type="boolean", nullable=false, options={"default"="1"})
-     */
+    #[ORM\Column(name: "enabled", type: "boolean", nullable: false, options: ["default" => 1])]
     private bool $enabled;
 
-    /**
-     * @var Collection|SolidcpHostingSpace[]
-     *
-     * @ORM\OneToMany(targetEntity=SolidcpHostingSpace::class,
-     *     orphanRemoval=true, cascade={"persist"}, mappedBy="solidcpServer")
-     */
+    /** @var Collection|SolidcpHostingSpace[] */
+    #[ORM\OneToMany(mappedBy: "solidcpServer", targetEntity: SolidcpHostingSpace::class, cascade: ["persist"], orphanRemoval: true)]
     private array|Collection|ArrayCollection $hostingSpaces;
 
     public function __construct(EnterpriseDispatcher $enterprise, Location $location, string $name, int $cores, int $threads, int $memoryMb, bool $enabled = true)
@@ -109,7 +79,7 @@ class SolidcpServer implements AggregateRoot
 
     public function disable(): void
     {
-        if(!$this->isEnabled()){
+        if (!$this->isEnabled()) {
             throw new \DomainException("The Node {$this->getName()} is already disable");
         }
         $this->enabled = false;
@@ -118,7 +88,7 @@ class SolidcpServer implements AggregateRoot
 
     public function enable(): void
     {
-        if($this->isEnabled()){
+        if ($this->isEnabled()) {
             throw new \DomainException("The Node {$this->getName()} is already enable");
         }
         $this->enabled = true;

@@ -59,7 +59,7 @@ doctrine:
                 alias: User
             ControlPanel:
                 is_bundle: false
-                type: annotation
+                type: attribute
                 dir: '%kernel.project_dir%/src/Model/ControlPanel/Entity'
                 prefix: 'App\Model\ControlPanel\Entity'
                 alias: ControlPanel
