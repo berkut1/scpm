@@ -1,17 +1,11 @@
 doctrine:
     dbal:
-        # configure these for your database server
-        driver: 'pdo_pgsql'
-#        server_version: '14.1' #in .env
-#        charset: utf8          #in .env
+        #driver: 'pdo_pgsql'
         default_table_options:
             charset: utf8
             collate: utf8_unicode_ci
 
         url: '%env(resolve:DATABASE_URL)%'
-        # Important: be sure that this parameters exists and its value is set to true #TODO
-        # to fix the deprecation warning! https://github.com/doctrine/DoctrineBundle/pull/1290 #TODO
-        #override_url: true #TODO: remove, since doctrine/doctrine-bundle 2.4 && 4.4.32 not need anymore
 
         mapping_types:
             cidr: string #docrtinr does not know cidr type
@@ -63,3 +57,28 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Model/ControlPanel/Entity'
                 prefix: 'App\Model\ControlPanel\Entity'
                 alias: ControlPanel
+
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system

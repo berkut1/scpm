@@ -65,3 +65,11 @@ devassets:
 
 prodassets:
 	docker-compose run --rm scpsc-node yarn encore production
+
+git-recipe: gitreset gitpull
+
+gitreset:
+	docker-compose run --rm scpsc-php-cli git reset HEAD --hard
+
+gitpull:
+	docker-compose run --rm scpsc-php-cli git pull origin master -r
