@@ -7,13 +7,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $path = '';
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public string $name = '';
 
     public static function create(string $path, string $name): self

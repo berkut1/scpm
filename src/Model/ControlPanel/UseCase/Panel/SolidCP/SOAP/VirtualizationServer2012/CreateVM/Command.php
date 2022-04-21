@@ -8,14 +8,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Command
 {
     public ?int $id_enterprise_dispatcher = null;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $packageId = 0;
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public string $id_package_virtual_machines = '';
 //    /**
 //     * @Assert\NotBlank()
@@ -42,89 +40,68 @@ class Command
 //     * @Assert\PositiveOrZero()
 //     */
 //    public int $hddMaximumIOPS = 0;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\PositiveOrZero()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
     public int $snapshotsNumber = 0;
     public ?string $hostname = null;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $dvdDriveInstalled = true;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $bootFromCD = false;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $numLockEnabled = false;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $startTurnOffAllowed = true;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $pauseResumeAllowed = true;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $rebootAllowed = true;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $resetAllowed = true;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $reinstallAllowed = false;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $externalNetworkEnabled = true;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $privateNetworkEnabled = false;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\PositiveOrZero()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
     public int $defaultaccessvlan = 0;
 
 
-
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $osTemplateFile = "";
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public string $password = "";
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $summaryLetterEmail = false;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\PositiveOrZero()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
     public int $externalAddressesNumber = 1;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $randomExternalAddresses = true;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\PositiveOrZero()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
     public int $privateAddressesNumber = 0;
-    /**
-     * @Assert\Type("bool")
-     */
+
+    #[Assert\Type(type: 'bool')]
     public bool $randomPrivateAddresses = false;
 
     public static function createDefault(int $packageId, string $id_package_virtual_machines, string $osTemplateFile, string $password, int $externalAddressesNumber, ?int $id_enterprise_dispatcher = null):self

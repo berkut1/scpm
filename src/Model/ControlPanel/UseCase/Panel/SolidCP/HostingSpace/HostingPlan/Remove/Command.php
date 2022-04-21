@@ -7,16 +7,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $id;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $id_plan;
 
     public function __construct(int $id, int $id_plan)
