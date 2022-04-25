@@ -8,10 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Command
 {
     public ?int $id_enterprise_dispatcher = null;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $solidcp_item_id = 0;
 
 

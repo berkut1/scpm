@@ -10,39 +10,31 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public Id $id;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $cores;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $threads;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $ram_mb;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $space_gb;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\PositiveOrZero()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
     public int $iops_min;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\PositiveOrZero()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
     public int $iops_max;
 
     private function __construct(Id $id)

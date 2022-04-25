@@ -8,9 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Command
 {
     public ?int $id_enterprise_dispatcher = null;
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public string $username = '';
 
     public static function create(string $username, ?int $id_enterprise_dispatcher = null): self

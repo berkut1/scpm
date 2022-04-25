@@ -8,15 +8,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Command
 {
     public ?int $id_enterprise_dispatcher = null;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $userId = 0;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $planId = 0;
     public ?string $spaceName = null;
 

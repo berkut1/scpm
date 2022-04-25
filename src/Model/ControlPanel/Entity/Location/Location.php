@@ -11,32 +11,22 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
-/**
- * Location
- *
- * @ORM\Table(name="cp_locations")
- * @ORM\Entity
- */
+#[ORM\Table(name: "cp_locations")]
+#[ORM\Entity]
 class Location implements AggregateRoot
 {
     use EventsTrait;
-    /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(name: "name", type: "string", length: 255, nullable: false)]
     private string $name;
 
-    /**
-     * @var Collection|SolidcpServer[]
-     *
-     * @ORM\OneToMany(targetEntity=SolidcpServer::class, mappedBy="location")
-     */
+    /** @var Collection|SolidcpServer[] */
+    #[ORM\OneToMany(mappedBy: "location", targetEntity: SolidcpServer::class)]
     private array|Collection|ArrayCollection $solidcpServers;
 
     public function __construct(string $name)

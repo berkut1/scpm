@@ -8,21 +8,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     private int $id_hosting_space;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
-    private int $id_enterprise_dispatcher;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
-    public int $id_server;
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    private int $id_enterprise_dispatcher = 0;
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    public int $id_server = 0;
 
     private function __construct(int $id_hosting_space)
     {

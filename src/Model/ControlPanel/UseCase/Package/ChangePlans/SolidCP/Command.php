@@ -9,17 +9,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     private string $id_package;
-    /**
-     * @Assert\Positive()
-     */
+
+    #[Assert\Positive]
     public array $id_plans = [];
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     private string $packageType;
 
     private function __construct(string $id_package)

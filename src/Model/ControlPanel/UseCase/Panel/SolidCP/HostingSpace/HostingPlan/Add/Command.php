@@ -7,19 +7,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     private int $id_hosting_space;
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Positive()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $solidcp_id_plan = 0;
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public string $name = '';
 
     public function __construct(int $id_hosting_space)

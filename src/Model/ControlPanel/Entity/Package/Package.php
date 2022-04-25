@@ -10,37 +10,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
-/**
- * Package
- *
- * @ORM\Table(name="cp_packages")
- * @ORM\Entity
- */
+#[ORM\Table(name: "cp_packages")]
+#[ORM\Entity]
 class Package implements AggregateRoot
 {
     use EventsTrait;
-    /**
-     * @ORM\Column(name="id_package", type="cp_package_id", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "id_package", type: "cp_package_id", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "NONE")]
     private Id $id;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=128, nullable=false)
-     */
+    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
     private string $name;
 
-    /**
-     * @ORM\Column(name="package_type", type="cp_package_type", length=512, nullable=false)
-     */
+    #[ORM\Column(name: "package_type", type: "cp_package_type", length: 512, nullable: false)]
     private PackageType $packageType;
 
-    /**
-     * @var ArrayCollection|SolidcpHostingPlan[]
-     *
-     * @ORM\ManyToMany(targetEntity=SolidcpHostingPlan::class, mappedBy="assignedPackages")
-     */
+    /** @var ArrayCollection|SolidcpHostingPlan[] */
+    #[ORM\ManyToMany(targetEntity: SolidcpHostingPlan::class, mappedBy: "assignedPackages")]
     private mixed $solidcpHostingPlans;
 
     #[Pure]

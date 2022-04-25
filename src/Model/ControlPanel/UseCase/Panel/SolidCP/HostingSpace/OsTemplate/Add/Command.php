@@ -9,20 +9,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\Positive()
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $id_enterprise_dispatcher = 0;
-    /**
-     * @Assert\Positive()
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $id_hosting_space = 0;
-    /**
-     * @Assert\Positive()
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     public int $packageId = 0;
     public array $osTemplates = [];
 

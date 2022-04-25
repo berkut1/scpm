@@ -73,7 +73,7 @@ class NodesController extends AbstractController
         ]);
     }
 
-    #[Route('/create-hosting-space', name: '.createHostingSpace')]
+    #[Route('/{id}/create-hosting-space', name: '.createHostingSpace')]
     public function createHostingSpace(SolidcpServer $solidcpServer, Request $request, CreateHostingSpace\Handler $handler): Response
     {
         $command = CreateHostingSpace\Command::fromServer($solidcpServer);

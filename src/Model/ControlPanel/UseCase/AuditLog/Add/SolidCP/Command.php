@@ -11,21 +11,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public EnterpriseDispatcher $enterpriseDispatcher;
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public Entity $entity;
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public TaskNameInterface $taskName;
-    /**
-     * @Assert\NotBlank()
-     */
+
+    #[Assert\NotBlank]
     public array $records;
 
     /** When we call this method, we always have EnterpriseDispatcher, because we do SOAP call to SolidCP

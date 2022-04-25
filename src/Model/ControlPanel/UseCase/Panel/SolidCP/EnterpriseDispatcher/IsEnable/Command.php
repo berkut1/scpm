@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    public ?int $id_enterprise_dispatcher_server;
+    public ?int $id_enterprise_dispatcher_server = null;
 
     public function __construct(?int $id_enterprise_dispatcher_server = null)
     {

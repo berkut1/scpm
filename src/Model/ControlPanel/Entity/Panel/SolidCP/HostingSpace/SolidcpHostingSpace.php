@@ -14,78 +14,46 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
-/**
- * SolidcpHostingSpace
- *
- * @ORM\Table(
- *     name="cp_solidcp_hosting_spaces",
- *     indexes={
- *          @ORM\Index(name="cp_solidcp_hosting_spaces_id_server_idx", columns={"id_server"})
- *  })
- * @ORM\Entity
- */
+#[ORM\Table(name: "cp_solidcp_hosting_spaces")]
+#[ORM\Index(columns: ["id_server"], name: "cp_solidcp_hosting_spaces_id_server_idx")]
+#[ORM\Entity]
 class SolidcpHostingSpace implements AggregateRoot
 {
     use EventsTrait;
-    /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=SolidcpServer::class, inversedBy="hostingSpaces")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_server", referencedColumnName="id", nullable=false)
-     * })
-     */
+    #[ORM\ManyToOne(targetEntity: SolidcpServer::class, inversedBy: "hostingSpaces")]
+    #[ORM\JoinColumn(name: "id_server", referencedColumnName: "id", nullable: false)]
     private SolidcpServer $solidcpServer;
 
-    /**
-     * @ORM\Column(name="solidcp_id_hosting_space", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: "solidcp_id_hosting_space", type: "integer", nullable: false)]
     private int $solidCpIdHostingSpace;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=128, nullable=false)
-     */
+    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
     private string $name;
 
-    /**
-     * @ORM\Column(name="max_active_number", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: "max_active_number", type: "integer", nullable: false)]
     private int $maxActiveNumber;
 
-    /**
-     * @ORM\Column(name="max_reserved_memory_kb", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: "max_reserved_memory_kb", type: "integer", nullable: false)]
     private int $maxReservedMemoryKb;
 
-    /**
-     * @ORM\Column(name="space_quota_gb", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: "space_quota_gb", type: "integer", nullable: false)]
     private int $spaceQuotaGb;
 
-    /**
-     * @ORM\Column(name="enabled", type="boolean", nullable=false, options={"default"="1"})
-     */
-    private bool $enabled = true;
+    #[ORM\Column(name: "enabled", type: "boolean", nullable: false, options: ["default" => 1])]
+    private bool $enabled;
 
-    /**
-     * @var Collection|SolidcpHostingPlan[]
-     *
-     * @ORM\OneToMany(targetEntity=SolidcpHostingPlan::class,
-     *     orphanRemoval=true, cascade={"persist"}, mappedBy="hostingSpace")
-     */
+    /** @var Collection|SolidcpHostingPlan[] */
+    #[ORM\OneToMany(mappedBy: "hostingSpace", targetEntity: SolidcpHostingPlan::class, cascade: ["persist"], orphanRemoval: true)]
     private array|Collection|ArrayCollection $hostingPlans;
 
-    /**
-     * @var Collection|OsTemplate[]
-     *
-     * @ORM\OneToMany(targetEntity=OsTemplate::class,
-     *     orphanRemoval=true, cascade={"persist"}, mappedBy="hostingSpace")
-     */
+    /** @var Collection|OsTemplate[] */
+    #[ORM\OneToMany(mappedBy: "hostingSpace", targetEntity: OsTemplate::class, cascade: ["persist"], orphanRemoval: true)]
     private array|Collection|ArrayCollection $osTemplates;
 
     public function __construct(SolidcpServer $solidcpServer, int $solidCpIdHostingSpace, string $name, int $maxActiveNumber, int $maxReservedMemoryKb, int $spaceQuotaGb, bool $enabled = true)
@@ -113,7 +81,7 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function changeServer(SolidcpServer $newSolidcpServer): void
     {
-        if($newSolidcpServer->getId() === $this->solidcpServer->getId()){ //nothing changed
+        if ($newSolidcpServer->getId() === $this->solidcpServer->getId()) { //nothing changed
             return;
         }
         $oldNodeName = $this->solidcpServer->getName();
@@ -123,7 +91,7 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function changSolidCpHostingSpace(int $newSolidCpIdHostingSpace): void
     {
-        if($newSolidCpIdHostingSpace === $this->solidCpIdHostingSpace){ //nothing changed
+        if ($newSolidCpIdHostingSpace === $this->solidCpIdHostingSpace) { //nothing changed
             return;
         }
         $oldSolidCpIdHostingSpace = $this->solidCpIdHostingSpace;
@@ -133,8 +101,8 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function addHostingPlan(SolidcpHostingPlan $solidcpHostingPlan): void
     {
-        foreach ($this->hostingPlans as $current){
-            if($current->getSolidcpIdPlan() === $solidcpHostingPlan->getSolidcpIdPlan()){
+        foreach ($this->hostingPlans as $current) {
+            if ($current->getSolidcpIdPlan() === $solidcpHostingPlan->getSolidcpIdPlan()) {
                 throw new EntityNotFoundException('Hosting Plan already exists');
                 //return;
             }
@@ -145,8 +113,8 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function removeHostingPlan(int $idHostingPlan): void
     {
-        foreach ($this->hostingPlans as $current){
-            if($idHostingPlan === $current->getId()){
+        foreach ($this->hostingPlans as $current) {
+            if ($idHostingPlan === $current->getId()) {
                 $this->hostingPlans->removeElement($current);
                 $this->recordEvent(new Event\SolidcpHostingSpaceRemovedPlan($this, $current->getName()));
                 return;
@@ -157,8 +125,8 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function addOsTemplate(string $path, string $name): void
     {
-        foreach ($this->osTemplates as $current){
-            if($current->getPath() === $path){
+        foreach ($this->osTemplates as $current) {
+            if ($current->getPath() === $path) {
                 throw new EntityNotFoundException("TemplateOs $name already added");
             }
         }
@@ -169,8 +137,8 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function removeOsTemplate(int $id): void
     {
-        foreach ($this->osTemplates as $current){
-            if($current->getId() === $id){
+        foreach ($this->osTemplates as $current) {
+            if ($current->getId() === $id) {
                 $this->osTemplates->removeElement($current);
                 $this->recordEvent(new Event\SolidcpHostingSpaceRemovedOsTemplate($this, $current));
                 return;
@@ -181,7 +149,7 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function disable(): void
     {
-        if(!$this->isEnabled()){
+        if (!$this->isEnabled()) {
             throw new \DomainException("The Hosting Space {$this->getName()} is already disable");
         }
         $this->enabled = false;
@@ -190,7 +158,7 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function enable(): void
     {
-        if($this->isEnabled()){
+        if ($this->isEnabled()) {
             throw new \DomainException("The Hosting Space {$this->getName()} is already enable");
         }
         $this->enabled = true;
@@ -270,8 +238,8 @@ class SolidcpHostingSpace implements AggregateRoot
 
     public function getOsTemplateByName(string $name): ?OsTemplate
     {
-        foreach ($this->getOsTemplates() as $template){
-            if($template->getName() === $name){
+        foreach ($this->getOsTemplates() as $template) {
+            if ($template->getName() === $name) {
                 return $template;
             }
         }
