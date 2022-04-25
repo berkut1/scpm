@@ -13,7 +13,7 @@ class Command
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    private int $id_enterprise_dispatcher;
+    private int $id_enterprise_dispatcher = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]

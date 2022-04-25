@@ -12,19 +12,19 @@ class Command
     public int $id;
 
     #[Assert\NotBlank]
-    public string $name;
+    public string $name = '';
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $max_active_number;
+    public int $max_active_number = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $max_reserved_memory_mb;
+    public int $max_reserved_memory_mb = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $space_quota_gb;
+    public int $space_quota_gb = 0;
 
     private function __construct(int $id)
     {

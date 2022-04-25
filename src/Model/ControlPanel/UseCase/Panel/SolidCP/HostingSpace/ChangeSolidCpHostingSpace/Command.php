@@ -14,11 +14,11 @@ class Command
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_enterprise_dispatcher;
+    public int $id_enterprise_dispatcher = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_solidcp_hosting_space;
+    public int $id_solidcp_hosting_space = 0;
 
     private function __construct(int $id)
     {

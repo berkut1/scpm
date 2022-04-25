@@ -9,7 +9,7 @@ class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_solidcp_server;
+    public int $id_solidcp_server = 0;
 
     public function __construct(int $id_solidcp_server)
     {

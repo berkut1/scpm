@@ -11,19 +11,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Command
 {
     #[Assert\NotBlank]
-    public int $id;
+    public int $id = 0;
 
     #[Assert\NotBlank]
-    public string $name;
+    public string $name = '';
 
     #[Assert\NotBlank]
-    public string $url;
+    public string $url = '';
 
     #[Assert\NotBlank]
-    public string $login;
+    public string $login = '';
 
     #[Assert\NotBlank]
-    public string $password;
+    public string $password = '';
 
     private function __construct(int $id)
     {

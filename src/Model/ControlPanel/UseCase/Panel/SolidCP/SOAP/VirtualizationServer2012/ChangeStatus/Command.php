@@ -7,16 +7,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    public ?int $id_enterprise_dispatcher;
+    public ?int $id_enterprise_dispatcher = null;
 
     #[Assert\NotBlank]
-    public string $client_login;
+    public string $client_login = '';
 
     #[Assert\NotBlank]
-    public string $vps_ip_address;
+    public string $vps_ip_address = '';
 
     #[Assert\NotBlank]
-    public string $vps_status;
+    public string $vps_status = '';
 
     public static function create(string $client_login, $vps_ip_address, string $vps_status, ?int $id_enterprise_dispatcher = null): self
     {
