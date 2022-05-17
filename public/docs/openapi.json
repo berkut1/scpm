@@ -61,7 +61,6 @@
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "nullable": true,
                                             "properties": {
                                                 "code": {
                                                     "type": "integer"
@@ -70,7 +69,8 @@
                                                     "type": "string"
                                                 }
                                             },
-                                            "type": "object"
+                                            "type": "object",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
@@ -907,7 +907,6 @@
                                             "type": "object"
                                         },
                                         "link": {
-                                            "nullable": true,
                                             "properties": {
                                                 "rel": {
                                                     "type": "string"
@@ -919,7 +918,8 @@
                                                     "type": "string"
                                                 }
                                             },
-                                            "type": "object"
+                                            "type": "object",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
@@ -981,6 +981,91 @@
                         "schema": {
                             "type": "integer",
                             "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "id_enterprise_dispatcher",
+                        "in": "query",
+                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                        "required": false,
+                        "style": "form",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "state": {
+                                            "description": "After installation, we need to get the state = Running, everything else in this case means a problem. If state = Starting, then need to wait.",
+                                            "type": "string",
+                                            "example": "Snapshotting or Migrating or Deleted or Unknown or Other or Running or Off or Stopping or Saved or Paused or Starting or Reset or Saving or Pausing or Resuming or FastSaved or FastSaving or RunningCritical or OffCritical or StoppingCritical or SavedCritical or PausedCritical or StartingCritical or ResetCritical or SavingCritical or PausingCritical or ResumingCritical or FastSavedCritical or FastSavingCritical"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/solidCP/vps/ip/{vps_ip_address}/state": {
+            "get": {
+                "tags": [
+                    "VPS"
+                ],
+                "description": "Get state of VM Running/Stopped/ets. Use it only if you need to check a state of a VM after changing the VPS status",
+                "operationId": "72edc9e130055bacefe708c3f82ea32f",
+                "parameters": [
+                    {
+                        "name": "vps_ip_address",
+                        "in": "path",
+                        "description": "VM IPv4 address",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "ipv4"
                         }
                     },
                     {
@@ -1306,7 +1391,6 @@
             "ErrorModel": {
                 "properties": {
                     "error": {
-                        "nullable": true,
                         "properties": {
                             "code": {
                                 "type": "integer"
@@ -1315,10 +1399,10 @@
                                 "type": "string"
                             }
                         },
-                        "type": "object"
+                        "type": "object",
+                        "nullable": true
                     },
                     "violations": {
-                        "nullable": true,
                         "type": "array",
                         "items": {
                             "properties": {
@@ -1330,7 +1414,8 @@
                                 }
                             },
                             "type": "object"
-                        }
+                        },
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -1338,7 +1423,6 @@
             "SimpleError": {
                 "properties": {
                     "error": {
-                        "nullable": true,
                         "properties": {
                             "code": {
                                 "type": "integer"
@@ -1347,7 +1431,8 @@
                                 "type": "string"
                             }
                         },
-                        "type": "object"
+                        "type": "object",
+                        "nullable": true
                     }
                 },
                 "type": "object"

@@ -9,9 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class VpsController extends AbstractController
@@ -165,9 +165,82 @@ class VpsController extends AbstractController
      * )
      */
     #[Route('/solidCP/vps/{solidcp_item_id}/state', name: 'apiVps.vpsState', requirements: ['solidcp_item_id' => '\d+'], methods: ['GET'])]
-    public function vpsState(int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsState\Handler $handler): Response
+    public function vpsState(int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsState\ByItemId\Handler $handler): Response
     {
-        $command = new VirtualizationServer2012\Check\VpsState\Command($solidcp_item_id, (int)$request->query->get('id_enterprise_dispatcher'));
+        $command = new VirtualizationServer2012\Check\VpsState\ByItemId\Command($solidcp_item_id, (int)$request->query->get('id_enterprise_dispatcher'));
+
+        $violations = $this->validator->validate($command);
+        if (\count($violations)) {
+            $json = $this->serializer->serialize($violations, 'json');
+            return new JsonResponse($json, Response::HTTP_BAD_REQUEST, [], true);
+        }
+
+        $result = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
+
+        return $this->json([
+            'state' => $result,
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/solidCP/vps/ip/{vps_ip_address}/state",
+     *     tags={"VPS"},
+     *     description="Get state of VM Running/Stopped/ets. Use it only if you need to check a state of a VM after changing the VPS status",
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="vps_ip_address", description="VM IPv4 address",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="ipv4"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="id_enterprise_dispatcher", description="if not selected, the default is used. No need to choose if only one enterprise is used",
+     *         in="query",
+     *         required=false,
+     *         @OA\Schema(type="integer"),
+     *         style="form"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="state", type="string", example="Snapshotting or Migrating or Deleted or Unknown or Other or Running or Off or Stopping or Saved or Paused or Starting or Reset or Saving or Pausing or Resuming or FastSaved or FastSaving or RunningCritical or OffCritical or StoppingCritical or SavedCritical or PausedCritical or StartingCritical or ResetCritical or SavingCritical or PausingCritical or ResumingCritical or FastSavedCritical or FastSavingCritical",
+     *                          description="After installation, we need to get the state = Running, everything else in this case means a problem. If state = Starting, then need to wait."),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Errors",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Error",
+     *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    #[Route('/solidCP/vps/ip/{vps_ip_address}/state', name: 'apiVps.vpsStateByIp', methods: ['GET'])]
+    public function vpsStateByIp(string $vps_ip_address, Request $request, VirtualizationServer2012\Check\VpsState\ByIP\Handler $handler): Response
+    {
+        $command = new VirtualizationServer2012\Check\VpsState\ByIP\Command();
+        /** @var VirtualizationServer2012\Check\VpsState\ByIP\Command $command */
+        $command = $this->denormalizer->denormalize($request->query->all(), VirtualizationServer2012\Check\VpsState\ByIP\Command::class, 'array', [
+            'object_to_populate' => $command, //got prop from AbstractObjectNormalizer::
+            //'ignored_attributes' => ['id_enterprise_dispatcher'],
+            'disable_type_enforcement' => true //https://github.com/symfony/symfony/issues/32167#issuecomment-510241190
+        ]);
+        $command->vps_ip_address = $vps_ip_address;
 
         $violations = $this->validator->validate($command);
         if (\count($violations)) {
