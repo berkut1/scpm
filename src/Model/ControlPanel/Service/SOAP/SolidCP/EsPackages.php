@@ -215,15 +215,15 @@ final class EsPackages extends SoapExecute
             /*thanks for this awful code - data return SolidCP*/
             if (isset($summary[0])) { //we can get different arrays from getNestedPackagesSummary
                 foreach ($summary as $one) {
-                    if ($one['StatusID'] === 1) {
-                        $countOfActivePackages = $one['PackagesNumber'];
+                    if ((int)$one['StatusID'] === 1) {
+                        $countOfActivePackages = (int)$one['PackagesNumber'];
                         break;
                     }
                 }
                 unset($one);
             } else {
-                if ($summary['StatusID'] === 1) {
-                    $countOfActivePackages = $summary['PackagesNumber'];
+                if ((int)$summary['StatusID'] === 1) {
+                    $countOfActivePackages = (int)$summary['PackagesNumber'];
                 }
             }
         }
