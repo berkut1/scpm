@@ -113,7 +113,7 @@ class HostingSpaceService
             $solidcpHostingSpace = $possiblePlan->getHostingSpace();
             $ignoreHostingSpace = false;
             foreach ($ignore_hosting_space_ids as $one) {
-                if ($one === $solidcpHostingSpace->getSolidCpIdHostingSpace()) {
+                if ((int)$one === $solidcpHostingSpace->getSolidCpIdHostingSpace()) {
                     $ignoreHostingSpace = true;
                     break;
                 }
