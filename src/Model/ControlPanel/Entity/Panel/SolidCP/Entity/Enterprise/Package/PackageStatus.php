@@ -14,6 +14,7 @@ class PackageStatus
 
     public function __construct(string $name)
     {
+        $name = ucfirst(strtolower($name)); //make sure we have correct status letter case
         Assert::oneOf($name, [
             self::ACTIVE,
             self::SUSPENDED,
