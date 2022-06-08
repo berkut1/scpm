@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer2012\ChangeStatus;
 
+use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\Package;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Service\SolidCP\ServerService;
@@ -35,7 +36,13 @@ class Handler
             throw new \DomainException("This IP is currently owned by client {$ip['UserName']}, not client {$command->client_login}");
         }
 
+        $records[] = Record::create('SOLIDCP_CHANGED_NAME_VPS_WITH_IP_TO_STATUS', [
+                $command->client_login,
+                $command->vps_ip_address,
+                $command->vps_status,
+            ]);
+
         $changeStatusCommand = new Package\ChangeStatus\Command($ip['PackageId'], $command->vps_status, $enterpriseDispatcher->getId());
-        $this->changeStatusHandler->handle($changeStatusCommand);
+        $this->changeStatusHandler->handle($changeStatusCommand, $records);
     }
 }

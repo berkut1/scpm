@@ -48,5 +48,8 @@ return [
     'SOLIDCP_CREATED_VM_WITH_ITEM_ID_ON_PACKAGE_ID' => 'Created SolidCP VM ID: %s in Package ID: %s',
     'SOLIDCP_ASSIGNED_IP_AMOUNT_TO_PACKAGE_ID' => 'Created Assigned IP amount: %s to Package ID: %s',
     'SOLIDCP_RENAMED_PACKAGE_WITH_ID_TO_NAME' => 'Renamed a package with ID: %s to: %s',
+    'SOLIDCP_CHANGED_USER_VPS_WITH_IP_TO_STATE_WITH_SUCCESS_RESULT' => 'Changed an user %s VPS with IP: %s to State: %s (IsSuccess: %s)',
+    'SOLIDCP_CHANGED_PACKAGE_WITH_ID_TO_STATUS' => 'Changed a package with ID %s to Status: %s',
+    'SOLIDCP_CHANGED_NAME_VPS_WITH_IP_TO_STATUS' => 'Changed an user %s VPS with IP %s to Status: %s',
     'SOLIDCP_ERROR' => 'Error: %s',
 ];

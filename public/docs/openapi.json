@@ -1135,6 +1135,131 @@
                 ]
             }
         },
+        "/solidCP/users/{client_login}/vps/{vps_ip_address}/state": {
+            "put": {
+                "tags": [
+                    "VPS"
+                ],
+                "description": "Change VPS state over IPv4, that assigned to the client client_login. (Start or TurnOff or ShutDown or Reset or Pause or Save or Reboot or Resume)",
+                "operationId": "963831b5611df92abde059b7fbce14b3",
+                "parameters": [
+                    {
+                        "name": "client_login",
+                        "in": "path",
+                        "description": "SolidCP client login",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vps_ip_address",
+                        "in": "path",
+                        "description": "VM IPv4 address",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "ipv4"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "vps_state"
+                                ],
+                                "properties": {
+                                    "vps_state": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Start",
+                                            "TurnOff",
+                                            "ShutDown",
+                                            "Reset",
+                                            "Pause",
+                                            "Save",
+                                            "Reboot",
+                                            "Resume"
+                                        ]
+                                    },
+                                    "id_enterprise_dispatcher": {
+                                        "description": "if not selected, the default is used. No need to choose if only one enterprise is used",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "IsSuccess": {
+                                            "description": "Return true or false if Success",
+                                            "type": "boolean"
+                                        },
+                                        "ErrorCodes": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorModel"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "InternalError",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InternalError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/solidCP/users/{client_login}/vps/{vps_ip_address}/status": {
             "put": {
                 "tags": [

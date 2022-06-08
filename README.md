@@ -12,7 +12,7 @@ Swagger API docs - http://localhost/docs/index.html
 Requirements
 ------------
 - PHP >= 8.0
-- PostgreSQL (not tested with other DBMS)
+- PostgreSQL
 
 Installation
 ------------
