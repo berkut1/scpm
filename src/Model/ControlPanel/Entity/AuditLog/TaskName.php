@@ -40,8 +40,9 @@ class TaskName implements TaskNameInterface
     public const TASK_CREATE_SOLIDCP_USER = 'create_solidcp_user';
     public const TASK_CHECK_SOLIDCP_USER = 'check_solidcp_user';
     public const TASK_CHECK_SOLIDCP_VPS_AVAILABLE_SPACES = 'task_check_solidcp_vps_available_spaces';
-    public const TASK_CHANGE_USER_VPS_STATE = 'task_change_user_vps_state';
+    public const TASK_CHANGE_SOLIDCP_USER_VPS_STATE = 'task_change_solidcp_user_vps_state';
     public const TASK_CREATE_SOLIDCP_PACKAGE = 'create_solidcp_package';
+    public const TASK_CHANGE_SOLIDCP_PACKAGE_STATUS = 'change_solidcp_package_status';
     public const TASK_CREATE_SOLIDCP_VPS = 'create_solidcp_vps';
     private string $name;
 
@@ -80,8 +81,9 @@ class TaskName implements TaskNameInterface
             self::TASK_CREATE_SOLIDCP_USER,
             self::TASK_CHECK_SOLIDCP_USER,
             self::TASK_CHECK_SOLIDCP_VPS_AVAILABLE_SPACES,
-            self::TASK_CHANGE_USER_VPS_STATE,
+            self::TASK_CHANGE_SOLIDCP_USER_VPS_STATE,
             self::TASK_CREATE_SOLIDCP_PACKAGE,
+            self::TASK_CHANGE_SOLIDCP_PACKAGE_STATUS,
             self::TASK_CREATE_SOLIDCP_VPS,
         ]);
 
@@ -245,14 +247,19 @@ class TaskName implements TaskNameInterface
         return self::create(self::TASK_CHECK_SOLIDCP_VPS_AVAILABLE_SPACES);
     }
 
-    public static function changeUserVpsState(): self
+    public static function changeSolidcpUserVpsState(): self
     {
-        return self::create(self::TASK_CHANGE_USER_VPS_STATE);
+        return self::create(self::TASK_CHANGE_SOLIDCP_USER_VPS_STATE);
     }
 
     public static function createSolidcpPackage(): self
     {
         return self::create(self::TASK_CREATE_SOLIDCP_PACKAGE);
+    }
+
+    public static function changeSolidcpPackageStatus(): self
+    {
+        return self::create(self::TASK_CHANGE_SOLIDCP_PACKAGE_STATUS);
     }
 
     public static function createSolidcpVps(): self

@@ -58,7 +58,7 @@ class Handler
             $auditLogCommand = new AuditLog\Add\SolidCP\Command(
                 $enterpriseDispatcher,
                 $entity,
-                TaskName::changeUserVpsState(),
+                TaskName::changeSolidcpUserVpsState(),
                 $records
             );
             $this->auditLogHandler->handle($auditLogCommand);
