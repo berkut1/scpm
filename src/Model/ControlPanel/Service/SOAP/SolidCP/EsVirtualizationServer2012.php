@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\VirtualizationServer2012\VirtualMachineRequestedState;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachine\VirtualMachine;
 use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
@@ -29,6 +30,23 @@ final class EsVirtualizationServer2012 extends SoapExecute
             throw $e;
         } catch (\Exception $e) {
             throw new \Exception("GenerateMacAddress Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        }
+    }
+
+    public function changeVirtualMachineState(int $itemId, VirtualMachineRequestedState $state): array
+    {
+        try {
+            return $this->convertArray(
+                $this->execute(
+                    self::SERVICE,
+                    'ChangeVirtualMachineState', [
+                    'itemId' => $itemId,
+                    'state' => $state
+                ])->ChangeVirtualMachineStateResult);
+        } catch (NotFoundException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw new \Exception("ChangeVirtualMachineState Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
         }
     }
 

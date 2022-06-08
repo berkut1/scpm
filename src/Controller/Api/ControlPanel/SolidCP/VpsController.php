@@ -257,6 +257,87 @@ class VpsController extends AbstractController
 
     /**
      * @OA\Put(
+     *     path="/solidCP/users/{client_login}/vps/{vps_ip_address}/state",
+     *     tags={"VPS"},
+     *     description="Change VPS state over IPv4, that assigned to the client client_login. (Start or TurnOff or ShutDown or Reset or Pause or Save or Reboot or Resume)",
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="client_login", description="SolidCP client login",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="vps_ip_address", description="VM IPv4 address",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="ipv4"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"vps_state"},
+     *             @OA\Property(property="vps_state", type="string", enum={"Start", "TurnOff", "ShutDown", "Reset", "Pause", "Save", "Reboot", "Resume"}),
+     *             @OA\Property(property="id_enterprise_dispatcher", type="integer", description="if not selected, the default is used. No need to choose if only one enterprise is used"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="IsSuccess", type="bool", description="Return true or false if Success"),
+     *             @OA\Property(property="ErrorCodes", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(type="string")
+     *                     )
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Errors",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Error",
+     *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="InternalError",
+     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    #[Route('/solidCP/users/{client_login}/vps/{vps_ip_address}/state', name: 'apiVps.changeStateByIpAddress', methods: ['PUT'])]
+    public function changeStateByIpAddress(string $client_login, string $vps_ip_address, Request $request, VirtualizationServer2012\ChangeState\Handler $handler): Response
+    {
+        /** @var VirtualizationServer2012\ChangeState\Command $command */
+        $command = $this->serializer->deserialize($request->getContent(), VirtualizationServer2012\ChangeState\Command::class, 'json');
+        $command->client_login = $client_login;
+        $command->vps_ip_address = $vps_ip_address;
+        //$command->id_enterprise_dispatcher = (int)$request->query->get('id_enterprise_dispatcher');
+
+        $violations = $this->validator->validate($command);
+        if (\count($violations)) {
+            $json = $this->serializer->serialize($violations, 'json');
+            return new JsonResponse($json, Response::HTTP_BAD_REQUEST, [], true);
+        }
+
+        $result = $handler->handle($command); //catch exceptions from Events in DomainExceptionFormatter
+
+        return $this->json([$result], Response::HTTP_OK);
+    }
+
+    /**
+     * @OA\Put(
      *     path="/solidCP/users/{client_login}/vps/{vps_ip_address}/status",
      *     tags={"VPS"},
      *     description="Change VPS and its packet status over IPv4, that assigned to the client client_login. Active/Suspended/Cancelled",
