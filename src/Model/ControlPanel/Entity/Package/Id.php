@@ -19,7 +19,7 @@ class Id
 
     public static function next(): self
     {
-        return new self(Uuid::uuid4()->toString());
+        return new self(Uuid::uuid6()->toString());
     }
 
     public function isEqual(self $id): bool
