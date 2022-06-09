@@ -38,7 +38,7 @@ class SoapExecute
         $this->initManual($enterpriseDispatcher->getUrl(), $enterpriseDispatcher->getLogin(), $enterpriseDispatcher->getPassword(), $caching, $compression);
     }
 
-    public function initManual(string $url, string $login, string $password, bool $keepAlive = false, bool $caching = false, bool $compression = true): void
+    public function initManual(string $url, string $login, string $password, bool $caching = false, bool $compression = true, bool $keepAlive = false): void
     {
         $this->url = $url;
         $this->options = [
@@ -159,5 +159,6 @@ class SoapExecute
         dump($this->soapClient->__getLastResponseHeaders());
         dump($this->soapClient->__getLastRequestHeaders());
         dump($this->soapClient->__getLastRequest());
+        dump($this->soapClient->__getCookies());
     }
 }
