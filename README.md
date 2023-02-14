@@ -11,13 +11,14 @@ Swagger API docs - http://localhost/docs/index.html
 
 Requirements
 ------------
-- PHP >= 8.0
+- PHP >= 8.2
 - PostgreSQL
+- SolidCP 1.4.9
 
 Installation
 ------------
 apache or nginx (https://symfony.com/doc/5.4/setup/web_server_configuration.html#nginx)
-- `sudo apt install php8.0-soap php8.0-xml php8.0-mbstring php8.0-intl` - php libs
+- `sudo apt install php8.2-soap php8.2-xml php8.2-mbstring php8.2-intl` - php libs
 - `git clone --branch builded https://github.com/berkut1/scpm.git`
 - `composer dump-env prod` after in the file .env.local.php update APP_SECRET, DATABASE_URL and JWT_PASSPHRASE variables
 - `composer install`
@@ -80,7 +81,7 @@ Swagger API docs - http://localhost/docs/index.html
 
 Requirements
 ------------
-- PHP >= 8.0
+- PHP >= 8.2
 - PostgreSQL (не тестировалось с другими СУБД)
 
 Описание (true for HyperV SolidCP module)
