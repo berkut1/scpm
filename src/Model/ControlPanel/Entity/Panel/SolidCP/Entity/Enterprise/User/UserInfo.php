@@ -37,6 +37,7 @@ class UserInfo
     public string $CompanyName = '';
     public bool $EcommerceEnabled = false;
     public string $SubscriberNumber = '';
+    public int $MfaMode = 0;
 
 
     public function __construct(int $ownerId, UserRole $role, UserStatus $status, bool $isPeer, bool $isDemo, string $username, string $firstName, string $lastName, string $email, bool $htmlMail)
