@@ -6,20 +6,23 @@ namespace App\Model\AuditLog\Entity;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\GuidType;
 
-class IdType extends GuidType
+final class IdType extends GuidType
 {
-    public const NAME = 'audit_log_id';
+    final public const string NAME = 'audit_log_id';
 
+    #[\Override]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
         return $value instanceof Id ? $value->getValue() : $value;
     }
 
+    #[\Override]
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Id
     {
         return !empty($value) ? new Id($value) : null;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;

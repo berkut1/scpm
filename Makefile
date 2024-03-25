@@ -73,3 +73,9 @@ gitreset:
 
 gitpull:
 	docker-compose run --rm scpsc-php-cli git pull origin master -r
+
+rector:
+	docker-compose run --rm scpsc-php-cli vendor/bin/rector
+
+rector-dry:
+	docker-compose run --rm scpsc-php-cli vendor/bin/rector --dry-run

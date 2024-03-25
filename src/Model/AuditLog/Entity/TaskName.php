@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Model\AuditLog\Entity;
 
-class TaskName implements TaskNameInterface
+final class TaskName implements TaskNameInterface
 {
     private string $name;
 
+    #[\Override]
     public static function create(string $name): TaskNameInterface
     {
         $taskName = new self();
@@ -14,11 +15,13 @@ class TaskName implements TaskNameInterface
         return $taskName;
     }
 
+    #[\Override]
     public function isEqual(TaskNameInterface $type): bool
     {
         return $this->getName() === $type->getName();
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;

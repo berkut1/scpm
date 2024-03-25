@@ -7,7 +7,7 @@ use App\Model\EntityNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class AuditLogRepository
+final class AuditLogRepository
 {
     protected EntityManagerInterface $em;
     protected EntityRepository $repo;
@@ -20,7 +20,7 @@ class AuditLogRepository
         $this->em = $em;
     }
 
-    public function getLog(Id $id): AuditLog
+    public function get(Id $id): AuditLog
     {
         /** @var AuditLog $entity */
         if (!$entity = $this->repo->find($id)) {

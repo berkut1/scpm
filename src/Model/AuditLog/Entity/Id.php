@@ -7,9 +7,9 @@ use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
-class Id
+final class Id implements \Stringable
 {
-    const ZEROS = "00000000-0000-0000-0000-000000000000";
+    final public const string ZEROS = "00000000-0000-0000-0000-000000000000";
     private string $value;
 
     public function __construct(string $value)
@@ -39,6 +39,7 @@ class Id
     }
 
     #[Pure]
+    #[\Override]
     public function __toString(): string
     {
         return $this->getValue();

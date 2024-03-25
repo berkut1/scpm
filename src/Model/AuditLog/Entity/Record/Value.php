@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Model\AuditLog\Entity\Record;
 
 
-class Value implements \JsonSerializable
+final class Value implements \JsonSerializable
 {
     private string $value;
 
@@ -15,12 +15,13 @@ class Value implements \JsonSerializable
 
     public static function setFromDecodedJSON(array $data): self
     {
-        if(!isset($data['value'])){
+        if (!isset($data['value'])) {
             throw new \DomainException('Json array must have the property - value');
         }
         return new self($data['value']);
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return get_object_vars($this);

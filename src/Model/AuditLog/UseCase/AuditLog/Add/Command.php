@@ -8,7 +8,7 @@ use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\AuditLog\Entity\TaskNameInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public Entity $entity;
@@ -21,8 +21,6 @@ class Command
     public array $records;
 
     /**
-     * @param Entity $entity
-     * @param TaskNameInterface $taskName
      * @param Record[] $records
      */
     public function __construct(Entity $entity, TaskNameInterface $taskName, array $records = [])

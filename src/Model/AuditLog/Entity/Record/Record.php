@@ -5,7 +5,7 @@ namespace App\Model\AuditLog\Entity\Record;
 
 use JetBrains\PhpStorm\Pure;
 
-class Record implements \JsonSerializable
+final class Record implements \JsonSerializable
 {
     private string $text;
     /** @var $values Value[] */
@@ -16,7 +16,7 @@ class Record implements \JsonSerializable
     {
         $log = new self();
         $arr = [];
-        foreach ($values as $value){
+        foreach ($values as $value) {
             $arr[] = new Value((string)$value); //everything to string
         }
         $log->text = $text;
@@ -40,10 +40,10 @@ class Record implements \JsonSerializable
     {
         $log = new self();
         foreach ($data as $key => $val) {
-            if (property_exists(__CLASS__, $key)) {
+            if (property_exists(self::class, $key)) {
                 if (is_array($val)) { //as array, we can get only Values there, so not need to check something else
                     $arr = [];
-                    foreach ($val as $one){
+                    foreach ($val as $one) {
                         $arr[] = Value::setFromDecodedJSON($one);
                     }
                     $val = $arr;
@@ -55,6 +55,7 @@ class Record implements \JsonSerializable
         return $log;
     }
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return get_object_vars($this);

@@ -5,10 +5,10 @@ namespace App\Model\AuditLog\Entity;
 
 use Webmozart\Assert\Assert;
 
-class UserId
+final class UserId
 {
-    public const SYSTEM_USER_ID = '00000000-0000-0000-0000-000000000001';
-    public const JWT_USER_ID = '00000000-0000-0000-0000-000000000002'; //https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/8-jwt-user-provider.md
+    final public const string SYSTEM_USER_ID = '00000000-0000-0000-0000-000000000001';
+    final public const string JWT_USER_ID = '00000000-0000-0000-0000-000000000002'; //https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/8-jwt-user-provider.md
     private string $value;
 
     public function __construct(string $value)
