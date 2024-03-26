@@ -6,20 +6,19 @@ namespace App\Model\ControlPanel\Entity\Package\Event;
 use App\Model\ControlPanel\Entity\Package\Package;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
 
-class PackageChangedSolidCpPlans
+final class PackageChangedSolidCpPlans
 {
     public Package $package;
     /**
-     * @var array|SolidcpHostingPlan[]
+     * @var SolidcpHostingPlan[]
      */
     public array $removedPlans;
     /**
-     * @var array|SolidcpHostingPlan[]
+     * @var SolidcpHostingPlan[]
      */
     public array $addedPlans;
 
     /**
-     * @param Package $package
      * @param SolidcpHostingPlan[] $removedPlans
      * @param SolidcpHostingPlan[] $addedPlans
      */

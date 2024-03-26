@@ -9,7 +9,7 @@ use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsAuditLog extends SoapExecute
 {
-    public const SERVICE = 'esAuditLog.asmx';
+    public const string SERVICE = 'esAuditLog.asmx';
 
     public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
     {

@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\Event
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 
-class EnterpriseDispatcherEdited
+final class EnterpriseDispatcherEdited
 {
     public EnterpriseDispatcher $enterpriseDispatcher;
 

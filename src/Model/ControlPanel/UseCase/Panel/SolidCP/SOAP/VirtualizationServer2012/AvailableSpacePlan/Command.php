@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer2012\AvailableSpacePlan;
 
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public string $server_location_name = '';
@@ -25,16 +24,15 @@ class Command
     public ?int $id_enterprise_dispatcher = null;
 
     /**
-     * @param string $server_location_name
-     * @param string $server_package_name
-     * @param int $server_ip_amount
      * @param int[] $ignore_node_ids
      * @param int[] $ignore_hosting_space_ids
      * @param int|null $id_enterprise_dispatcher
      * @return static
      */
-    #[Pure]
-    public static function create(string $server_location_name, string $server_package_name, int $server_ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids, ?int $id_enterprise_dispatcher = null): self
+    public static function create(
+        string $server_location_name, string $server_package_name, int $server_ip_amount, array $ignore_node_ids,
+        array  $ignore_hosting_space_ids, ?int $id_enterprise_dispatcher = null
+    ): self
     {
         $command = new self();
         $command->id_enterprise_dispatcher = $id_enterprise_dispatcher;
@@ -79,12 +77,11 @@ class Command
     }
 
     /**
-     * @param array $arr
      * @return int[]
      */
     private function stringArrayToInt(array $arr): array
     {
-        foreach ($arr as $one){
+        foreach ($arr as $one) {
             if (!(is_int($one))) {
                 //$this->ignore_hosting_space_ids = array_map('intval', array_values($arr));
                 return array_map('intval', array_values($arr)); //convert array to int

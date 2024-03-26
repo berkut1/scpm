@@ -8,49 +8,33 @@ use App\Model\AuditLog\Entity\Id;
 use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
+use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use App\Model\ControlPanel\UseCase\AuditLog;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\Package\PackageStatus;
+use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
+use App\Model\ControlPanel\Service\SOAP\SolidCP\EsServers;
+use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsVirtualizationServer2012;
+use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\Package as SOAPPackage;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\User\Create as SOAPUserCreate;
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer2012 as SOAPVirtualizationServer2012;
-use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository;
-use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
-use App\Model\ControlPanel\Service\SOAP\SolidCP\EsServers;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
-use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 use JetBrains\PhpStorm\ArrayShape;
 
-class Handler
+final class Handler
 {
     private EnterpriseDispatcher $enterpriseDispatcher;
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private VirtualMachinePackageRepository $virtualMachinePackageRepository;
-    private SOAPVirtualizationServer2012\AvailableSpacePlan\Handler $soapVpsAvailableSpaceHandler;
-    private SOAPUserCreate\Handler $soapUserCreateHandler;
-    private SOAPPackage\Create\Handler $soapCreatePackageHandler;
-    private SOAPVirtualizationServer2012\CreateVM\Handler $soapCreateVmHandler;
-    private AuditLog\Add\SolidCP\Handler $auditLogHandler;
 
     public function __construct(
-        EnterpriseDispatcherRepository                          $enterpriseDispatcherRepository,
-        VirtualMachinePackageRepository                         $virtualMachinePackageRepository,
-        SOAPVirtualizationServer2012\AvailableSpacePlan\Handler $soapVpsAvailableSpaceHandler,
-        SOAPUserCreate\Handler                                  $soapUserCreateHandler,
-        SOAPPackage\Create\Handler                              $soapCreatePackageHandler,
-        SOAPVirtualizationServer2012\CreateVM\Handler           $soapCreateVmHandler,
-        AuditLog\Add\SolidCP\Handler                            $auditLogHandler
-    )
-    {
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->virtualMachinePackageRepository = $virtualMachinePackageRepository;
-        $this->soapVpsAvailableSpaceHandler = $soapVpsAvailableSpaceHandler;
-        $this->soapUserCreateHandler = $soapUserCreateHandler;
-        $this->soapCreatePackageHandler = $soapCreatePackageHandler;
-        $this->soapCreateVmHandler = $soapCreateVmHandler;
-        $this->auditLogHandler = $auditLogHandler;
-    }
+        private readonly EnterpriseDispatcherRepository                          $enterpriseDispatcherRepository,
+        private readonly VirtualMachinePackageRepository                         $virtualMachinePackageRepository,
+        private readonly SOAPVirtualizationServer2012\AvailableSpacePlan\Handler $soapVpsAvailableSpaceHandler,
+        private readonly SOAPUserCreate\Handler                                  $soapUserCreateHandler,
+        private readonly SOAPPackage\Create\Handler                              $soapCreatePackageHandler,
+        private readonly SOAPVirtualizationServer2012\CreateVM\Handler           $soapCreateVmHandler,
+        private readonly AuditLog\Add\SolidCP\Handler                            $auditLogHandler
+    ) {}
 
     /**
      * @throws \Exception
@@ -59,7 +43,7 @@ class Handler
         'is_user_exists' => "bool",
         'solidcp_package_id' => "int",
         'vps' => "array",
-        'solidcp_server_node' => "array"
+        'solidcp_server_node' => "array",
     ])]
     public function handle(Command $command): array
     {
@@ -67,7 +51,7 @@ class Handler
             throw new \DomainException("The server must have at least one IP");
         }
         $this->enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
-        if(!$this->enterpriseDispatcher->isEnabled()){
+        if (!$this->enterpriseDispatcher->isEnabled()) {
             throw new \DomainException("The EnterpriseDispatcher {$this->enterpriseDispatcher->getName()} is disabled");
         }
 
@@ -82,14 +66,14 @@ class Handler
             $command->ignore_hosting_space_ids,
             $this->enterpriseDispatcher->getId());
         $possiblePlans = $this->soapVpsAvailableSpaceHandler->handle($commandPossibleSpace, $records, false);
-        if(count($possiblePlans) === 0){
+        if (count($possiblePlans) === 0) {
             $this->saveAuditLogAndThrowDomainException($records, "No free spaces for VMs or was not assigned plants to VM packages");
         }
 
         $possiblePlan = null;
         $osTemplate = null;
         //get a random space from $possiblePlan
-        while(count($possiblePlans) > 0){
+        while (count($possiblePlans) > 0) {
             $maxIdxVal = count($possiblePlans) - 1;
             $index = random_int(0, $maxIdxVal);
             $possiblePlan = $possiblePlans[$index];
@@ -129,7 +113,7 @@ class Handler
             }
             $userId = $user['UserId'];
             $records[] = Record::create('SOLIDCP_TOOK_EXISTED_USER_WITH_ID', [
-                $userId
+                $userId,
             ]);
         }
 
@@ -169,13 +153,13 @@ class Handler
             $this->saveAuditLogAndThrowDomainException($records, "Something wrong with ItemID, should be $newItemIDResult, but got $getItemIDResult");
         }
         //rename package to ip
-        $pieces = explode(".", $vmItemResult['ItemName']); //ItemName is hostname name.domain.local
+        $pieces = explode(".", (string)$vmItemResult['ItemName']); //ItemName is hostname name.domain.local
         $esPackages->updatePackageName($packageId, $pieces[0]);
         $records[] = Record::create('SOLIDCP_RENAMED_PACKAGE_WITH_ID_TO_NAME', [$packageId, $pieces[0]]);
 
         $resultPackageIPs = $esServers->getPackageIPAddressesVpsExternalNetwork($packageId)['Items'];
         $mainIp = '';
-        if($command->server_ip_amount === 1){
+        if ($command->server_ip_amount === 1) {
             $mainIp = $resultPackageIPs['PackageIPAddress']['ExternalIP'];
         }
 
@@ -187,7 +171,7 @@ class Handler
                     break;
                 }
             }
-            if(empty($mainIp) && isset($resultPackageIPs['PackageIPAddress'][0])){ //if SolidCP not mark the Primary IP, then get the first one.
+            if (empty($mainIp) && isset($resultPackageIPs['PackageIPAddress'][0])) { //if SolidCP not mark the Primary IP, then get the first one.
                 $mainIp = $resultPackageIPs['PackageIPAddress'][0]['ExternalIP'];
                 $resultPackageIPs['PackageIPAddress'][0]['IsPrimary'] = true; //manually set for next functions
             }
@@ -216,7 +200,7 @@ class Handler
                     array_map(static function (array $data) { //return simply array of SecondaryIps
                         return $data['ExternalIP'];
                     }, $filteredResultPackageSecondaryIPs)
-                )
+                ),
             ],
             'solidcp_server_node' => [
                 'node_id' => $possiblePlan->getHostingSpace()->getSolidcpServer()->getId(),  //SolidCP server aka node
@@ -247,7 +231,9 @@ class Handler
     /**
      * @throws \Exception
      */
-    private function guardResultAndRenameProblemPackage(array $result, EsPackages $esPackages, int $packageId, string $hostingPlanName, array $auditLogRecords): void
+    private function guardResultAndRenameProblemPackage(
+        array $result, EsPackages $esPackages, int $packageId, string $hostingPlanName, array $auditLogRecords
+    ): void
     {
         if (!$result['IsSuccess']) {
             $this->renamePackageAndCancel($esPackages, $packageId, $hostingPlanName);

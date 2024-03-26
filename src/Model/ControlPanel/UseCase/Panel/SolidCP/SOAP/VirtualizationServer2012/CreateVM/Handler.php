@@ -8,32 +8,24 @@ use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
 use App\Model\ControlPanel\Entity\Package\Id;
-use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachine\VirtualMachine;
-use App\Model\ControlPanel\Service\Generators;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsVirtualizationServer2012;
+use App\Model\ControlPanel\UseCase\AuditLog;
 
-class Handler
+final readonly class Handler
 {
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private VirtualMachinePackageRepository $virtualMachinePackageRepository;
-    private AuditLog\Add\SolidCP\Handler $auditLogHandler;
-
-    public function __construct(EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
-                                VirtualMachinePackageRepository $virtualMachinePackageRepository,
-                                AuditLog\Add\SolidCP\Handler    $auditLogHandler)
-    {
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->virtualMachinePackageRepository = $virtualMachinePackageRepository;
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(
+        private EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
+        private VirtualMachinePackageRepository $virtualMachinePackageRepository,
+        private AuditLog\Add\SolidCP\Handler    $auditLogHandler
+    ) {}
 
     public function handle(Command $command, array &$auditLogRecords = [], bool $saveAuditLog = true): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->getDefaultOrById($command->id_enterprise_dispatcher);
-        $virtualMachinePackage = $this->virtualMachinePackageRepository->get(new Id($command->id_package_virtual_machines));
+        $virtualMachinePackage = $this->virtualMachinePackageRepository->getVmPackage(new Id($command->id_package_virtual_machines));
         $esVirtualizationServer2012 = EsVirtualizationServer2012::createFromEnterpriseDispatcher($enterpriseDispatcher);
 
         $vmSettings = VirtualMachine::create(
@@ -60,11 +52,11 @@ class Handler
         );
         //dump($vmSettings);
 
-        if(!$command->externalNetworkEnabled){
+        if (!$command->externalNetworkEnabled) {
             $command->externalAddressesNumber = 0;
             $command->randomExternalAddresses = false;
         }
-        if(!$command->privateNetworkEnabled){
+        if (!$command->privateNetworkEnabled) {
             $command->privateAddressesNumber = 0;
             $command->randomPrivateAddresses = false;
         }

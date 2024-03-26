@@ -8,16 +8,12 @@ use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackage;
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository;
 use App\Model\Flusher;
 
-class Handler
+final readonly class Handler
 {
-    private Flusher $flusher;
-    private VirtualMachinePackageRepository $virtualMachinePackageRepository;
-
-    public function __construct(Flusher $flusher, VirtualMachinePackageRepository $virtualMachinePackageRepository)
-    {
-        $this->flusher = $flusher;
-        $this->virtualMachinePackageRepository = $virtualMachinePackageRepository;
-    }
+    public function __construct(
+        private Flusher                         $flusher,
+        private VirtualMachinePackageRepository $virtualMachinePackageRepository
+    ) {}
 
     public function handle(Command $command): void
     {

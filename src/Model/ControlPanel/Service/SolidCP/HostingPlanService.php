@@ -3,29 +3,19 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SolidCP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
 use Doctrine\DBAL\Connection;
 
-class HostingPlanService
+final readonly class HostingPlanService
 {
-    private Connection $connection;
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private SolidcpHostingSpaceRepository $solidcpHostingSpaceRepository;
-    private EsPackages $esPackages;
-
-    public function __construct(Connection                     $connection,
-                                EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
-                                SolidcpHostingSpaceRepository  $solidcpHostingSpaceRepository,
-                                EsPackages                     $esPackages)
-    {
-        $this->connection = $connection;
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->solidcpHostingSpaceRepository = $solidcpHostingSpaceRepository;
-        $this->esPackages = $esPackages;
-    }
+    public function __construct(
+        private Connection                    $connection,
+        //private readonly EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
+        private SolidcpHostingSpaceRepository $solidcpHostingSpaceRepository,
+        private EsPackages                    $esPackages
+    ) {}
 
     public function getRealSolidCpServerIdFromPlanId(SolidcpHostingSpace $hostingSpace, int $plan_id): int
     {
@@ -40,6 +30,7 @@ class HostingPlanService
     }
 
     //$idEnterprise - means a Reseller with his hosting space
+
     /**
      * @throws \Doctrine\DBAL\Exception
      * @throws \Doctrine\DBAL\Driver\Exception
@@ -53,8 +44,8 @@ class HostingPlanService
         //dump($solidCpPlans);
 
         $plans = [];
-        foreach ($solidCpPlans as $value){
-            if((int)$value['PackageID'] === $solidcpHostingSpace->getSolidCpIdHostingSpace()){ //show only plans, which assigned to specific hosting space
+        foreach ($solidCpPlans as $value) {
+            if ((int)$value['PackageID'] === $solidcpHostingSpace->getSolidCpIdHostingSpace()) { //show only plans, which assigned to specific hosting space
                 $plans[(int)$value['PlanID']] = "{$value['PlanName']} - id:{$value['PlanID']}";
             }
         }
@@ -71,11 +62,10 @@ class HostingPlanService
             ->setParameter('id_enterprise_dispatcher', $solidcpHostingSpace->getSolidcpServer()->getEnterprise()->getId())
             ->andWhere('spaces.solidcp_id_hosting_space = :solidcp_id_hosting_space')
             ->setParameter('solidcp_id_hosting_space', $solidcpHostingSpace->getSolidCpIdHostingSpace())
-
             ->orderBy('name')
             ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
 
-        $existSpaces = array_column($stmt->fetchAllAssociative(), 'name','solidcp_id_plan');
+        $existSpaces = array_column($stmt->fetchAllAssociative(), 'name', 'solidcp_id_plan');
 
         return array_diff_key($plans, $existSpaces); //remove exist keys from $plans
     }

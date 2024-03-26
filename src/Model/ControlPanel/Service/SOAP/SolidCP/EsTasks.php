@@ -9,7 +9,7 @@ use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsTasks extends SoapExecute
 {
-    public const SERVICE = 'esTasks.asmx';
+    public const string SERVICE = 'esTasks.asmx';
 
     public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
     {

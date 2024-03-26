@@ -8,8 +8,8 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
 use App\Model\EventsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 
 #[ORM\Table(name: "cp_locations")]
 #[ORM\Entity]
@@ -18,11 +18,11 @@ class Location implements AggregateRoot
     use EventsTrait;
 
     #[ORM\Id]
-    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\Column(name: "id", type: Types::INTEGER, nullable: false)]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    #[ORM\Column(name: "name", type: "string", length: 255, nullable: false)]
+    #[ORM\Column(name: "name", type: Types::STRING, length: 255, nullable: false)]
     private string $name;
 
     /** @var Collection|SolidcpServer[] */
@@ -48,7 +48,6 @@ class Location implements AggregateRoot
         return !$this->solidcpServers->isEmpty();
     }
 
-    #[Pure]
     public function isEqualName(string $name): bool
     {
         return $this->getName() === $name;

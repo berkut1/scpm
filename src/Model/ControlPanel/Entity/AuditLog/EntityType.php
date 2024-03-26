@@ -6,19 +6,20 @@ namespace App\Model\ControlPanel\Entity\AuditLog;
 use App\Model\AuditLog\Entity\EntityTypeInterface;
 use Webmozart\Assert\Assert;
 
-class EntityType implements EntityTypeInterface
+final class EntityType implements EntityTypeInterface
 {
-    public const ENTITY_CP_LOCATION = 'cp_location';
-    public const ENTITY_CP_PACKAGE = 'cp_package';
-    public const ENTITY_CP_PACKAGE_VIRTUAL_MACHINE = 'cp_package_virtual_machine';
-    public const ENTITY_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'cp_solidcp_enterprise_dispatcher';
-    public const ENTITY_CP_SOLIDCP_SERVER = 'cp_solidcp_server';
-    public const ENTITY_CP_SOLIDCP_HOSTING_SPACE = 'cp_solidcp_hosting_space';
-    public const ENTITY_CP_SOLIDCP_HOSTING_PLAN = 'cp_solidcp_hosting_plan';
+    public const string ENTITY_CP_LOCATION = 'cp_location';
+    public const string ENTITY_CP_PACKAGE = 'cp_package';
+    public const string ENTITY_CP_PACKAGE_VIRTUAL_MACHINE = 'cp_package_virtual_machine';
+    public const string ENTITY_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'cp_solidcp_enterprise_dispatcher';
+    public const string ENTITY_CP_SOLIDCP_SERVER = 'cp_solidcp_server';
+    public const string ENTITY_CP_SOLIDCP_HOSTING_SPACE = 'cp_solidcp_hosting_space';
+    public const string ENTITY_CP_SOLIDCP_HOSTING_PLAN = 'cp_solidcp_hosting_plan';
 
-    public const ENTITY_SOAP_EXECUTE = 'SOAP_EXECUTE';
+    public const string ENTITY_SOAP_EXECUTE = 'SOAP_EXECUTE';
     private string $name;
 
+    #[\Override]
     public static function create(string $name): self
     {
         Assert::oneOf($name, [
@@ -77,11 +78,13 @@ class EntityType implements EntityTypeInterface
         return self::create(self::ENTITY_SOAP_EXECUTE);
     }
 
+    #[\Override]
     public function isEqual(EntityTypeInterface $type): bool
     {
         return $this->getName() === $type->getName();
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;

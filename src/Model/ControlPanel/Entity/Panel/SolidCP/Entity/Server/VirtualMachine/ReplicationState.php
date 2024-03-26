@@ -5,9 +5,9 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachi
 
 use Webmozart\Assert\Assert;
 
-class ReplicationState
+final class ReplicationState implements \Stringable
 {
-    const DISABLED = 'Disabled';
+    public const string DISABLED = 'Disabled';
     private string $name;
 
     public function __construct(string $name)
@@ -37,6 +37,7 @@ class ReplicationState
         return new self(self::DISABLED);
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;

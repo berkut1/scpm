@@ -5,9 +5,9 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\User\Edit\Email;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
-    public ?int $id_enterprise_dispatcher;
+    public ?int $id_enterprise_dispatcher = null;
 
     #[Assert\NotBlank]
     public string $username;

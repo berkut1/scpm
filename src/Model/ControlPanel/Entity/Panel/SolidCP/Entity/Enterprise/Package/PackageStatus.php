@@ -5,11 +5,11 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\Package;
 
 use Webmozart\Assert\Assert;
 
-class PackageStatus
+final class PackageStatus implements \Stringable
 {
-    const ACTIVE = 'Active';
-    const SUSPENDED = 'Suspended';
-    const CANCELLED = 'Cancelled';
+    public const string ACTIVE = 'Active';
+    public const string SUSPENDED = 'Suspended';
+    public const string CANCELLED = 'Cancelled';
     private string $name;
 
     public function __construct(string $name)
@@ -38,8 +38,8 @@ class PackageStatus
      */
     public function getId(): int
     {
-        foreach (self::list() as $key => $value){
-            if($this->name === $value){
+        foreach (self::list() as $key => $value) {
+            if ($this->name === $value) {
                 return $key;
             }
         }
@@ -66,6 +66,7 @@ class PackageStatus
         return $this->name;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;

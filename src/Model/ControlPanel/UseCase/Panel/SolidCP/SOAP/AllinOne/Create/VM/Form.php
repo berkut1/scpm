@@ -4,20 +4,16 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\AllinOne\Create\VM;
 
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
-use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form extends AbstractType
+final class Form extends AbstractType
 {
-    private EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher;
+    public function __construct(private readonly EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher) {}
 
-    public function __construct(EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher)
-    {
-        $this->enterpriseDispatcherFetcher = $enterpriseDispatcherFetcher;
-    }
-
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -25,54 +21,53 @@ class Form extends AbstractType
                 [
                     'choices' => array_flip($this->enterpriseDispatcherFetcher->allList()),
                     'placeholder' => 'Default',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('client_login', Type\TextType::class,
                 [
                     'label' => 'Client Name',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('client_email', Type\EmailType::class,
                 [
                     'label' => 'Client Email',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('client_password', Type\PasswordType::class,
                 [
                     'label' => 'Client Password',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('server_package_name', Type\TextType::class,
                 [
                     'label' => 'Server Package',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('server_location_name', Type\TextType::class,
                 [
                     'label' => 'Server Location',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('server_os_name', Type\TextType::class,
                 [
                     'label' => 'Server OS',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('server_password', Type\PasswordType::class,
                 [
                     'label' => 'Server Password',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('server_ip_amount', Type\IntegerType::class,
                 [
                     'label' => 'Amount of IPs',
-                    'required' => true
+                    'required' => true,
                 ]);
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Command::class,
-        ));
+        $resolver->setDefaults(['data_class' => Command::class]);
     }
 }

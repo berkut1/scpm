@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model\AuditLog\Entity;
 
-use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
@@ -38,7 +37,6 @@ final class Id implements \Stringable
         return $this->value;
     }
 
-    #[Pure]
     #[\Override]
     public function __toString(): string
     {

@@ -10,6 +10,7 @@ use App\Model\ControlPanel\Service\SolidCP\HostingPlanService;
 use App\Model\EventsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "cp_solidcp_hosting_plans")]
@@ -20,7 +21,7 @@ class SolidcpHostingPlan implements AggregateRoot
     use EventsTrait;
 
     #[ORM\Id]
-    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\Column(name: "id", type: Types::INTEGER, nullable: false)]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
@@ -28,13 +29,13 @@ class SolidcpHostingPlan implements AggregateRoot
     #[ORM\JoinColumn(name: "id_hosting_space", referencedColumnName: "id", nullable: false)]
     private SolidcpHostingSpace $hostingSpace;
 
-    #[ORM\Column(name: "solidcp_id_plan", type: "integer", nullable: false)]
+    #[ORM\Column(name: "solidcp_id_plan", type: Types::INTEGER, nullable: false)]
     private int $solidcpIdPlan;
 
-    #[ORM\Column(name: "solidcp_id_server", type: "integer", nullable: false)]
+    #[ORM\Column(name: "solidcp_id_server", type: Types::INTEGER, nullable: false)]
     private int $solidcpIdServer;
 
-    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
+    #[ORM\Column(name: "name", type: Types::STRING, length: 128, nullable: false)]
     private string $name;
 
     /** @var Collection|Package[] */
@@ -64,7 +65,7 @@ class SolidcpHostingPlan implements AggregateRoot
         $package->assignSolidCpPlan($this);
     }
 
-    public function removePackage(Package $package)
+    public function removePackage(Package $package): void
     {
         if (!$this->assignedPackages->contains($package)) {
             return;

@@ -3,34 +3,28 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\ChangeNode;
 
-use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
-use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form extends AbstractType
+final class Form extends AbstractType
 {
-    private EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher;
-    private SolidcpServerFetcher $serverFetcher;
-    private HostingSpaceService $hostingSpaceService;
+    public function __construct(
+        private readonly EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher,
+        private readonly SolidcpServerFetcher        $serverFetcher,
+    ) {}
 
-    public function __construct(EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher, SolidcpServerFetcher $serverFetcher, HostingSpaceService $hostingSpaceService)
-    {
-        $this->enterpriseDispatcherFetcher = $enterpriseDispatcherFetcher;
-        $this->serverFetcher = $serverFetcher;
-        $this->hostingSpaceService = $hostingSpaceService;
-    }
-
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit')); //need to refill data to pass the form validation
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, $this->onPreSetData(...));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, $this->onPreSubmit(...)); //need to refill data to pass the form validation
     }
 
     protected function addElements(FormInterface $form, array $data, Command $modelOriginalData): void
@@ -57,19 +51,6 @@ class Form extends AbstractType
                 'choices' => $servers,
                 //'data' => isset($data['id_server']) ?? $data['id_server'],
             ]);
-//
-//        $spaces = [];
-//        if (!empty($data['id_server'])) {
-//            $spaces = array_flip($this->hostingSpaceService->allNotAddedHostingSpacesExceptHostingSpaceIdFrom((int)$data['id_enterprise_dispatcher'], $modelOriginalData->id_solidcp_hosting_space));
-//        }
-//        $form->add('id_solidcp_hosting_space', Type\ChoiceType::class,
-//            [
-//                'label' => 'Hosting Space',
-//                'required' => true,
-//                //'placeholder' => 'Select a Node first...',
-//                'choices' => $spaces,
-//                //'data' => isset($data['id_hosting_space']) ?? $data['id_hosting_space'],
-//            ]);
     }
 
     function onPreSubmit(FormEvent $event): void
@@ -90,10 +71,9 @@ class Form extends AbstractType
         $this->addElements($form, $data, $modelOriginalData);
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Command::class,
-        ));
+        $resolver->setDefaults(['data_class' => Command::class]);
     }
 }

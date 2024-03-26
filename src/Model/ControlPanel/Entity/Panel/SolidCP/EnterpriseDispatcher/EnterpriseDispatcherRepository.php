@@ -7,7 +7,7 @@ use App\Model\EntityNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class EnterpriseDispatcherRepository
+final class EnterpriseDispatcherRepository
 {
     private EntityManagerInterface $em;
     private EntityRepository $repo;

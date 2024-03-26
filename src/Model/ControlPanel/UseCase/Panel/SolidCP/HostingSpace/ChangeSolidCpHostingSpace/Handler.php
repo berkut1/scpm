@@ -6,21 +6,17 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\ChangeSolidC
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceRepository;
 use App\Model\Flusher;
 
-class Handler
+final readonly class Handler
 {
-    private Flusher $flusher;
-    private SolidcpHostingSpaceRepository $repository;
-
-    public function __construct(Flusher $flusher, SolidcpHostingSpaceRepository $repository)
-    {
-        $this->flusher = $flusher;
-        $this->repository = $repository;
-    }
+    public function __construct(
+        private Flusher                       $flusher,
+        private SolidcpHostingSpaceRepository $repository
+    ) {}
 
     public function handle(Command $command): void
     {
         $hostingSpace = $this->repository->get($command->id);
-        if(count($hostingSpace->getHostingPlans())>0){ //or can we? Who will test that?
+        if (count($hostingSpace->getHostingPlans()) > 0) { //or can we? Who will test that?
             throw new \DomainException("You cannot change SolidCP hosting space if there are plans assigned");
         }
 

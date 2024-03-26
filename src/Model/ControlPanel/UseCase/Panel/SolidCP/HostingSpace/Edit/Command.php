@@ -6,7 +6,7 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\Edit;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public int $id;

@@ -6,7 +6,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\Event;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\OsTemplate\OsTemplate;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 
-class SolidcpHostingSpaceRemovedOsTemplate
+final class SolidcpHostingSpaceRemovedOsTemplate
 {
     public SolidcpHostingSpace $solidcpHostingSpace;
     public OsTemplate $osTemplate;

@@ -8,14 +8,9 @@ use App\Model\ControlPanel\Service\SOAP\SolidCP\EsTasks;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsVirtualizationServer2012;
 use JetBrains\PhpStorm\ArrayShape;
 
-class Handler
+final readonly class Handler
 {
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-
-    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository)
-    {
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-    }
+    public function __construct(private EnterpriseDispatcherRepository $enterpriseDispatcherRepository) {}
 
     #[ArrayShape([
         'provisioning_status' => "string",
@@ -31,20 +26,20 @@ class Handler
         $creationTime = $virtualMachineItem['CreationTime'];
         $Status = null;
 
-        if(!empty($virtualMachineItem['CurrentTaskId'])){
+        if (!empty($virtualMachineItem['CurrentTaskId'])) {
             $esTask = EsTasks::createFromEnterpriseDispatcher($enterpriseDispatcher);
             $taskResult = $esTask->getTask($virtualMachineItem['CurrentTaskId']);
             $percentComplete = $taskResult['IndicatorCurrent']; //the earliest value can be -1 or 0, as well as the last value... Only hdd converting shows correct value.
             $Status = $taskResult['Status'];
         }
 
-        if(!empty($virtualMachineItem['CurrentTaskId']) && $provisioningStatus === 'Error'){ //can get ERROR before OK status (that how works solidcp)
+        if (!empty($virtualMachineItem['CurrentTaskId']) && $provisioningStatus === 'Error') { //can get ERROR before OK status (that how works solidcp)
             $provisioningStatus = 'InProgress';
             $percentComplete = 95;
             $Status = 'Run';
         }
 
-        if(empty($virtualMachineItem['CurrentTaskId']) && $provisioningStatus === 'OK'){
+        if (empty($virtualMachineItem['CurrentTaskId']) && $provisioningStatus === 'OK') {
             $percentComplete = 100;
             $Status = 'Complete';
         }

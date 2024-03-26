@@ -10,7 +10,7 @@ use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsUsers extends SoapExecute
 {
-    public const SERVICE = 'esUsers.asmx';
+    public const string SERVICE = 'esUsers.asmx';
 
     //private SoapExecute $soapExecute;
 
@@ -65,7 +65,7 @@ final class EsUsers extends SoapExecute
     {
         try {
             return $this->execute(self::SERVICE, 'UserExists', [
-                'username' => $username
+                'username' => $username,
             ])->UserExistsResult;
         } catch (NotFoundException $e) {
             throw $e;
@@ -79,7 +79,7 @@ final class EsUsers extends SoapExecute
         try {
             $result = $this->execute(self::SERVICE, 'ChangeUserPassword', [
                 'userId' => $userId,
-                'password' => $password
+                'password' => $password,
             ])->ChangeUserPasswordResult;
         } catch (NotFoundException $e) {
             throw $e;
@@ -140,7 +140,7 @@ final class EsUsers extends SoapExecute
                 'instantMessenger' => $instantMessenger,
                 'htmlMail' => $htmlMail,
                 'companyName' => $companyName,
-                'ecommerceEnabled' => $ecommerceEnabled
+                'ecommerceEnabled' => $ecommerceEnabled,
             ])->UpdateUserLiteralResult;
         } catch (NotFoundException $e) {
             throw $e;

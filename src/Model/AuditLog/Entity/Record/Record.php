@@ -3,15 +3,12 @@ declare(strict_types=1);
 
 namespace App\Model\AuditLog\Entity\Record;
 
-use JetBrains\PhpStorm\Pure;
-
 final class Record implements \JsonSerializable
 {
     private string $text;
     /** @var $values Value[] */
     private array $values;
 
-    #[Pure]
     public static function create(string $text, array $values): self
     {
         $log = new self();

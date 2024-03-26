@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\OsTemplate;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "cp_solidcp_hosting_space_os_templates")]
@@ -14,7 +15,7 @@ class OsTemplate
 {
 
     #[ORM\Id]
-    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\Column(name: "id", type: Types::INTEGER, nullable: false)]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
@@ -22,10 +23,10 @@ class OsTemplate
     #[ORM\JoinColumn(name: "id_hosting_space", referencedColumnName: "id", nullable: false)]
     private SolidcpHostingSpace $hostingSpace;
 
-    #[ORM\Column(name: "path", type: "string", length: 128, nullable: false)]
+    #[ORM\Column(name: "path", type: Types::STRING, length: 128, nullable: false)]
     private string $path;
 
-    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
+    #[ORM\Column(name: "name", type: Types::STRING, length: 128, nullable: false)]
     private string $name;
 
     public function __construct(SolidcpHostingSpace $hostingSpace, string $path, string $name)

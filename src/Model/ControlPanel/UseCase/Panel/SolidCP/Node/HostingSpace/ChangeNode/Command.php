@@ -6,11 +6,11 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\ChangeN
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    private int $id_hosting_space;
+    private readonly int $id_hosting_space;
 
     #[Assert\NotBlank]
     #[Assert\Positive]

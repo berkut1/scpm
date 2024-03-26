@@ -8,29 +8,21 @@ use App\Model\AuditLog\Entity\Id;
 use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
-use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
-use App\Model\ControlPanel\UseCase\AuditLog;
-use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\Package;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
+use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
+use App\Model\ControlPanel\UseCase\AuditLog;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\Package;
 
-class Handler
+final readonly class Handler
 {
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private HostingSpaceService $hostingSpaceService;
-    private AuditLog\Add\SolidCP\Handler $auditLogHandler;
-
-    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository, HostingSpaceService $hostingSpaceService, AuditLog\Add\SolidCP\Handler $auditLogHandler)
-    {
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->hostingSpaceService = $hostingSpaceService;
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(
+        private EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
+        private HostingSpaceService            $hostingSpaceService,
+        private AuditLog\Add\SolidCP\Handler   $auditLogHandler
+    ) {}
 
     /**
-     * @param Command $command
-     * @param array $auditLogRecords
-     * @param bool $saveAuditLog
      * @return SolidcpHostingPlan[]
      * @throws \Exception
      */
@@ -53,10 +45,10 @@ class Handler
                 count($possibleSpaces),
             ]),
         ];
-        if(count($command->getIgnoreHostingSpaceIds())>0){
+        if (count($command->getIgnoreHostingSpaceIds()) > 0) {
             $comma_separated = implode(", ", $command->getIgnoreHostingSpaceIds());
             $records[] = Record::create('SOLIDCP_IGNORED_POSSIBLE_SPACE_IDS', [
-                $comma_separated
+                $comma_separated,
             ]);
         }
         $auditLogRecords = array_merge($auditLogRecords, $records);

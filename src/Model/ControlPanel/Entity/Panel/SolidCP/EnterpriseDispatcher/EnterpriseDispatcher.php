@@ -9,8 +9,8 @@ use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
 use App\Model\EventsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 
 #[ORM\Table(name: "cp_solidcp_enterprise_dispatchers")]
 #[ORM\UniqueConstraint(name: "cp_solidcp_enterprise_dispatchers_unique_default", columns: ["id"], options: ["where" => "is_default"])]
@@ -20,36 +20,38 @@ class EnterpriseDispatcher implements AggregateRoot
     use EventsTrait;
 
     #[ORM\Id]
-    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\Column(name: "id", type: Types::INTEGER, nullable: false)]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
+    #[ORM\Column(name: "name", type: Types::STRING, length: 128, nullable: false)]
     private string $name;
 
-    #[ORM\Column(name: "url", type: "string", length: 1024, nullable: false)]
+    #[ORM\Column(name: "url", type: Types::STRING, length: 1024, nullable: false)]
     private string $url;
 
-    #[ORM\Column(name: "login", type: "string", length: 64, nullable: false)]
+    #[ORM\Column(name: "login", type: Types::STRING, length: 64, nullable: false)]
     private string $login;
 
-    #[ORM\Column(name: "password", type: "string", length: 512, nullable: false)]
+    #[ORM\Column(name: "password", type: Types::STRING, length: 512, nullable: false)]
     private string $password;
 
-    #[ORM\Column(name: "solidcp_login_id", type: "integer", nullable: false)]
+    #[ORM\Column(name: "solidcp_login_id", type: Types::INTEGER, nullable: false)]
     private int $solidcpLoginId;
 
-    #[ORM\Column(name: "is_default", type: "boolean", nullable: false, options: ["default" => 0])]
-    private bool $isDefault;
+    #[ORM\Column(name: "is_default", type: Types::BOOLEAN, nullable: false, options: ["default" => 0])]
+    private bool $isDefault = false;
 
-    #[ORM\Column(name: "enabled", type: "boolean", nullable: false, options: ["default" => 1])]
+    #[ORM\Column(name: "enabled", type: Types::BOOLEAN, nullable: false, options: ["default" => 1])]
     private bool $enabled;
 
     /** @var Collection|SolidcpServer[] */
     #[ORM\OneToMany(mappedBy: "enterprise", targetEntity: SolidcpServer::class)]
     private array|Collection|ArrayCollection $solidcpServers;
 
-    public function __construct(EnterpriseDispatcherService $service, string $name, string $url, string $login, string $password, bool $enabled = true)
+    public function __construct(
+        EnterpriseDispatcherService $service, string $name, string $url, string $login, string $password, bool $enabled = true
+    )
     {
         $this->name = $name;
         $this->url = $url;
@@ -57,7 +59,6 @@ class EnterpriseDispatcher implements AggregateRoot
         $this->password = $password;
 //        $this->solidcpLoginId = $solidcpLoginId;
         $this->solidcpLoginId = $service->getEnterpriseDispatcherRealUserId($url, $login, $password);
-        $this->isDefault = false;
         $this->enabled = $enabled;
         $this->solidcpServers = new ArrayCollection();
         $this->recordEvent(new Event\EnterpriseDispatcherCreated($this));
@@ -96,7 +97,6 @@ class EnterpriseDispatcher implements AggregateRoot
         return !$this->solidcpServers->isEmpty();
     }
 
-    #[Pure]
     public function isEqualName(string $name): bool
     {
         return $this->getName() === $name;

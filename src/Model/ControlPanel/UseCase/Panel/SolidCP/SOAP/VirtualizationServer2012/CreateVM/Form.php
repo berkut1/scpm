@@ -6,34 +6,27 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer
 use App\Model\ControlPanel\Service\SolidCP\VirtualizationServer2012Service;
 use App\ReadModel\ControlPanel\Package\VirtualMachine\VirtualMachinePackageFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
-use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanFetcher;
-use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form extends AbstractType
+final class Form extends AbstractType
 {
-    private EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher;
-    private VirtualizationServer2012Service $virtualizationServer2012Service;
-    private VirtualMachinePackageFetcher $virtualMachinePackageFetcher;
+    public function __construct(
+        private readonly EnterpriseDispatcherFetcher     $enterpriseDispatcherFetcher,
+        private readonly VirtualizationServer2012Service $virtualizationServer2012Service,
+        private readonly VirtualMachinePackageFetcher    $virtualMachinePackageFetcher
+    ) {}
 
-    public function __construct(EnterpriseDispatcherFetcher     $enterpriseDispatcherFetcher,
-                                VirtualizationServer2012Service $virtualizationServer2012Service,
-                                VirtualMachinePackageFetcher    $virtualMachinePackageFetcher)
-    {
-        $this->enterpriseDispatcherFetcher = $enterpriseDispatcherFetcher;
-        $this->virtualizationServer2012Service = $virtualizationServer2012Service;
-        $this->virtualMachinePackageFetcher = $virtualMachinePackageFetcher;
-    }
-
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit')); //need to refill data to pass the form validation
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, $this->onPreSetData(...));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, $this->onPreSubmit(...)); //need to refill data to pass the form validation
     }
 
     protected function addElements(FormInterface $form, array $data, Command $modelOriginalData): void
@@ -50,17 +43,17 @@ class Form extends AbstractType
             ->add('packageId', Type\IntegerType::class,
                 [
                     'label' => 'PackageId',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('hostname', Type\TextType::class,
                 [
                     'label' => 'Host Name (empty - auto generate)',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('password', Type\PasswordType::class,
                 [
                     'label' => 'Password',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('id_package_virtual_machines', Type\ChoiceType::class,
                 [
@@ -70,95 +63,70 @@ class Form extends AbstractType
                     'required' => true,
                     //'data' => isset($data['id_enterprise_dispatcher']) ?? $data['id_enterprise_dispatcher'],
                 ])
-//            ->add('cpuCores', Type\IntegerType::class,
-//                [
-//                    'label' => 'cpuCores',
-//                    'required' => true
-//                ])
-//            ->add('ramSize', Type\IntegerType::class,
-//                [
-//                    'label' => 'ramSize',
-//                    'required' => true
-//                ])
-//            ->add('hddSize', Type\IntegerType::class,
-//                [
-//                    'label' => 'hddSize',
-//                    'required' => true
-//                ])
-//            ->add('hddMinimumIOPS', Type\IntegerType::class,
-//                [
-//                    'label' => 'hddMinimumIOPS',
-//                    'required' => true
-//                ])
-//            ->add('hddMaximumIOPS', Type\IntegerType::class,
-//                [
-//                    'label' => 'hddMaximumIOPS',
-//                    'required' => true
-//                ])
             ->add('snapshotsNumber', Type\IntegerType::class,
                 [
                     'label' => 'snapshotsNumber',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('dvdDriveInstalled', Type\CheckboxType::class,
                 [
                     'label' => 'dvdDriveInstalled',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('bootFromCD', Type\CheckboxType::class,
                 [
                     'label' => 'bootFromCD',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('numLockEnabled', Type\CheckboxType::class,
                 [
                     'label' => 'numLockEnabled',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('startTurnOffAllowed', Type\CheckboxType::class,
                 [
                     'label' => 'startTurnOffAllowed',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('pauseResumeAllowed', Type\CheckboxType::class,
                 [
                     'label' => 'pauseResumeAllowed',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('rebootAllowed', Type\CheckboxType::class,
                 [
                     'label' => 'rebootAllowed',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('resetAllowed', Type\CheckboxType::class,
                 [
                     'label' => 'resetAllowed',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('reinstallAllowed', Type\CheckboxType::class,
                 [
                     'label' => 'reinstallAllowed',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('externalNetworkEnabled', Type\CheckboxType::class,
                 [
                     'label' => 'externalNetworkEnabled',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('privateNetworkEnabled', Type\CheckboxType::class,
                 [
                     'label' => 'privateNetworkEnabled',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('defaultaccessvlan', Type\IntegerType::class,
                 [
                     'label' => 'defaultaccessvlan',
-                    'required' => true
+                    'required' => true,
                 ]);
 
         $templates = [];
         if (!empty($data['packageId'])) {
-            if(empty($data['id_enterprise_dispatcher'])){
+            if (empty($data['id_enterprise_dispatcher'])) {
                 $data['id_enterprise_dispatcher'] = $this->enterpriseDispatcherFetcher->getDefault()->getId();
             }
             $templates = array_flip($this->virtualizationServer2012Service->allOsTemplateListFrom((int)$data['id_enterprise_dispatcher'], (int)$data['packageId']));
@@ -174,27 +142,27 @@ class Form extends AbstractType
             ->add('externalAddressesNumber', Type\IntegerType::class,
                 [
                     'label' => 'externalAddressesNumber',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('randomExternalAddresses', Type\CheckboxType::class,
                 [
                     'label' => 'randomExternalAddresses',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('privateAddressesNumber', Type\IntegerType::class,
                 [
                     'label' => 'privateAddressesNumber',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('randomPrivateAddresses', Type\CheckboxType::class,
                 [
                     'label' => 'randomPrivateAddresses',
-                    'required' => false
+                    'required' => false,
                 ])
             ->add('summaryLetterEmail', Type\CheckboxType::class,
                 [
                     'label' => 'summaryLetterEmail',
-                    'required' => false
+                    'required' => false,
                 ]);
     }
 
@@ -216,10 +184,9 @@ class Form extends AbstractType
         $this->addElements($form, $data, $modelOriginalData);
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Command::class,
-        ));
+        $resolver->setDefaults(['data_class' => Command::class]);
     }
 }

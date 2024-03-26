@@ -7,16 +7,9 @@ use App\Model\ControlPanel\Entity\Location\Location;
 use App\Model\ControlPanel\Entity\Location\LocationRepository;
 use App\Model\Flusher;
 
-class Handler
+final readonly class Handler
 {
-    private Flusher $flusher;
-    private LocationRepository $locationRepository;
-
-    public function __construct(LocationRepository $locationRepository, Flusher $flusher)
-    {
-        $this->flusher = $flusher;
-        $this->locationRepository = $locationRepository;
-    }
+    public function __construct(private LocationRepository $locationRepository, private Flusher $flusher) {}
 
     public function handle(Command $command): void
     {

@@ -6,22 +6,18 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\User\Check;
 use App\Model\AuditLog\Entity\Entity;
 use App\Model\AuditLog\Entity\Id;
 use App\Model\AuditLog\Entity\Record\Record;
-use App\Model\ControlPanel\UseCase\AuditLog;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
+use App\Model\ControlPanel\UseCase\AuditLog;
 
-class Handler
+final readonly class Handler
 {
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private AuditLog\Add\SolidCP\Handler $auditLogHandler;
-
-    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository, AuditLog\Add\SolidCP\Handler $auditLogHandler)
-    {
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(
+        private EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
+        private AuditLog\Add\SolidCP\Handler   $auditLogHandler
+    ) {}
 
     /**
      * @throws \Exception

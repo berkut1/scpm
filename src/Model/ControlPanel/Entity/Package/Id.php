@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Entity\Package;
 
-use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
-class Id
+final class Id implements \Stringable
 {
     private string $value;
 
@@ -32,7 +31,7 @@ class Id
         return $this->value;
     }
 
-    #[Pure]
+    #[\Override]
     public function __toString(): string
     {
         return $this->getValue();

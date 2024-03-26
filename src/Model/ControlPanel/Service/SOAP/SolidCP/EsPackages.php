@@ -10,7 +10,7 @@ use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsPackages extends SoapExecute
 {
-    public const SERVICE = 'esPackages.asmx';
+    public const string SERVICE = 'esPackages.asmx';
 
     public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
     {
@@ -32,7 +32,8 @@ final class EsPackages extends SoapExecute
         bool    $createFtpAccount = false,
         ?string $ftpAccountName = null,
         bool    $createMailAccount = false,
-        string  $hostName = ""): int
+        string  $hostName = ""
+    ): int
     {
         try {
             return $this->execute(
@@ -68,7 +69,7 @@ final class EsPackages extends SoapExecute
                 'ChangePackageStatus',
                 [
                     'packageId' => $packageId,
-                    'status' => $status->getName()
+                    'status' => $status->getName(),
                 ])->ChangePackageStatusResult;
         } catch (NotFoundException $e) {
             throw $e;
@@ -91,7 +92,7 @@ final class EsPackages extends SoapExecute
                 [
                     'packageId' => $packageId,
                     'packageName' => $packageName,
-                    'packageComments' => $packageComments
+                    'packageComments' => $packageComments,
                 ])->UpdatePackageNameResult;
         } catch (NotFoundException $e) {
             throw $e;
@@ -142,7 +143,7 @@ final class EsPackages extends SoapExecute
                 self::SERVICE,
                 'GetHostingPlans',
                 [
-                    'userId' => $userId
+                    'userId' => $userId,
                 ])->GetHostingPlansResult;
             return $this->convertArray($result['any'], true);
         } catch (NotFoundException $e) {
@@ -210,7 +211,7 @@ final class EsPackages extends SoapExecute
         $packageDataSet = $this->getNestedPackagesSummary($packageId);
         $countOfActivePackages = 0;
 
-        if($packageDataSet['NewDataSet']['Table']['PackagesNumber'] > 0){ //if we have packages, then get number of Active Packages
+        if ($packageDataSet['NewDataSet']['Table']['PackagesNumber'] > 0) { //if we have packages, then get number of Active Packages
             $summary = $packageDataSet['NewDataSet']['Table1']; //in Table1 we have separated packages to Active/Suspended/Canceled
             /*thanks for this awful code - data return SolidCP*/
             if (isset($summary[0])) { //we can get different arrays from getNestedPackagesSummary

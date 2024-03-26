@@ -7,16 +7,12 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseD
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsVirtualizationServer2012;
 use App\Model\ControlPanel\Service\SolidCP\ServerService;
 
-class Handler
+final readonly class Handler
 {
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private ServerService $serverService;
-
-    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository, ServerService $serverService)
-    {
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->serverService = $serverService;
-    }
+    public function __construct(
+        private EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
+        private ServerService                  $serverService
+    ) {}
 
     public function handle(Command $command): string
     {

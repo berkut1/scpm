@@ -7,10 +7,10 @@ use App\Model\ControlPanel\Entity\Package\Package;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    private string $id_package;
+    private readonly string $id_package;
 
     #[Assert\Positive]
     public array $id_plans = [];

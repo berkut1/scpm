@@ -6,46 +6,47 @@ namespace App\Model\ControlPanel\Entity\AuditLog;
 use App\Model\AuditLog\Entity\TaskNameInterface;
 use Webmozart\Assert\Assert;
 
-class TaskName implements TaskNameInterface
+final class TaskName implements TaskNameInterface
 {
-    public const TASK_CREATE_CP_LOCATION = 'create_cp_location';
-    public const TASK_RENAME_CP_LOCATION = 'rename_cp_location';
-    public const TASK_REMOVE_CP_LOCATION = 'remove_cp_location';
-    public const TASK_RENAME_CP_PACKAGE = 'rename_cp_package';
-    public const TASK_REMOVE_CP_PACKAGE = 'remove_cp_package';
-    public const TASK_CHANGE_SOLIDCP_PLANS_CP_PACKAGE = 'change_solidcp_plans_cp_package';
-    public const TASK_CREATE_CP_PACKAGE_VIRTUAL_MACHINE = 'create_cp_package_virtual_machine';
-    public const TASK_EDIT_CP_PACKAGE_VIRTUAL_MACHINE = 'edit_cp_package_virtual_machine';
-    public const TASK_CREATE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'create_cp_solidcp_enterprise_dispatcher';
-    public const TASK_REMOVE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'remove_cp_solidcp_enterprise_dispatcher';
-    public const TASK_EDIT_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'edit_cp_solidcp_enterprise_dispatcher';
-    public const TASK_DISABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'disable_cp_solidcp_enterprise_dispatcher';
-    public const TASK_ENABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'enable_cp_solidcp_enterprise_dispatcher';
-    public const TASK_CREATE_CP_SOLIDCP_SERVER = 'create_cp_solidcp_server';
-    public const TASK_REMOVE_CP_SOLIDCP_SERVER = 'remove_cp_solidcp_server';
-    public const TASK_EDIT_CP_SOLIDCP_SERVER = 'edit_cp_solidcp_server';
-    public const TASK_DISABLE_CP_SOLIDCP_SERVER = 'disable_cp_solidcp_server';
-    public const TASK_ENABLE_CP_SOLIDCP_SERVER = 'enable_cp_solidcp_server';
-    public const TASK_CREATE_CP_SOLIDCP_HOSTING_SPACE = 'create_cp_solidcp_hosting_space';
-    public const TASK_REMOVE_CP_SOLIDCP_HOSTING_SPACE = 'remove_cp_solidcp_hosting_space';
-    public const TASK_EDIT_CP_SOLIDCP_HOSTING_SPACE = 'edit_cp_solidcp_hosting_space';
-    public const TASK_CREATE_CP_SOLIDCP_HOSTING_PLAN = 'create_cp_solidcp_hosting_plan';
-    public const TASK_REMOVE_CP_SOLIDCP_HOSTING_PLAN = 'remove_cp_solidcp_hosting_plan';
-    public const TASK_ADD_OS_TEMPLATE_CP_SOLIDCP_HOSTING_SPACE = 'add_os_template_cp_solidcp_hosting_space';
-    public const TASK_REMOVE_OS_TEMPLATE_CP_SOLIDCP_HOSTING_SPACE = 'remove_os_template_cp_solidcp_hosting_space';
-    public const TASK_DISABLE_CP_SOLIDCP_HOSTING_SPACE = 'disable_cp_solidcp_hosting_space';
-    public const TASK_ENABLE_CP_SOLIDCP_HOSTING_SPACE = 'enable_cp_solidcp_hosting_space';
+    public const string TASK_CREATE_CP_LOCATION = 'create_cp_location';
+    public const string TASK_RENAME_CP_LOCATION = 'rename_cp_location';
+    public const string TASK_REMOVE_CP_LOCATION = 'remove_cp_location';
+    public const string TASK_RENAME_CP_PACKAGE = 'rename_cp_package';
+    public const string TASK_REMOVE_CP_PACKAGE = 'remove_cp_package';
+    public const string TASK_CHANGE_SOLIDCP_PLANS_CP_PACKAGE = 'change_solidcp_plans_cp_package';
+    public const string TASK_CREATE_CP_PACKAGE_VIRTUAL_MACHINE = 'create_cp_package_virtual_machine';
+    public const string TASK_EDIT_CP_PACKAGE_VIRTUAL_MACHINE = 'edit_cp_package_virtual_machine';
+    public const string TASK_CREATE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'create_cp_solidcp_enterprise_dispatcher';
+    public const string TASK_REMOVE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'remove_cp_solidcp_enterprise_dispatcher';
+    public const string TASK_EDIT_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'edit_cp_solidcp_enterprise_dispatcher';
+    public const string TASK_DISABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'disable_cp_solidcp_enterprise_dispatcher';
+    public const string TASK_ENABLE_CP_SOLIDCP_ENTERPRISE_DISPATCHER = 'enable_cp_solidcp_enterprise_dispatcher';
+    public const string TASK_CREATE_CP_SOLIDCP_SERVER = 'create_cp_solidcp_server';
+    public const string TASK_REMOVE_CP_SOLIDCP_SERVER = 'remove_cp_solidcp_server';
+    public const string TASK_EDIT_CP_SOLIDCP_SERVER = 'edit_cp_solidcp_server';
+    public const string TASK_DISABLE_CP_SOLIDCP_SERVER = 'disable_cp_solidcp_server';
+    public const string TASK_ENABLE_CP_SOLIDCP_SERVER = 'enable_cp_solidcp_server';
+    public const string TASK_CREATE_CP_SOLIDCP_HOSTING_SPACE = 'create_cp_solidcp_hosting_space';
+    public const string TASK_REMOVE_CP_SOLIDCP_HOSTING_SPACE = 'remove_cp_solidcp_hosting_space';
+    public const string TASK_EDIT_CP_SOLIDCP_HOSTING_SPACE = 'edit_cp_solidcp_hosting_space';
+    public const string TASK_CREATE_CP_SOLIDCP_HOSTING_PLAN = 'create_cp_solidcp_hosting_plan';
+    public const string TASK_REMOVE_CP_SOLIDCP_HOSTING_PLAN = 'remove_cp_solidcp_hosting_plan';
+    public const string TASK_ADD_OS_TEMPLATE_CP_SOLIDCP_HOSTING_SPACE = 'add_os_template_cp_solidcp_hosting_space';
+    public const string TASK_REMOVE_OS_TEMPLATE_CP_SOLIDCP_HOSTING_SPACE = 'remove_os_template_cp_solidcp_hosting_space';
+    public const string TASK_DISABLE_CP_SOLIDCP_HOSTING_SPACE = 'disable_cp_solidcp_hosting_space';
+    public const string TASK_ENABLE_CP_SOLIDCP_HOSTING_SPACE = 'enable_cp_solidcp_hosting_space';
 
-    public const TASK_CREATE_SOLIDCP_ALL_IN_ONE_VPS = 'create_solidcp_all_in_one_vps';
-    public const TASK_CREATE_SOLIDCP_USER = 'create_solidcp_user';
-    public const TASK_CHECK_SOLIDCP_USER = 'check_solidcp_user';
-    public const TASK_CHECK_SOLIDCP_VPS_AVAILABLE_SPACES = 'task_check_solidcp_vps_available_spaces';
-    public const TASK_CHANGE_SOLIDCP_USER_VPS_STATE = 'task_change_solidcp_user_vps_state';
-    public const TASK_CREATE_SOLIDCP_PACKAGE = 'create_solidcp_package';
-    public const TASK_CHANGE_SOLIDCP_PACKAGE_STATUS = 'change_solidcp_package_status';
-    public const TASK_CREATE_SOLIDCP_VPS = 'create_solidcp_vps';
+    public const string TASK_CREATE_SOLIDCP_ALL_IN_ONE_VPS = 'create_solidcp_all_in_one_vps';
+    public const string TASK_CREATE_SOLIDCP_USER = 'create_solidcp_user';
+    public const string TASK_CHECK_SOLIDCP_USER = 'check_solidcp_user';
+    public const string TASK_CHECK_SOLIDCP_VPS_AVAILABLE_SPACES = 'task_check_solidcp_vps_available_spaces';
+    public const string TASK_CHANGE_SOLIDCP_USER_VPS_STATE = 'task_change_solidcp_user_vps_state';
+    public const string TASK_CREATE_SOLIDCP_PACKAGE = 'create_solidcp_package';
+    public const string TASK_CHANGE_SOLIDCP_PACKAGE_STATUS = 'change_solidcp_package_status';
+    public const string TASK_CREATE_SOLIDCP_VPS = 'create_solidcp_vps';
     private string $name;
 
+    #[\Override]
     public static function create(string $name): self
     {
         Assert::oneOf($name, [
@@ -267,11 +268,13 @@ class TaskName implements TaskNameInterface
         return self::create(self::TASK_CREATE_SOLIDCP_VPS);
     }
 
+    #[\Override]
     public function isEqual(TaskNameInterface $type): bool
     {
         return $this->getName() === $type->getName();
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;

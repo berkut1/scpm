@@ -5,9 +5,9 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User;
 
 use Webmozart\Assert\Assert;
 
-class UserStatus
+final class UserStatus implements \Stringable
 {
-    const ACTIVE = 'Active';
+    public const string ACTIVE = 'Active';
     private string $name;
 
     public function __construct(string $name)
@@ -28,8 +28,8 @@ class UserStatus
 
     public function getId(): int
     {
-        foreach (self::list() as $key => $value){
-            if($this->name === $value){
+        foreach (self::list() as $key => $value) {
+            if ($this->name === $value) {
                 return $key;
             }
         }
@@ -46,6 +46,7 @@ class UserStatus
         return $this->name;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;

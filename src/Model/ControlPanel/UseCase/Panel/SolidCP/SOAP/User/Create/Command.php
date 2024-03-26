@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\User\Create;
 
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     public ?int $id_enterprise_dispatcher = null;
 
@@ -21,8 +20,9 @@ class Command
     #[Assert\NotBlank]
     public string $password = '';
 
-    #[Pure]
-    public static function create(string $username, ?string $firstName, ?string $lastName, string $email, string $password, ?int $id_enterprise_dispatcher = null): self
+    public static function create(
+        string $username, ?string $firstName, ?string $lastName, string $email, string $password, ?int $id_enterprise_dispatcher = null
+    ): self
     {
         $command = new self();
         $command->id_enterprise_dispatcher = $id_enterprise_dispatcher;

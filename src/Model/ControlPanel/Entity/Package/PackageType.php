@@ -5,10 +5,10 @@ namespace App\Model\ControlPanel\Entity\Package;
 
 use Webmozart\Assert\Assert;
 
-class PackageType
+final class PackageType
 {
     //must have the same name as class name
-    public const PACKAGE_VIRTUAL_MACHINE = 'VirtualMachinePackage';
+    public const string PACKAGE_VIRTUAL_MACHINE = 'VirtualMachinePackage';
 
     private string $name;
 

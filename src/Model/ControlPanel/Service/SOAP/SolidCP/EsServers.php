@@ -9,7 +9,7 @@ use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsServers extends SoapExecute
 {
-    public const SERVICE = 'esServers.asmx';
+    public const string SERVICE = 'esServers.asmx';
 
     public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
     {
@@ -55,7 +55,7 @@ final class EsServers extends SoapExecute
                 [
                     'packageId' => $packageId,
                     'orgId' => 0,
-                    'pool' => 'VpsExternalNetwork'
+                    'pool' => 'VpsExternalNetwork',
                 ])->GetPackageUnassignedIPAddressesResult);
         } catch (NotFoundException $e) {
             throw $e;
@@ -64,7 +64,9 @@ final class EsServers extends SoapExecute
         }
     }
 
-    public function allocatePackageIPAddressesVpsExternalNetwork(int $packageId, bool $allocateRandom, int $addressesNumber, array $addressId = []): array
+    public function allocatePackageIPAddressesVpsExternalNetwork(int   $packageId, bool $allocateRandom, int $addressesNumber,
+                                                                 array $addressId = []
+    ): array
     {
         try {
             return $this->convertArray($this->execute(
@@ -77,7 +79,7 @@ final class EsServers extends SoapExecute
                     'pool' => 'VpsExternalNetwork',
                     'allocateRandom' => $allocateRandom,
                     'addressesNumber' => $addressesNumber,
-                    'addressId' => $addressId //int array
+                    'addressId' => $addressId, //int array
                 ])->AllocatePackageIPAddressesResult);
         } catch (NotFoundException $e) {
             throw $e;

@@ -6,7 +6,7 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\Create;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public string $name = '';
@@ -17,7 +17,7 @@ class Command
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    private int $id_server;
+    private readonly int $id_server;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
@@ -56,7 +56,6 @@ class Command
     {
         return $this->id_server;
     }
-
 
 
 }

@@ -5,13 +5,10 @@ namespace App\Model\ControlPanel\Service\SolidCP;
 
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 
-class EnterpriseDispatcherService
+final readonly class EnterpriseDispatcherService
 {
-    private EsUsers $esUsers;
-
-    public function __construct(EsUsers $esUsers)
+    public function __construct(private EsUsers $esUsers)
     {
-        $this->esUsers = $esUsers;
     }
 
     public function getEnterpriseDispatcherRealUserId(string $url, string $login, string $password): int

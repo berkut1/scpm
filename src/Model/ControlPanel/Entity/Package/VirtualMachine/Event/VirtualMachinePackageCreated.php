@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Package\VirtualMachine\Event;
 
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackage;
 
-class VirtualMachinePackageCreated
+final class VirtualMachinePackageCreated
 {
     public VirtualMachinePackage $virtualMachinePackage;
 

@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Edit;
 
-use App\Model\ControlPanel\Entity\Location\Location;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public int $id;

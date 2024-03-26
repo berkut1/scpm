@@ -11,7 +11,7 @@ use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsVirtualizationServer2012 extends SoapExecute
 {
-    public const SERVICE = 'esVirtualizationServer2012.asmx';
+    public const string SERVICE = 'esVirtualizationServer2012.asmx';
 
     public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
     {
@@ -41,7 +41,7 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'ChangeVirtualMachineState', [
                     'itemId' => $itemId,
-                    'state' => $state
+                    'state' => $state,
                 ])->ChangeVirtualMachineStateResult);
         } catch (NotFoundException $e) {
             throw $e;
@@ -58,7 +58,7 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'GetOperatingSystemTemplates',
                     [
-                        'packageId' => $packageId
+                        'packageId' => $packageId,
                     ])->GetOperatingSystemTemplatesResult);
         } catch (NotFoundException $e) {
             throw $e;
@@ -67,16 +67,18 @@ final class EsVirtualizationServer2012 extends SoapExecute
         }
     }
 
-    public function createNewVirtualMachine(VirtualMachine $vmSettings,
-                                            string         $osTemplateFile,
-                                            string         $password,
-                                            int            $externalAddressesNumber = 0,
-                                            bool           $randomExternalAddresses = false,
-                                            array          $externalAddresses = [],
-                                            int            $privateAddressesNumber = 0,
-                                            bool           $randomPrivateAddresses = false,
-                                            array          $privateAddresses = [],
-                                            ?string        $summaryLetterEmail = null): array
+    public function createNewVirtualMachine(
+        VirtualMachine $vmSettings,
+        string         $osTemplateFile,
+        string         $password,
+        int            $externalAddressesNumber = 0,
+        bool           $randomExternalAddresses = false,
+        array          $externalAddresses = [],
+        int            $privateAddressesNumber = 0,
+        bool           $randomPrivateAddresses = false,
+        array          $privateAddresses = [],
+        ?string        $summaryLetterEmail = null
+    ): array
     {
         try {
             return $this->convertArray(
@@ -111,7 +113,7 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'GetVirtualMachineItem',
                     [
-                        'itemId' => $itemId
+                        'itemId' => $itemId,
                     ])->GetVirtualMachineItemResult);
         } catch (NotFoundException $e) {
             throw $e;
@@ -128,7 +130,7 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'GetVirtualMachineGeneralDetails',
                     [
-                        'itemId' => $itemId
+                        'itemId' => $itemId,
                     ])->GetVirtualMachineGeneralDetailsResult); //symfony denormalize service?
         } catch (NotFoundException $e) {
             throw $e;
@@ -145,7 +147,7 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'GetExternalNetworkAdapterDetails',
                     [
-                        'itemId' => $itemId
+                        'itemId' => $itemId,
                     ])->GetExternalNetworkAdapterDetailsResult);
         } catch (NotFoundException $e) {
             throw $e;
@@ -168,7 +170,7 @@ final class EsVirtualizationServer2012 extends SoapExecute
                         'sortColumn' => '',
                         'startRow' => '',
                         'maximumRows' => 100000000,
-                        'recursive' => false
+                        'recursive' => false,
                     ])->GetVirtualMachinesResult);
         } catch (NotFoundException $e) {
             throw $e;

@@ -5,10 +5,9 @@ namespace App\Model\ControlPanel\UseCase\Package\VirtualMachine\Edit;
 
 use App\Model\ControlPanel\Entity\Package\Id;
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackage;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public Id $id;
@@ -42,7 +41,6 @@ class Command
         $this->id = $id;
     }
 
-    #[Pure]
     public static function fromVirtualMachine(VirtualMachinePackage $virtualMachinePackage): self
     {
         $command = new self($virtualMachinePackage->getId());

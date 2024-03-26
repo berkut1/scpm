@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 
-class VirtualMachinePackageRepository extends PackageRepository
+final class VirtualMachinePackageRepository extends PackageRepository
 {
     private EntityManagerInterface $em;
     private EntityRepository $repo;
@@ -25,7 +25,7 @@ class VirtualMachinePackageRepository extends PackageRepository
         $this->em = $em;
     }
 
-    public function get(Id $id): VirtualMachinePackage
+    public function getVmPackage(Id $id): VirtualMachinePackage
     {
         /** @var VirtualMachinePackage $entity */
         if (!$entity = $this->repo->find($id)) {
@@ -37,7 +37,7 @@ class VirtualMachinePackageRepository extends PackageRepository
     public function getByName(string $name): VirtualMachinePackage
     {
         $virtualMachinePackage = $this->repo->createQueryBuilder('t')
-            ->leftJoin(Package::class, 't2', Join::WITH,'t2.id = t.id')
+            ->leftJoin(Package::class, 't2', Join::WITH, 't2.id = t.id')
             ->andWhere('t2.name = :name')
             ->setParameter('name', $name)
             ->getQuery()->getOneOrNullResult();

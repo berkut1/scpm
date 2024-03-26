@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\ChangeSolidCpHostingSpace;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public int $id;
@@ -25,7 +24,6 @@ class Command
         $this->id = $id;
     }
 
-    #[Pure]
     public static function fromHostingSpace(SolidcpHostingSpace $solidcpHostingSpace): self
     {
         $command = new self($solidcpHostingSpace->getId());

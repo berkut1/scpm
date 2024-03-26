@@ -5,22 +5,19 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Edit;
 
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
-use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form extends AbstractType
+final class Form extends AbstractType
 {
-    private EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher;
-    private LocationFetcher $locationFetcher;
+    public function __construct(
+        private readonly EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher,
+        private readonly LocationFetcher             $locationFetcher
+    ) {}
 
-    public function __construct(EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher, LocationFetcher $locationFetcher)
-    {
-        $this->enterpriseDispatcherFetcher = $enterpriseDispatcherFetcher;
-        $this->locationFetcher = $locationFetcher;
-    }
-    
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -34,34 +31,33 @@ class Form extends AbstractType
                 [
                     'choices' => array_flip($this->locationFetcher->allList()),
                     'required' => true,
-                    'placeholder' => 'Select a Location'
+                    'placeholder' => 'Select a Location',
                 ])
             ->add('name', Type\TextType::class,
                 [
                     'label' => 'Name',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('cores', Type\IntegerType::class,
                 [
                     'label' => 'Cores',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('threads', Type\IntegerType::class,
                 [
                     'label' => 'Threads',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('ram_mb', Type\IntegerType::class,
                 [
                     'label' => 'RAM (MB)',
-                    'required' => true
+                    'required' => true,
                 ]);
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Command::class,
-        ));
+        $resolver->setDefaults(['data_class' => Command::class]);
     }
 }

@@ -4,20 +4,16 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\ChangeNode;
 
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
-use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form extends AbstractType
+final class Form extends AbstractType
 {
-    private SolidcpServerFetcher $serverFetcher;
+    public function __construct(private readonly SolidcpServerFetcher $serverFetcher) {}
 
-    public function __construct(SolidcpServerFetcher $serverFetcher)
-    {
-        $this->serverFetcher = $serverFetcher;
-    }
-
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Command $data */
@@ -28,14 +24,13 @@ class Form extends AbstractType
                     'label' => 'Node/Server',
                     'choices' => array_flip($this->serverFetcher->allListFrom($data->getIdEnterpriseDispatcher())),
                     'required' => true,
-                    'placeholder' => 'Move to Node'
+                    'placeholder' => 'Move to Node',
                 ]);
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Command::class,
-        ));
+        $resolver->setDefaults(['data_class' => Command::class]);
     }
 }

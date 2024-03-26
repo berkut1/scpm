@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\UseCase\Location\Remove;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public int $id;

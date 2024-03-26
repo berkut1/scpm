@@ -6,16 +6,12 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\Enab
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\Flusher;
 
-class Handler
+final readonly class Handler
 {
-    private Flusher $flusher;
-    private EnterpriseDispatcherRepository $repository;
-
-    public function __construct(Flusher $flusher, EnterpriseDispatcherRepository $repository)
-    {
-        $this->flusher = $flusher;
-        $this->repository = $repository;
-    }
+    public function __construct(
+        private Flusher                        $flusher,
+        private EnterpriseDispatcherRepository $repository
+    ) {}
 
     public function handle(Command $command): void
     {

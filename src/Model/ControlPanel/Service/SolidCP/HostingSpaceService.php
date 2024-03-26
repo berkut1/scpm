@@ -13,26 +13,14 @@ use App\Model\EntityNotFoundException;
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use Doctrine\DBAL\Connection;
 
-class HostingSpaceService
+final readonly class HostingSpaceService
 {
-    private Connection $connection;
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private LocationFetcher $locationFetcher;
-    private VirtualMachinePackageRepository $virtualMachinePackageRepository;
-    private SolidcpServerRepository $serverRepository;
-
-    public function __construct(Connection                      $connection,
-                                EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
-                                LocationFetcher                 $locationFetcher,
-                                VirtualMachinePackageRepository $virtualMachinePackageRepository,
-                                SolidcpServerRepository         $serverRepository)
-    {
-        $this->connection = $connection;
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->locationFetcher = $locationFetcher;
-        $this->virtualMachinePackageRepository = $virtualMachinePackageRepository;
-        $this->serverRepository = $serverRepository;
-    }
+    public function __construct(private Connection                      $connection,
+                                private EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
+                                private LocationFetcher                 $locationFetcher,
+                                private VirtualMachinePackageRepository $virtualMachinePackageRepository,
+                                private SolidcpServerRepository         $serverRepository
+    ) {}
 
     //$idEnterprise - means a Reseller with his hosting spaces
     public function allNotAddedHostingSpacesFrom(int $id_enterprise_dispatcher): array
@@ -82,16 +70,15 @@ class HostingSpaceService
     }
 
     /**
-     * @param int $id_enterprise_dispatcher
-     * @param string $location_name
-     * @param string $server_package_name
-     * @param int $ip_amount
      * @param int[] $ignore_node_ids
      * @param int[] $ignore_hosting_space_ids
      * @return SolidcpHostingPlan[]
      * @throws \Exception
      */
-    public function possibleHostingSpacesWithPlansForVPS2012Installation(int $id_enterprise_dispatcher, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
+    public function possibleHostingSpacesWithPlansForVPS2012Installation(int    $id_enterprise_dispatcher, string $location_name,
+                                                                         string $server_package_name, int $ip_amount,
+                                                                         array  $ignore_node_ids, array $ignore_hosting_space_ids
+    ): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);
         if (!$enterpriseDispatcher->isEnabled()) {
@@ -118,20 +105,20 @@ class HostingSpaceService
                     break;
                 }
             }
-            if($ignoreHostingSpace){
+            if ($ignoreHostingSpace) {
                 continue;
             }
             $ips = $esServers->getPackageUnassignedIPAddressesVpsExternalNetwork($possiblePlan->getHostingSpace()->getSolidCpIdHostingSpace());
             /*thanks for this awful code - data return SolidCP*/
-            if(!isset($ips['PackageIPAddress'])){
+            if (!isset($ips['PackageIPAddress'])) {
                 continue;
             }
-            if(isset($ips['PackageIPAddress'][0])){ //we can get different arrays, so if it is a true array, check that exist 0 index
-                if(count($ips['PackageIPAddress']) < $ip_amount){
+            if (isset($ips['PackageIPAddress'][0])) { //we can get different arrays, so if it is a true array, check that exist 0 index
+                if (count($ips['PackageIPAddress']) < $ip_amount) {
                     continue;
                 }
-            }else{ //if we get assoc array, that means there is only 1 ip left
-                if(1 < $ip_amount){
+            } else { //if we get assoc array, that means there is only 1 ip left
+                if (1 < $ip_amount) {
                     continue;
                 }
             }
@@ -171,7 +158,7 @@ class HostingSpaceService
                 }
                 unset($hostingSpace);
                 $hosting_space_ids_from_node_id = array_merge($hosting_space_ids_from_node_id, $spaceIds);
-            } catch (EntityNotFoundException $e) {
+            } catch (EntityNotFoundException) {
                 //ignore if not found $server
             }
         }
