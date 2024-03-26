@@ -48,7 +48,7 @@ final class Form extends AbstractType
         $field = $form->get($fieldName);
         $options = $field->getConfig()->getOptions();
         $options['disabled'] = true;
-        $type = $field->getConfig()->getType()->getInnerType()::class; //type of field
+        $type = get_class($field->getConfig()->getType()->getInnerType()); //type of field
         $form->add($fieldName, $type, $options);
     }
 
