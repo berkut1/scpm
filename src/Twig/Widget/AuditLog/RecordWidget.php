@@ -8,19 +8,15 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class RecorsdWidget extends AbstractExtension
+final class RecordWidget extends AbstractExtension
 {
-    private TranslatorInterface $translator;
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
+    #[\Override]
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('audit_log_records', [$this, 'records'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('audit_log_records', $this->records(...), ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
@@ -28,9 +24,9 @@ class RecorsdWidget extends AbstractExtension
     {
         $records = json_decode($records, true);
         $formattedRecords = [];
-        foreach ($records as $record){
+        foreach ($records as $record) {
             $values = [];
-            foreach ($record['values'] as $value){
+            foreach ($record['values'] as $value) {
                 $values[] = $value['value'];
             }
             unset($value);
@@ -48,7 +44,7 @@ class RecorsdWidget extends AbstractExtension
         unset($record);
 
         return $twig->render('widget/audit_log/records.html.twig', [
-            'records' => $formattedRecords
+            'records' => $formattedRecords,
         ]);
     }
 }

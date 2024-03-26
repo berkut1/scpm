@@ -1,4 +1,4 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Twig\Menu;
@@ -7,16 +7,12 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class NavbarMenu
+final readonly class NavbarMenu
 {
-    private FactoryInterface $factory;
-    private AuthorizationCheckerInterface $auth;
-
-    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $auth)
-    {
-        $this->factory = $factory;
-        $this->auth = $auth;
-    }
+    public function __construct(
+        private FactoryInterface              $factory,
+        private AuthorizationCheckerInterface $auth
+    ) {}
 
     public function build(): ItemInterface
     {
@@ -26,7 +22,7 @@ class NavbarMenu
         $menu->addChild('Locations', ['route' => 'locations'])
             ->setExtra('routes', [
                 ['route' => 'locations'],
-                ['pattern' => '/^locations\..+/']
+                ['pattern' => '/^locations\..+/'],
             ])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
@@ -35,7 +31,7 @@ class NavbarMenu
             //->setExtra('icon', 'sidebar-nav-icon icon-speedometer')
             ->setExtra('routes', [
                 ['route' => 'virtualMachinePackages'],
-                ['pattern' => '/^virtualMachinePackages\..+/']
+                ['pattern' => '/^virtualMachinePackages\..+/'],
             ])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
@@ -43,7 +39,7 @@ class NavbarMenu
         $menu->addChild('Enterprise Dispatchers', ['route' => 'enterpriseDispatchers'])
             ->setExtra('routes', [
                 ['route' => 'enterpriseDispatchers'],
-                ['pattern' => '/^enterpriseDispatchers\..+/']
+                ['pattern' => '/^enterpriseDispatchers\..+/'],
             ])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
@@ -51,7 +47,7 @@ class NavbarMenu
         $menu->addChild('Node Servers', ['route' => 'solidCpServers'])
             ->setExtra('routes', [
                 ['route' => 'solidCpServers'],
-                ['pattern' => '/^solidCpServers\..+/']
+                ['pattern' => '/^solidCpServers\..+/'],
             ])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
@@ -59,7 +55,7 @@ class NavbarMenu
         $menu->addChild('Hosting Spaces', ['route' => 'solidCpHostingSpaces'])
             ->setExtra('routes', [
                 ['route' => 'solidCpHostingSpaces'],
-                ['pattern' => '/^solidCpHostingSpaces\..+/']
+                ['pattern' => '/^solidCpHostingSpaces\..+/'],
             ])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
@@ -67,7 +63,7 @@ class NavbarMenu
         $menu->addChild('Users', ['route' => 'users'])
             ->setExtra('routes', [
                 ['route' => 'users'],
-                ['pattern' => '/^users\..+/']
+                ['pattern' => '/^users\..+/'],
             ])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
@@ -75,11 +71,10 @@ class NavbarMenu
         $menu->addChild('Logs', ['route' => 'auditLogs'])
             ->setExtra('routes', [
                 ['route' => 'auditLogs'],
-                ['pattern' => '/^auditLogs\..+/']
+                ['pattern' => '/^auditLogs\..+/'],
             ])
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
-
 
 
         return $menu;
