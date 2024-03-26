@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class EnterpriseDispatcherFetcher
+final readonly class EnterpriseDispatcherFetcher
 {
     private Connection $connection;
     private EntityRepository $repository;
@@ -46,7 +46,7 @@ class EnterpriseDispatcherFetcher
             ->orderBy('name')
             ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
 
-        return array_column($stmt->fetchAllAssociative(), 'name','id');
+        return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }
 
     public function all(int $page, int $size, string $sort, string $direction): PaginationInterface

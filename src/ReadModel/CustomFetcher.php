@@ -5,11 +5,9 @@ namespace App\ReadModel;
 
 use Doctrine\DBAL\Result;
 
-class CustomFetcher
+final class CustomFetcher
 {
     /**
-     * @param Result $statement
-     * @param CustomObjectInterface $customObjectClass
      * @return CustomObjectInterface[]
      * @throws \Doctrine\DBAL\Exception
      */

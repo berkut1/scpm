@@ -7,7 +7,7 @@ use Doctrine\DBAL\Connection;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class AuditLogFetcher
+final readonly class AuditLogFetcher
 {
     private Connection $connection;
     private PaginatorInterface $paginator;

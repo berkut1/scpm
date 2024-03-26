@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class OsTemplateFetcher
+final readonly class OsTemplateFetcher
 {
     private Connection $connection;
     private EntityRepository $repository;
@@ -35,7 +35,8 @@ class OsTemplateFetcher
         return $template;
     }
 
-    public function allOsTemplatesFromSpace(int $id_hosting_space, int $page, int $size, string $sort, string $direction): PaginationInterface
+    public function allOsTemplatesFromSpace(int $id_hosting_space, int $page, int $size, string $sort, string $direction
+    ): PaginationInterface
     {
         $qb = $this->connection->createQueryBuilder()
             ->select(

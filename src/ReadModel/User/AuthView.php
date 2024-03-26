@@ -6,7 +6,7 @@ namespace App\ReadModel\User;
 use App\ReadModel\CustomObjectInterface;
 use App\ReadModel\FromArrayTrait;
 
-class AuthView implements CustomObjectInterface
+final class AuthView implements CustomObjectInterface
 {
     use FromArrayTrait;
 
