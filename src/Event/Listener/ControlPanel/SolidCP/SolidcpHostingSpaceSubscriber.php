@@ -20,14 +20,9 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\Event\SolidcpHostin
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SolidcpHostingSpaceSubscriber implements EventSubscriberInterface
+final readonly class SolidcpHostingSpaceSubscriber implements EventSubscriberInterface
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(private AuditLog\Add\Handler $auditLogHandler) {}
 
     #[ArrayShape([
         SolidcpHostingSpaceCreated::class => "string",
@@ -40,6 +35,7 @@ class SolidcpHostingSpaceSubscriber implements EventSubscriberInterface
         SolidcpHostingSpaceDisabled::class => "string",
         SolidcpHostingSpaceEnabled::class => "string",
     ])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

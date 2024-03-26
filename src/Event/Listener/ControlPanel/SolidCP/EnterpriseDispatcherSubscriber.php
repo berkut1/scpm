@@ -1,4 +1,4 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Event\Listener\ControlPanel\SolidCP;
@@ -15,14 +15,9 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\Event\Enter
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class EnterpriseDispatcherSubscriber implements EventSubscriberInterface
+final readonly class EnterpriseDispatcherSubscriber implements EventSubscriberInterface
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(private AuditLog\Add\Handler $auditLogHandler) {}
 
     #[ArrayShape([
         EnterpriseDispatcherCreated::class => "string",
@@ -30,6 +25,7 @@ class EnterpriseDispatcherSubscriber implements EventSubscriberInterface
         EnterpriseDispatcherDisabled::class => "string",
         EnterpriseDispatcherEnabled::class => "string",
     ])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

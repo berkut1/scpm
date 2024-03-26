@@ -13,19 +13,15 @@ use App\Model\ControlPanel\Entity\Package\VirtualMachine\Event\VirtualMachinePac
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class VirtualMachinePackageSubscriber implements EventSubscriberInterface
+final readonly class VirtualMachinePackageSubscriber implements EventSubscriberInterface
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(private AuditLog\Add\Handler $auditLogHandler) {}
 
     #[ArrayShape([
         VirtualMachinePackageCreated::class => "string",
         VirtualMachinePackageEdited::class => "string",
     ])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

@@ -18,16 +18,14 @@ use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 
 final class LoginListener
 {
-    private Flusher $flusher;
-    private AuditLogRepository $auditLogRepository;
-    private RequestStack $requestStack;
     private string $clientIP = '127.0.0.1';
 
-    public function __construct(Flusher $flusher, AuditLogRepository $auditLogRepository, RequestStack $requestStack)
+    public function __construct(
+        private readonly Flusher            $flusher,
+        private readonly AuditLogRepository $auditLogRepository,
+        private readonly RequestStack       $requestStack
+    )
     {
-        $this->flusher = $flusher;
-        $this->auditLogRepository = $auditLogRepository;
-        $this->requestStack = $requestStack;
         if ($this->requestStack->getMainRequest() !== null) {
             $this->clientIP = $this->requestStack->getMainRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
         }

@@ -6,14 +6,9 @@ namespace App\Event\Listener\Security;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class JWTDecodedListener
+final readonly class JWTDecodedListener
 {
-    private RequestStack $requestStack;
-
-    public function __construct(RequestStack $requestStack)
-    {
-        $this->requestStack = $requestStack;
-    }
+    public function __construct(private RequestStack $requestStack) {}
 
     public function onJWTDecoded(JWTDecodedEvent $event): void
     {
