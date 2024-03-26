@@ -5,6 +5,7 @@ namespace App\Model\User\Entity\User;
 
 use App\Model\AggregateRoot;
 use App\Model\EventsTrait;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "user_users")]
@@ -18,13 +19,13 @@ class User implements AggregateRoot
     #[ORM\GeneratedValue(strategy: "NONE")]
     private Id $id;
 
-    #[ORM\Column(name: "login", type: "string", length: 64, nullable: false)]
+    #[ORM\Column(name: "login", type: Types::STRING, length: 64, nullable: false)]
     private string $login;
 
-    #[ORM\Column(name: "password", type: "string", length: 512, nullable: false)]
+    #[ORM\Column(name: "password", type: Types::STRING, length: 512, nullable: false)]
     private string $password;
 
-    #[ORM\Column(name: "date", type: "datetime_immutable", nullable: false, options: ["default" => "now()"])]
+    #[ORM\Column(name: "date", type: Types::DATETIME_IMMUTABLE, nullable: false, options: ["default" => "now()"])]
     private \DateTimeImmutable $date;
 
     #[ORM\Column(name: "role", type: "user_user_role", length: 32, nullable: false)]
@@ -44,7 +45,7 @@ class User implements AggregateRoot
 
     public static function create(Id $id, \DateTimeImmutable $date, string $login, string $hash, Role $role = null): self
     {
-        $role = $role ?? Role::default();
+        $role ??= Role::default();
         $user = new self($id, $date, $login, $role);
         $user->password = $hash;
         $user->status = Status::active();

@@ -9,18 +9,18 @@ use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form extends AbstractType
+final class Form extends AbstractType
 {
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('role', Type\ChoiceType::class, ['label' => 'Role', 'choices' => Role::getArray()]);
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Command::class,
-        ));
+        $resolver->setDefaults(['data_class' => Command::class]);
     }
 }

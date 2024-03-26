@@ -2,9 +2,10 @@
 declare(strict_types=1);
 
 namespace App\Model\User\UseCase\Password;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public string $id;

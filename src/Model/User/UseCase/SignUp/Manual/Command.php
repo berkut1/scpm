@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\User\UseCase\SignUp\Manual;
 
-class Command
+final class Command
 {
     public string $login;
     public string $password;

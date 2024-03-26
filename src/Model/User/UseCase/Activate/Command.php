@@ -5,7 +5,7 @@ namespace App\Model\User\UseCase\Activate;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     public string $id;
