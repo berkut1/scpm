@@ -12,16 +12,12 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
+final readonly class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    private UserFetcher $users;
-    private EntityManagerInterface $em;
-
-    public function __construct(UserFetcher $users, EntityManagerInterface $em)
-    {
-        $this->users = $users;
-        $this->em = $em;
-    }
+    public function __construct(
+        private UserFetcher            $users,
+        private EntityManagerInterface $em
+    ) {}
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
@@ -33,18 +29,21 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     /**
      * @deprecated since Symfony 5.3, use loadUserByIdentifier() instead
      */
+    #[\Override]
     public function loadUserByUsername($username) {}
 
+    #[\Override]
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof UserIdentity) {
-            throw new UnsupportedUserException('Invalid user class ' . \get_class($user));
+            throw new UnsupportedUserException('Invalid user class ' . $user::class);
         }
 
         $loadUser = $this->loadUser($user->getUserIdentifier());
         return self::identityByUser($loadUser, $user->getUserIdentifier());
     }
 
+    #[\Override]
     public function supportsClass($class): bool
     {
         //return $class instanceof UserIdentity;

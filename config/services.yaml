@@ -26,10 +26,8 @@ services:
     #for autowiring Entity Repositories
     App\Model\AuditLog\Entity\AuditLogRepository: ~
 
-    App\Model\User\Entity\AuditLog\AuditLogRepository: ~
     App\Model\User\Entity\User\UserRepository: ~
 
-    App\Model\ControlPanel\Entity\AuditLog\AuditLogRepository: ~
     App\Model\ControlPanel\Entity\Location\LocationRepository: ~
     App\Model\ControlPanel\Entity\Package\PackageRepository: ~
     App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository: ~
