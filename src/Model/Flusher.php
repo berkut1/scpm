@@ -5,16 +5,12 @@ namespace App\Model;
 
 use Doctrine\ORM\EntityManagerInterface;
 
-class Flusher
+final readonly class Flusher
 {
-    private EntityManagerInterface $em;
-    private EventDispatcher $dispatcher;
-
-    public function __construct(EntityManagerInterface $em, EventDispatcher $dispatcher)
-    {
-        $this->em = $em;
-        $this->dispatcher = $dispatcher;
-    }
+    public function __construct(
+        private EntityManagerInterface $em,
+        private EventDispatcher        $dispatcher
+    ) {}
 
     public function flush(AggregateRoot ...$roots): void
     {

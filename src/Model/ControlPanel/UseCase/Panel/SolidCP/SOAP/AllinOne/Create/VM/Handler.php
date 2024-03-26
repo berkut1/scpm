@@ -209,7 +209,7 @@ final class Handler
         ];
     }
 
-    private function saveAuditLogAndThrowDomainException(array $records, string $error): void
+    private function saveAuditLogAndThrowDomainException(array $records, string $error): never
     {
         $records[] = Record::create('SOLIDCP_ERROR', [$error]);
         $this->saveAuditLog($records);
