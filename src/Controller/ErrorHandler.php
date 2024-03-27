@@ -5,14 +5,9 @@ namespace App\Controller;
 
 use Psr\Log\LoggerInterface;
 
-class ErrorHandler
+final readonly class ErrorHandler
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private LoggerInterface $logger) {}
 
     public function handle(\DomainException $e): void
     {

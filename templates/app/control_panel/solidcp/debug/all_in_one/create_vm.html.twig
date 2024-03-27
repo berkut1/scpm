@@ -36,7 +36,7 @@
         $('#form_packageId').change(function () {
             let firstSelector = $(this);
             $.ajax({
-                url: "{{ path('solidCpAjax.allOsTempaltesArrayFromEnterpriseAndPackageId') }}",
+                url: "{{ path('solidCpAjax.allOsTemplatesArrayFromEnterpriseAndPackageId') }}",
                 type: "GET",
                 dataType: "JSON",
                 data: {

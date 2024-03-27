@@ -4,28 +4,23 @@ declare(strict_types=1);
 namespace App\Controller\ControlPanel\SolidCP;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\{Create, Edit, Enable, Disable, Remove, SetDefault};
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\{Create, Disable, Edit, Enable, Remove, SetDefault};
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/panel/solidcp/enterprise-dispatchers', name: 'enterpriseDispatchers')]
 #[IsGranted('ROLE_MODERATOR')]
-class EnterpriseDispatchersController extends AbstractController
+final class EnterpriseDispatchersController extends AbstractController
 {
-    private const PER_PAGE = 25;
-    private const MAIN_TITLE = 'Enterprise Dispatchers';
+    private const int PER_PAGE = 25;
+    private const string MAIN_TITLE = 'Enterprise Dispatchers';
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, EnterpriseDispatcherFetcher $fetcher): Response

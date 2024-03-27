@@ -7,25 +7,20 @@ use App\Model\ControlPanel\Entity\Location\Location;
 use App\Model\ControlPanel\UseCase\Location\{Create, Edit, Remove};
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/locations', name: 'locations')]
 #[IsGranted('ROLE_MODERATOR')]
-class LocationsController extends AbstractController
+final class LocationsController extends AbstractController
 {
-    private const PER_PAGE = 25;
-    private const MAIN_TITLE = 'Locations';
+    private const int PER_PAGE = 25;
+    private const string MAIN_TITLE = 'Locations';
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, LocationFetcher $fetcher): Response

@@ -8,24 +8,21 @@ use App\Controller\ErrorHandler;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class DomainExceptionFormatter implements EventSubscriberInterface
+final readonly class DomainExceptionFormatter implements EventSubscriberInterface
 {
-    private ErrorHandler $errors;
-
-    public function __construct(ErrorHandler $errors)
-    {
-        $this->errors = $errors;
-    }
+    public function __construct(private ErrorHandler $errors) {}
 
     #[ArrayShape([KernelEvents::EXCEPTION => "string"])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
-        return array(
-            KernelEvents::EXCEPTION => 'onKernelException'
-        );
+        return [
+            KernelEvents::EXCEPTION => 'onKernelException',
+        ];
     }
 
     public function onKernelException(ExceptionEvent $event): void
@@ -37,7 +34,7 @@ class DomainExceptionFormatter implements EventSubscriberInterface
             return;
         }
 
-        if (!str_starts_with($request->attributes->get('_route'), 'api.')) { //(strpos($request->attributes->get('_route'), 'api.') !== 0)
+        if (!str_starts_with((string)$request->attributes->get('_route'), 'api.')) { //(strpos($request->attributes->get('_route'), 'api.') !== 0)
             return;
         }
 
@@ -47,7 +44,7 @@ class DomainExceptionFormatter implements EventSubscriberInterface
             'error' => [
                 'code' => 400,
                 'message' => $exception->getMessage(),
-            ]
-        ], 400));
+            ],
+        ], Response::HTTP_BAD_REQUEST));
     }
 }

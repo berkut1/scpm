@@ -14,17 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/audit-logs', name: 'auditLogs')]
 #[IsGranted('ROLE_ADMIN')]
-class AuditLogsController extends AbstractController
+final class AuditLogsController extends AbstractController
 {
-    private const PER_PAGE = 25;
-    private const MAIN_TITLE = 'Audit Logs';
+    private const int PER_PAGE = 25;
+    private const string MAIN_TITLE = 'Audit Logs';
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, AuditLogFetcher $fetcher): Response

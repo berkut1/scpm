@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\User\Entity\User\User;
-use App\Model\User\UseCase\{Create, Role, Password, Activate, Suspend};
+use App\Model\User\UseCase\{Activate, Create, Password, Role, Suspend};
 use App\Model\User\UseCase\Remove\Archive;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
@@ -17,16 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/users', name: 'users')]
 #[IsGranted('ROLE_ADMIN')]
-class UsersController extends AbstractController
+final class UsersController extends AbstractController
 {
-    private const PER_PAGE = 10;
+    private const int PER_PAGE = 10;
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, UserFetcher $fetcher): Response

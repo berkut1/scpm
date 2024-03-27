@@ -54,7 +54,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *        @OA\Property(property="detail", type="string"),
  * )
  */
-class HomeController extends AbstractController
+final class HomeController extends AbstractController
 {
     /**
      * @OA\Get(
@@ -75,7 +75,7 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         return $this->json([
-            'name' => 'JSON API v1'
+            'name' => 'JSON API v1',
         ]);
     }
 }

@@ -5,32 +5,27 @@ namespace App\Controller\ControlPanel\SolidCP;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\Create as CreateHostingSpace;
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\{Create, Disable, Edit, Enable, Remove};
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\ChangeNode;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\{Create, Edit, Enable, Disable, Remove};
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\Create as CreateHostingSpace;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\HostingSpace\SolidcpHostingSpaceFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/panel/solidcp/node-servers', name: 'solidCpServers')]
 #[IsGranted('ROLE_MODERATOR')]
-class NodesController extends AbstractController
+final class NodesController extends AbstractController
 {
-    private const PER_PAGE = 25;
-    private const MAIN_TITLE = 'Node Servers';
+    private const int PER_PAGE = 25;
+    private const string MAIN_TITLE = 'Node Servers';
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, SolidcpServerFetcher $fetcher): Response

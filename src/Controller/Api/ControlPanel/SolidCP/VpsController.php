@@ -14,18 +14,13 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class VpsController extends AbstractController
+final class VpsController extends AbstractController
 {
-    private SerializerInterface $serializer;
-    private DenormalizerInterface $denormalizer;
-    private ValidatorInterface $validator;
-
-    public function __construct(SerializerInterface $serializer, DenormalizerInterface $denormalizer, ValidatorInterface $validator)
-    {
-        $this->serializer = $serializer;
-        $this->denormalizer = $denormalizer;
-        $this->validator = $validator;
-    }
+    public function __construct(
+        private readonly SerializerInterface   $serializer,
+        private readonly DenormalizerInterface $denormalizer,
+        private readonly ValidatorInterface    $validator
+    ) {}
 
     /**
      * @OA\Get(
@@ -85,7 +80,9 @@ class VpsController extends AbstractController
      * )
      */
     #[Route('/solidCP/vps/{solidcp_item_id}/provisioning-status', name: 'apiVps.vpsProvisioningStatus', requirements: ['solidcp_item_id' => '\d+'], methods: ['GET'])]
-    public function vpsProvisioningStatus(int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsProvisioningStatus\Handler $handler): Response
+    public function vpsProvisioningStatus(
+        int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsProvisioningStatus\Handler $handler
+    ): Response
     {
         $command = new VirtualizationServer2012\Check\VpsProvisioningStatus\Command($solidcp_item_id, (int)$request->query->get('id_enterprise_dispatcher'));
 
@@ -165,7 +162,9 @@ class VpsController extends AbstractController
      * )
      */
     #[Route('/solidCP/vps/{solidcp_item_id}/state', name: 'apiVps.vpsState', requirements: ['solidcp_item_id' => '\d+'], methods: ['GET'])]
-    public function vpsState(int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsState\ByItemId\Handler $handler): Response
+    public function vpsState(
+        int $solidcp_item_id, Request $request, VirtualizationServer2012\Check\VpsState\ByItemId\Handler $handler
+    ): Response
     {
         $command = new VirtualizationServer2012\Check\VpsState\ByItemId\Command($solidcp_item_id, (int)$request->query->get('id_enterprise_dispatcher'));
 
@@ -231,14 +230,16 @@ class VpsController extends AbstractController
      * )
      */
     #[Route('/solidCP/vps/ip/{vps_ip_address}/state', name: 'apiVps.vpsStateByIp', methods: ['GET'])]
-    public function vpsStateByIp(string $vps_ip_address, Request $request, VirtualizationServer2012\Check\VpsState\ByIP\Handler $handler): Response
+    public function vpsStateByIp(
+        string $vps_ip_address, Request $request, VirtualizationServer2012\Check\VpsState\ByIP\Handler $handler
+    ): Response
     {
         $command = new VirtualizationServer2012\Check\VpsState\ByIP\Command();
         /** @var VirtualizationServer2012\Check\VpsState\ByIP\Command $command */
         $command = $this->denormalizer->denormalize($request->query->all(), VirtualizationServer2012\Check\VpsState\ByIP\Command::class, 'array', [
             'object_to_populate' => $command, //got prop from AbstractObjectNormalizer::
             //'ignored_attributes' => ['id_enterprise_dispatcher'],
-            'disable_type_enforcement' => true //https://github.com/symfony/symfony/issues/32167#issuecomment-510241190
+            'disable_type_enforcement' => true, //https://github.com/symfony/symfony/issues/32167#issuecomment-510241190
         ]);
         $command->vps_ip_address = $vps_ip_address;
 
@@ -317,7 +318,9 @@ class VpsController extends AbstractController
      * )
      */
     #[Route('/solidCP/users/{client_login}/vps/{vps_ip_address}/state', name: 'apiVps.changeStateByIpAddress', methods: ['PUT'])]
-    public function changeStateByIpAddress(string $client_login, string $vps_ip_address, Request $request, VirtualizationServer2012\ChangeState\Handler $handler): Response
+    public function changeStateByIpAddress(
+        string $client_login, string $vps_ip_address, Request $request, VirtualizationServer2012\ChangeState\Handler $handler
+    ): Response
     {
         /** @var VirtualizationServer2012\ChangeState\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), VirtualizationServer2012\ChangeState\Command::class, 'json');
@@ -389,7 +392,9 @@ class VpsController extends AbstractController
      * )
      */
     #[Route('/solidCP/users/{client_login}/vps/{vps_ip_address}/status', name: 'apiVps.changeStatusByIpAddress', methods: ['PUT'])]
-    public function changeStatusByIpAddress(string $client_login, string $vps_ip_address, Request $request, VirtualizationServer2012\ChangeStatus\Handler $handler): Response
+    public function changeStatusByIpAddress(
+        string $client_login, string $vps_ip_address, Request $request, VirtualizationServer2012\ChangeStatus\Handler $handler
+    ): Response
     {
         /** @var VirtualizationServer2012\ChangeStatus\Command $command */
         $command = $this->serializer->deserialize($request->getContent(), VirtualizationServer2012\ChangeStatus\Command::class, 'json');
@@ -491,7 +496,7 @@ class VpsController extends AbstractController
         $command = $this->denormalizer->denormalize($request->query->all(), VirtualizationServer2012\AvailableSpacePlan\Command::class, 'array', [
             'object_to_populate' => $command, //got prop from AbstractObjectNormalizer::
             //'ignored_attributes' => ['id_enterprise_dispatcher'],
-            'disable_type_enforcement' => true //https://github.com/symfony/symfony/issues/32167#issuecomment-510241190
+            'disable_type_enforcement' => true, //https://github.com/symfony/symfony/issues/32167#issuecomment-510241190
         ]);
 
         $violations = $this->validator->validate($command);
