@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\Status;
 use App\Model\User\Entity\User\User;
-use App\Model\User\Entity\User\Id;
 use App\Model\User\Service\PasswordHasher;
 use App\Security\UserIdentity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -14,13 +14,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class UserFixture extends Fixture
 {
-    private PasswordHasher $hasher;
+    public function __construct(private readonly PasswordHasher $hasher) {}
 
-    public function __construct(PasswordHasher $hasher)
-    {
-        $this->hasher = $hasher;
-    }
-
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $textPassword = 'password';
@@ -44,7 +40,7 @@ class UserFixture extends Fixture
             Role::user()->getName(),
             Status::active()->getName()
         );
-        $hash = $this->hasher->hash($userIdentity,$textPassword);
+        $hash = $this->hasher->hash($userIdentity, $textPassword);
         return User::create(
             new Id($userIdentity->getId()),
             new \DateTimeImmutable(),
