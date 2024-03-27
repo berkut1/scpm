@@ -23,6 +23,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
     $rectorConfig->skip([
         __DIR__ . '/src/Kernel.php',
+        __DIR__ . '/src/EntityFromDB',
         ClosureToArrowFunctionRector::class, //I don't like Arrow functions
         ClassPropertyAssignToConstructorPromotionRector::class => [ //not touch some constructors, because of mess after "refactoring" (two styles in one constructor look awful)
             __DIR__ . '/src/Model/AuditLog/Entity',
@@ -54,8 +55,7 @@ return static function (RectorConfig $rectorConfig): void {
         DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
         SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-        SymfonySetList::SYMFONY_54,
-        SensiolabsSetList::ANNOTATIONS_TO_ATTRIBUTES,
+        SymfonySetList::SYMFONY_64,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
     ]);

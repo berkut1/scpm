@@ -40,6 +40,7 @@ readonly class JWTUser implements JWTUserInterface
         return $this->roles;
     }
 
+    #[\Override]
     public function getUserIdentifier(): string
     {
         return $this->username;

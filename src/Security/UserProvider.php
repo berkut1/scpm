@@ -20,6 +20,7 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
         private EntityManagerInterface $em
     ) {}
 
+    #[\Override]
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         // Load a User object from your data source or throw UserNotFoundException.
@@ -48,6 +49,7 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
     /**
      * Upgrades the encoded password of a user, typically for using a better hash algorithm.
      */
+    #[\Override]
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         // TODO: when encoded passwords are in use, this method should:

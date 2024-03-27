@@ -28,14 +28,12 @@ final readonly class UserIdentity implements UserInterface, EquatableInterface, 
         return $this->status === Status::STATUS_ACTIVE;
     }
 
+    #[\Override]
     public function getUserIdentifier(): string
     {
         return $this->username;
     }
 
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
     #[\Override]
     public function getPassword(): string
     {
