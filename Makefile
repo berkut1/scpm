@@ -72,7 +72,7 @@ gitreset:
 	docker-compose run --rm scpsc-php-cli git reset HEAD --hard
 
 gitpull:
-	docker-compose run --rm scpsc-php-cli git pull origin master -r
+	docker-compose run --rm scpsc-php-cli git pull origin dev -r
 
 rector:
 	docker-compose run --rm scpsc-php-cli vendor/bin/rector
