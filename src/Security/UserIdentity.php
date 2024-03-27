@@ -37,15 +37,6 @@ final readonly class UserIdentity implements UserInterface, EquatableInterface, 
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
      */
     #[\Override]
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    #[\Override]
     public function getPassword(): string
     {
         return $this->password;
@@ -55,15 +46,6 @@ final readonly class UserIdentity implements UserInterface, EquatableInterface, 
     public function getRoles(): array
     {
         return [$this->role];
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    #[\Override]
-    public function getSalt(): ?string
-    {
-        return null;
     }
 
     #[\Override]

@@ -8,6 +8,7 @@ use App\ReadModel\User\UserFetcher;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -25,12 +26,6 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
         $user = $this->loadUser($identifier);
         return self::identityByUser($user, $identifier);
     }
-
-    /**
-     * @deprecated since Symfony 5.3, use loadUserByIdentifier() instead
-     */
-    #[\Override]
-    public function loadUserByUsername($username) {}
 
     #[\Override]
     public function refreshUser(UserInterface $user): UserInterface
@@ -53,7 +48,7 @@ final readonly class UserProvider implements UserProviderInterface, PasswordUpgr
     /**
      * Upgrades the encoded password of a user, typically for using a better hash algorithm.
      */
-    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         // TODO: when encoded passwords are in use, this method should:
         // 1. persist the new password in the user storage
