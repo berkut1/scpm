@@ -11,12 +11,12 @@ use App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\Create as Cre
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\HostingSpace\SolidcpHostingSpaceFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/panel/solidcp/node-servers', name: 'solidCpServers')]
 #[IsGranted('ROLE_MODERATOR')]
@@ -177,8 +177,12 @@ final class NodesController extends AbstractController
     }
 
     #[Route('/{id}/hosting-spaces/{id_hosting_space}/change-node', name: '.changeNode')]
-    #[ParamConverter('solidcpHostingSpace', options: ['mapping' => ['id_hosting_space' => 'id']])]
-    public function changeNode(int $id, SolidcpHostingSpace $solidcpHostingSpace, Request $request, ChangeNode\Handler $handler): Response
+    public function changeNode(
+        int                                                                     $id,
+        #[MapEntity(mapping: ['id_hosting_space' => 'id'])] SolidcpHostingSpace $solidcpHostingSpace,
+        Request                                                                 $request,
+        ChangeNode\Handler                                                      $handler
+    ): Response
     {
         $command = ChangeNode\Command::fromHostingSpace($solidcpHostingSpace);
 

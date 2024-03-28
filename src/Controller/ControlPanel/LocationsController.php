@@ -7,11 +7,11 @@ use App\Model\ControlPanel\Entity\Location\Location;
 use App\Model\ControlPanel\UseCase\Location\{Create, Edit, Remove};
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/locations', name: 'locations')]
 #[IsGranted('ROLE_MODERATOR')]

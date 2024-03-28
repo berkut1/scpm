@@ -47,5 +47,5 @@ readonly class JWTUser implements JWTUserInterface
     }
 
     #[\Override]
-    public function eraseCredentials() {}
+    public function eraseCredentials(): void {}
 }

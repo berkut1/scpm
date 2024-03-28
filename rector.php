@@ -8,13 +8,12 @@ use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
-use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\CodeQuality\Rector\BinaryOp\ResponseStatusCodeRector;
-use Rector\Symfony\Set\SensiolabsSetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\Symfony\Symfony40\Rector\MethodCall\FormIsValidRector;
 use Rector\Symfony\Symfony61\Rector\Class_\CommandPropertyToAttributeRector;
+use Rector\Symfony\Symfony62\Rector\ClassMethod\ParamConverterAttributeToMapEntityAttributeRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->symfonyContainerXml(__DIR__ . '/var/cache/dev/App_KernelDevDebugContainer.xml');
@@ -48,6 +47,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(CommandPropertyToAttributeRector::class);
     $rectorConfig->rule(FormIsValidRector::class);
     $rectorConfig->rule(ResponseStatusCodeRector::class);
+    $rectorConfig->rule(ParamConverterAttributeToMapEntityAttributeRector::class); //from Symfony 5.4 to 6.4
 
     // define sets of rules
     $rectorConfig->sets([

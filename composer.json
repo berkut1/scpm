@@ -20,7 +20,6 @@
         "lexik/jwt-authentication-bundle": "^2.11",
         "phpdocumentor/reflection-docblock": "^5.2",
         "ramsey/uuid": "^4.1",
-        "sensio/framework-extra-bundle": "^6.0",
         "symfony/asset": "6.4.*",
         "symfony/console": "6.4.*",
         "symfony/dotenv": "6.4.*",

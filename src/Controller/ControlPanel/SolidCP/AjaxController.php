@@ -7,11 +7,11 @@ use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
 use App\Model\ControlPanel\Service\SolidCP\VirtualizationServer2012Service;
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/panel/solidcp/ajax', name: 'solidCpAjax')]
 #[IsGranted('ROLE_MODERATOR')]

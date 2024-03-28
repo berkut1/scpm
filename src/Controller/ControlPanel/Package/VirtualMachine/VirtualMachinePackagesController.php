@@ -10,11 +10,11 @@ use App\Model\ControlPanel\UseCase\Package\VirtualMachine\{Create, Edit};
 use App\ReadModel\ControlPanel\Package\VirtualMachine\VirtualMachinePackageFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanFetcher;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/packages/virtual-machines', name: 'virtualMachinePackages')]
 #[IsGranted('ROLE_MODERATOR')]

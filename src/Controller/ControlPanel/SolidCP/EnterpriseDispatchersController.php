@@ -7,11 +7,11 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseD
 use App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\{Create, Disable, Edit, Enable, Remove, SetDefault};
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/panel/solidcp/enterprise-dispatchers', name: 'enterpriseDispatchers')]
 #[IsGranted('ROLE_MODERATOR')]

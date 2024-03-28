@@ -9,11 +9,11 @@ use App\Model\User\UseCase\Remove\Archive;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/users', name: 'users')]
 #[IsGranted('ROLE_ADMIN')]
