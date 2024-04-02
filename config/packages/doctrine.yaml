@@ -1,6 +1,5 @@
 doctrine:
     dbal:
-        #driver: 'pdo_pgsql'
         default_table_options:
             charset: utf8
             collate: utf8_unicode_ci
@@ -28,16 +27,22 @@ doctrine:
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '16'
+
+        profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true #https://github.com/doctrine/orm/pull/10187 and https://symfony.com/blog/revisiting-lazy-loading-proxies-in-php
+        report_fields_where_declared: true
+        validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
+        controller_resolver:
+            auto_mapping: false # keep it false https://github.com/doctrine/DoctrineBundle/pull/1762
         mappings:
 #            App:
+#                type: attribute
 #                is_bundle: false
-#                type: annotation
 #                dir: '%kernel.project_dir%/src/Entity'
 #                prefix: 'App\Entity'
 #                alias: App
