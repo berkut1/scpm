@@ -9,7 +9,7 @@ use App\Model\AuditLog\Entity\Id;
 use App\Model\AuditLog\Entity\UserId;
 use App\Model\Flusher;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 final class Handler
 {

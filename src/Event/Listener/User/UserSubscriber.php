@@ -12,7 +12,7 @@ use App\Model\User\Entity\User\Event\UserCreated;
 use App\Model\User\Entity\User\UserRepository;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 final readonly class UserSubscriber implements EventSubscriberInterface
 {
