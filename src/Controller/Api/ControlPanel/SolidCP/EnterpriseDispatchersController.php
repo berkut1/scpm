@@ -20,39 +20,6 @@ final class EnterpriseDispatchersController extends AbstractController
         private readonly ValidatorInterface  $validator
     ) {}
 
-//    /**
-//     * @OA\Get(
-//     *     path="/solidCP/enterprise-dispatchers",
-//     *     tags={"Enterprise Dispatchers"},
-//     *     description="Get list of Enterprise Dispatchers, use only if you have more than one Enterprise Dispatchers",
-//     *     @OA\Response(
-//     *         response=200,
-//     *         description="Success response",
-//     *         @OA\JsonContent(
-//     *             type="array", description="return ids and names",
-//     *             @OA\Items(
-//     *                  @OA\Property(type="string"),
-//     *              ),
-//     *         )
-//     *     ),
-//     *     @OA\Response(
-//     *         response=400,
-//     *         description="Errors",
-//     *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
-//     *     ),
-//     *     @OA\Response(
-//     *         response=401,
-//     *         description="Error",
-//     *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
-//     *     ),
-//     *     @OA\Response(
-//     *         response=500,
-//     *         description="InternalError",
-//     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
-//     *     ),
-//     *     security={{"bearerAuth":{}}}
-//     * )
-//     */
     #[OA\Get(
         path: '/solidCP/enterprise-dispatchers',
         description: 'Get list of Enterprise Dispatchers, use only if you have more than one Enterprise Dispatchers',
@@ -84,45 +51,6 @@ final class EnterpriseDispatchersController extends AbstractController
         return $this->json([$enterpriseDispatchers], Response::HTTP_OK);
     }
 
-//    /**
-//     * @OA\Get(
-//     *     path="/solidCP/enterprise-dispatchers/default/is-enable",
-//     *     tags={"Enterprise Dispatchers"},
-//     *     description="Check if default Enterprise Dispatcher is manually disabled",
-//     *     @OA\Parameter(
-//     *         name="id_enterprise_dispatcher",
-//     *         in="query",
-//     *         required=false,
-//     *         @OA\Schema(type="integer"),
-//     *         style="form",
-//     *         description="if not pass value, it will use a default"
-//     *     ),
-//     *     @OA\Response(
-//     *         response=200,
-//     *         description="Success response",
-//     *         @OA\JsonContent(
-//     *             type="object",
-//     *             @OA\Property(property="is_enable", type="boolean"),
-//     *         )
-//     *     ),
-//     *     @OA\Response(
-//     *         response=400,
-//     *         description="Errors",
-//     *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
-//     *     ),
-//     *     @OA\Response(
-//     *         response=401,
-//     *         description="Error",
-//     *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
-//     *     ),
-//     *     @OA\Response(
-//     *         response=500,
-//     *         description="InternalError",
-//     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
-//     *     ),
-//     *     security={{"bearerAuth":{}}}
-//     * )
-//     */
     #[OA\Get(
         path: '/solidCP/enterprise-dispatchers/default/is-enable',
         description: 'Check if default Enterprise Dispatcher is manually disabled',
@@ -172,45 +100,6 @@ final class EnterpriseDispatchersController extends AbstractController
         return $this->json(['is_enable' => $isEnable], Response::HTTP_OK);
     }
 
-//    /**
-//     * @OA\Get(
-//     *     path="/solidCP/enterprise-dispatchers/{id_enterprise_dispatcher}/is-enable",
-//     *     tags={"Enterprise Dispatchers"},
-//     *     description="Check if specific Enterprise Dispatcher is disabled",
-//     *     @OA\Parameter(
-//     *         in="path",
-//     *         name="id_enterprise_dispatcher",
-//     *         required=true,
-//     *         @OA\Schema(
-//     *             type="integer"
-//     *         )
-//     *     ),
-//     *     @OA\Response(
-//     *         response=200,
-//     *         description="Success response",
-//     *         @OA\JsonContent(
-//     *             type="object",
-//     *             @OA\Property(property="is_enable", type="boolean"),
-//     *         )
-//     *     ),
-//     *     @OA\Response(
-//     *         response=400,
-//     *         description="Errors",
-//     *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
-//     *     ),
-//     *     @OA\Response(
-//     *         response=401,
-//     *         description="Error",
-//     *         @OA\JsonContent(ref="#/components/schemas/SimpleError")
-//     *     ),
-//     *     @OA\Response(
-//     *         response=500,
-//     *         description="InternalError",
-//     *         @OA\JsonContent(ref="#/components/schemas/InternalError")
-//     *     ),
-//     *     security={{"bearerAuth":{}}}
-//     * )
-//     */
     #[OA\Get(
         path: '/solidCP/enterprise-dispatchers/{id_enterprise_dispatcher}/is-enable',
         description: 'Check if specific Enterprise Dispatcher is disabled',
