@@ -103,6 +103,7 @@ final class EnterpriseDispatchersController extends AbstractController
     #[OA\Get(
         path: '/solidCP/enterprise-dispatchers/{id_enterprise_dispatcher}/is-enable',
         description: 'Check if specific Enterprise Dispatcher is disabled',
+        security: [['bearerAuth' => []]],
         tags: ['Enterprise Dispatchers'],
         parameters: [
             new OA\Parameter(name: 'id_enterprise_dispatcher', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),

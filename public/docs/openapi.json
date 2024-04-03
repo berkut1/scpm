@@ -970,7 +970,7 @@
                 "tags": [
                     "VPS"
                 ],
-                "description": "Get state of VM Running/Stopped/ets. Must be used only if VPS Provisioning Status shows - OK",
+                "description": "Get state of VM Running/Stopped/etc. Must be used only if VPS Provisioning Status shows - OK",
                 "operationId": "8e4d187e6bf4f8b2f4ef489045332896",
                 "parameters": [
                     {
@@ -1055,7 +1055,7 @@
                 "tags": [
                     "VPS"
                 ],
-                "description": "Get state of VM Running/Stopped/ets. Use it only if you need to check a state of a VM after changing the VPS status",
+                "description": "Get state of VM Running/Stopped/etc. Use it only if you need to check a state of a VM after changing the VPS status",
                 "operationId": "72edc9e130055bacefe708c3f82ea32f",
                 "parameters": [
                     {
