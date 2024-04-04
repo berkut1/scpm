@@ -8,7 +8,7 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User\UserInfo;
 use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
-final class EsUsers extends SoapExecute
+final class EsUsers extends SoapExecute implements EsUsersInterface
 {
     public const string SERVICE = 'esUsers.asmx';
 

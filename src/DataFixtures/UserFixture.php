@@ -12,7 +12,7 @@ use App\Security\UserIdentity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class UserFixture extends Fixture
+final class UserFixture extends Fixture
 {
     public function __construct(private readonly PasswordHasher $hasher) {}
 

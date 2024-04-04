@@ -6,7 +6,7 @@ namespace App\Model\ControlPanel\Service\SOAP;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Service\NotFoundException;
 
-class SoapExecute
+class SoapExecute implements SoapExecuteInterface
 {
     private string $url;
     private array $options;

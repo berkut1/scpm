@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SolidCP;
 
-use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
+use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsersInterface;
 
 final readonly class EnterpriseDispatcherService
 {
-    public function __construct(private EsUsers $esUsers)
-    {
-    }
+    public function __construct(
+        private EsUsersInterface $esUsers
+    ) {}
 
     public function getEnterpriseDispatcherRealUserId(string $url, string $login, string $password): int
     {
@@ -19,7 +19,7 @@ final readonly class EnterpriseDispatcherService
         } catch (\Exception $e) {
             throw new \DomainException("Soap execution error (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
         }
-        if($result['IsPeer']){
+        if ($result['IsPeer']) {
             throw new \DomainException("This Login {$login} is Peer. Please use a real User, not Peer");
         }
         return (int)$result['UserId'];
