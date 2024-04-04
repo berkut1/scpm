@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/audit-logs', name: 'auditLogs')]
@@ -37,7 +38,7 @@ final class AuditLogsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: '.show')]
+    #[Route('/{id}', name: '.show', requirements: ['solidcp_item_id' => Requirement::UID_RFC4122])]
     public function show(AuditLog $auditLog): Response
     {
         return $this->render('app/audit_logs/show.html.twig', [

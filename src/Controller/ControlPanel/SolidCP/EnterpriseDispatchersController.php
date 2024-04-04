@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/panel/solidcp/enterprise-dispatchers', name: 'enterpriseDispatchers')]
@@ -64,7 +65,7 @@ final class EnterpriseDispatchersController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '.edit')]
+    #[Route('/{id}/edit', name: '.edit', requirements: ['id' => Requirement::DIGITS])]
     public function edit(EnterpriseDispatcher $enterpriseDispatcher, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromEnterpriseDispatcher($enterpriseDispatcher);
@@ -88,7 +89,7 @@ final class EnterpriseDispatchersController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/enable', name: '.enable', methods: ['POST'])]
+    #[Route('/{id}/enable', name: '.enable', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function enable(int $id, Request $request, Enable\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('enable', $request->request->get('token'))) {
@@ -107,7 +108,7 @@ final class EnterpriseDispatchersController extends AbstractController
         return $this->redirectToRoute('enterpriseDispatchers');
     }
 
-    #[Route('/{id}/disable', name: '.disable', methods: ['POST'])]
+    #[Route('/{id}/disable', name: '.disable', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function disable(int $id, Request $request, Disable\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('disable', $request->request->get('token'))) {
@@ -126,7 +127,7 @@ final class EnterpriseDispatchersController extends AbstractController
         return $this->redirectToRoute('enterpriseDispatchers');
     }
 
-    #[Route('/{id}/set-default', name: '.setDefault', methods: ['POST'])]
+    #[Route('/{id}/set-default', name: '.setDefault', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function setDefault(EnterpriseDispatcher $enterpriseDispatcher, Request $request, SetDefault\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('setDefault', $request->request->get('token'))) {
@@ -145,7 +146,7 @@ final class EnterpriseDispatchersController extends AbstractController
         return $this->redirectToRoute('enterpriseDispatchers');
     }
 
-    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
+    #[Route('/{id}/remove', name: '.remove', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function remove(int $id, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {

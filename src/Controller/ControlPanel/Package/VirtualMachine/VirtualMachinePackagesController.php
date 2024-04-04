@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/packages/virtual-machines', name: 'virtualMachinePackages')]
@@ -67,7 +68,7 @@ final class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/rename', name: '.rename')]
+    #[Route('/{id}/rename', name: '.rename', requirements: ['id' => Requirement::UID_RFC4122])]
     public function rename(VirtualMachinePackage $virtualMachinePackage, Request $request, Rename\Handler $handler): Response
     {
         $command = Rename\Command::fromPackage($virtualMachinePackage->getPackage());
@@ -92,7 +93,7 @@ final class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '.edit')]
+    #[Route('/{id}/edit', name: '.edit', requirements: ['id' => Requirement::UID_RFC4122])]
     public function edit(VirtualMachinePackage $virtualMachinePackage, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromVirtualMachine($virtualMachinePackage);
@@ -117,7 +118,7 @@ final class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: '.show')]
+    #[Route('/{id}', name: '.show', requirements: ['id' => Requirement::UID_RFC4122])]
     public function show(Request $request, VirtualMachinePackage $virtualMachinePackage, SolidcpHostingPlanFetcher $planFetcher): Response
     {
         $plansFromPackage = $planFetcher->allPlansFromPackage(
@@ -135,7 +136,7 @@ final class VirtualMachinePackagesController extends AbstractController
         );
     }
 
-    #[Route('/{id}/change-solidcp-plans', name: '.changeSolidCpPlans')]
+    #[Route('/{id}/change-solidcp-plans', name: '.changeSolidCpPlans', requirements: ['id' => Requirement::UID_RFC4122])]
     public function changeSolidCpPlans(
         Request $request, VirtualMachinePackage $virtualMachinePackage, ChangePlans\SolidCP\Handler $handler
     ): Response
@@ -163,7 +164,7 @@ final class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
+    #[Route('/{id}/remove', name: '.remove', requirements: ['id' => Requirement::UID_RFC4122], methods: ['POST'])]
     public function remove(Package $location, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {

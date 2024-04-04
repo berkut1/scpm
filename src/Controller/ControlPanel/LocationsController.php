@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/locations', name: 'locations')]
@@ -64,7 +65,7 @@ final class LocationsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '.edit')]
+    #[Route('/{id}/edit', name: '.edit', requirements: ['id' => Requirement::DIGITS])]
     public function edit(Location $location, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromLocation($location);
@@ -88,7 +89,7 @@ final class LocationsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
+    #[Route('/{id}/remove', name: '.remove', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function remove(Location $location, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {
