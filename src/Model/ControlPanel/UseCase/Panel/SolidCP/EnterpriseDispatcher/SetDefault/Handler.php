@@ -15,7 +15,7 @@ final readonly class Handler
 
     public function handle(Command $command): void
     {
-        if ($enterpriseDispatcherDefault = $this->enterpriseDispatcherRepository->getDefault()) {
+        if ($enterpriseDispatcherDefault = $this->enterpriseDispatcherRepository->getDefaultOrNull()) {
             $enterpriseDispatcherDefault->setNonDefault();
             //$this->flusher->flush();
         }

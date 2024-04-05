@@ -14,6 +14,11 @@ use Doctrine\Persistence\ObjectManager;
 
 final class UserFixture extends Fixture
 {
+    public const array REFERENCE_USERS = [
+        'user_1',
+        'user_2',
+    ];
+
     public function __construct(private readonly PasswordHasher $hasher) {}
 
     #[\Override]
@@ -23,13 +28,14 @@ final class UserFixture extends Fixture
         $admin = $this->createUser('berkut', $textPassword);
         $admin->changeRole(Role::admin());
         $manager->persist($admin);
+        $this->setReference(self::REFERENCE_USERS[0], $admin);
 
         $user = $this->createUser('user', $textPassword);
         $manager->persist($user);
+        $this->setReference(self::REFERENCE_USERS[1], $user);
 
         $manager->flush();
     }
-
 
     private function createUser(string $login, string $textPassword): User
     {

@@ -17,7 +17,6 @@ final class EnterpriseDispatcherFixture extends Fixture
     public const array REFERENCE_ED = [
         'EnterpriseDispatcher_1',
         'EnterpriseDispatcher_2',
-        'EnterpriseDispatcher_3',
     ];
 
     #[\Override]
