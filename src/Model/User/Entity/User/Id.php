@@ -18,7 +18,7 @@ final class Id implements \Stringable
 
     public static function next(): self
     {
-        return new self(Uuid::uuid6()->toString());
+        return new self(Uuid::uuid7()->toString());
     }
 
     public function getValue(): string
