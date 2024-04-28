@@ -6,8 +6,8 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     <!-- Custom styles for this template -->
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
     {% endblock %}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
 </head>
 <body class="app flex-row align-items-center">
 {% block body %}{% endblock %}

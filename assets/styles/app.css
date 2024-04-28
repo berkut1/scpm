@@ -1,0 +1,12 @@
+body {
+    padding-top: 5rem;
+    background-color: lightgray;
+}
+
+a:not([class]) { /*https://stackoverflow.com/questions/65480036/bootstrap-5-underline-default-changed*/
+text-decoration: none;
+}
+
+a:not([class]):hover {
+    text-decoration: underline;
+}
