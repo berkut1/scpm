@@ -14,4 +14,7 @@ import './styles/app.css';
 //import scripts
 import 'bootstrap'
 
+// import $ from 'jquery'; // we do that in each file, not here
+// window.$ = $;
+
 // console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
