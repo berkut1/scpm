@@ -12,6 +12,7 @@ use App\Model\ControlPanel\Service\SOAP\SolidCP\EsServers;
 use App\Model\EntityNotFoundException;
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
 
 final readonly class HostingSpaceService
 {
@@ -24,11 +25,18 @@ final readonly class HostingSpaceService
     ) {}
 
     //$idEnterprise - means a Reseller with his hosting spaces
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function allNotAddedHostingSpacesFrom(int $id_enterprise_dispatcher): array
     {
         return $this->allNotAddedHostingSpacesFromInternal($id_enterprise_dispatcher);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function allNotAddedHostingSpacesExceptHostingSpaceIdFrom(int $id_enterprise_dispatcher, int $exceptHostingSpaceId): array
     {
         return $this->allNotAddedHostingSpacesFromInternal($id_enterprise_dispatcher, $exceptHostingSpaceId);
@@ -36,7 +44,6 @@ final readonly class HostingSpaceService
 
     /**
      * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
      * @throws \Exception
      */
     private function allNotAddedHostingSpacesFromInternal(int $id_enterprise_dispatcher, int $exceptHostingSpaceId = 0): array
