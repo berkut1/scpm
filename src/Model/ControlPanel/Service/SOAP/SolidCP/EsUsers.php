@@ -5,7 +5,6 @@ namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User\UserInfo;
-use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsUsers extends SoapExecute implements EsUsersInterface
@@ -27,6 +26,9 @@ final class EsUsers extends SoapExecute implements EsUsersInterface
         return $soap;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function addUser(UserInfo $userInfo, string $password, bool $sendLetter = false, ?string $notes = null): int
     {
         $result = $this->execute(self::SERVICE, 'AddUser', [
@@ -42,6 +44,9 @@ final class EsUsers extends SoapExecute implements EsUsersInterface
         return $result;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getUserByUsername(string $username): array
     {
         try {
@@ -52,28 +57,30 @@ final class EsUsers extends SoapExecute implements EsUsersInterface
                 self::SERVICE,
                 'GetUserByUsername',
                 ['username' => $username])->GetUserByUsernameResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetUserByUsername Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetUserByUsername Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         }
 
         return $result;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function userExists(string $username): bool
     {
         try {
             return $this->execute(self::SERVICE, 'UserExists', [
                 'username' => $username,
             ])->UserExistsResult;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("UserExists Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "UserExists Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function changeUserPassword(int $userId, string $password): int
     {
         try {
@@ -81,10 +88,8 @@ final class EsUsers extends SoapExecute implements EsUsersInterface
                 'userId' => $userId,
                 'password' => $password,
             ])->ChangeUserPasswordResult;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("ChangeUserPassword Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "ChangeUserPassword Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
 
         if ($result < 0) {
@@ -93,6 +98,9 @@ final class EsUsers extends SoapExecute implements EsUsersInterface
         return $result;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function updateUserLiteral(
         int    $userId,
         int    $roleId,
@@ -142,10 +150,8 @@ final class EsUsers extends SoapExecute implements EsUsersInterface
                 'companyName' => $companyName,
                 'ecommerceEnabled' => $ecommerceEnabled,
             ])->UpdateUserLiteralResult;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("UpdateUserLiteral Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "UpdateUserLiteral Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
 
         if ($result < 0) {

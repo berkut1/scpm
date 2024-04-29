@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsTasks extends SoapExecute
@@ -18,19 +17,18 @@ final class EsTasks extends SoapExecute
         return $soap;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getTask(string $taskId): array
     {
         try {
-            $result = $this->convertArray($this->execute(
+            return $this->convertArray($this->execute(
                 self::SERVICE,
                 'GetTask',
                 ['taskId' => $taskId])->GetTaskResult);
-
-            return $result;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetTask Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetTask Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 }
