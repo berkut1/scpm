@@ -15,11 +15,12 @@ use Doctrine\DBAL\Connection;
 
 final readonly class HostingSpaceService
 {
-    public function __construct(private Connection                      $connection,
-                                private EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
-                                private LocationFetcher                 $locationFetcher,
-                                private VirtualMachinePackageRepository $virtualMachinePackageRepository,
-                                private SolidcpServerRepository         $serverRepository
+    public function __construct(
+        private Connection                      $connection,
+        private EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
+        private LocationFetcher                 $locationFetcher,
+        private VirtualMachinePackageRepository $virtualMachinePackageRepository,
+        private SolidcpServerRepository         $serverRepository
     ) {}
 
     //$idEnterprise - means a Reseller with his hosting spaces
@@ -75,9 +76,10 @@ final readonly class HostingSpaceService
      * @return SolidcpHostingPlan[]
      * @throws \Exception
      */
-    public function possibleHostingSpacesWithPlansForVPS2012Installation(int    $id_enterprise_dispatcher, string $location_name,
-                                                                         string $server_package_name, int $ip_amount,
-                                                                         array  $ignore_node_ids, array $ignore_hosting_space_ids
+    public function possibleHostingSpacesWithPlansForVPS2012Installation(
+        int    $id_enterprise_dispatcher, string $location_name,
+        string $server_package_name, int $ip_amount,
+        array  $ignore_node_ids, array $ignore_hosting_space_ids
     ): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);

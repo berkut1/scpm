@@ -13,4 +13,9 @@ final readonly class ErrorHandler
     {
         $this->logger->warning($e->getMessage(), ['exception' => $e]);
     }
+
+    public function handleError(\Exception $e): void
+    {
+        $this->logger->error($e->getMessage(), ['exception' => $e]);
+    }
 }
