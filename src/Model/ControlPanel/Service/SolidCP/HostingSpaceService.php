@@ -12,7 +12,6 @@ use App\Model\ControlPanel\Service\SOAP\SolidCP\EsServers;
 use App\Model\EntityNotFoundException;
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Exception;
 
 final readonly class HostingSpaceService
 {
@@ -81,7 +80,7 @@ final readonly class HostingSpaceService
      * @param int[] $ignore_node_ids
      * @param int[] $ignore_hosting_space_ids
      * @return SolidcpHostingPlan[]
-     * @throws \Exception
+     * @throws \SoapFault
      */
     public function possibleHostingSpacesWithPlansForVPS2012Installation(
         int    $id_enterprise_dispatcher, string $location_name,
@@ -104,6 +103,8 @@ final readonly class HostingSpaceService
         $esServers = EsServers::createFromEnterpriseDispatcher($enterpriseDispatcher);
         $possibleSpacesAndPlans = [];
         $esPackages = EsPackages::createFromEnterpriseDispatcher($enterpriseDispatcher);
+
+        $soapError = null;
         //searching possible spaces with plans for installation
         foreach ($possiblePlans as $possiblePlan) {
             $solidcpHostingSpace = $possiblePlan->getHostingSpace();
@@ -135,21 +136,30 @@ final readonly class HostingSpaceService
             $isEnabled = ($solidcpHostingSpace->getSolidcpServer()->isEnabled() && $solidcpHostingSpace->isEnabled());
 
             if ($isEnabled && $solidcpHostingSpace->getSolidcpServer()->getLocation()->getId() === $location->getId()) {
-                //Check Free RAM
-                $memory = $esServers->getMemoryPackageId($solidcpHostingSpace->getSolidCpIdHostingSpace());
-                $freeMemory = (int)$memory['FreePhysicalMemoryKB'] - ($package->getRamMb() * 1024);
-                if ($freeMemory >= $possiblePlan->getHostingSpace()->getMaxReservedMemoryKb()) {
-                    $countOfActivePackages = $esPackages->getNumberOfActivePackages($solidcpHostingSpace->getSolidCpIdHostingSpace());
-                    $storageUsageGB = $esPackages->getPackageVPS2012StorageUsageGB($solidcpHostingSpace->getSolidCpIdHostingSpace());
 
-                    $isHasStorageSpace = (($storageUsageGB + $package->getSpaceGb()) <= $possiblePlan->getHostingSpace()->getSpaceQuotaGb());
-                    $isActivePackagesNotOverQuota = ($countOfActivePackages < $solidcpHostingSpace->getMaxActiveNumber() + 1);
+                try {
+                    //Check Free RAM
+                    $memory = $esServers->getMemoryPackageId($solidcpHostingSpace->getSolidCpIdHostingSpace());
+                    $freeMemory = (int)$memory['FreePhysicalMemoryKB'] - ($package->getRamMb() * 1024);
+                    if ($freeMemory >= $possiblePlan->getHostingSpace()->getMaxReservedMemoryKb()) {
+                        $countOfActivePackages = $esPackages->getNumberOfActivePackages($solidcpHostingSpace->getSolidCpIdHostingSpace());
+                        $storageUsageGB = $esPackages->getPackageVPS2012StorageUsageGB($solidcpHostingSpace->getSolidCpIdHostingSpace());
 
-                    if ($isHasStorageSpace && $isActivePackagesNotOverQuota) {
-                        $possibleSpacesAndPlans[] = $possiblePlan;
+                        $isHasStorageSpace = (($storageUsageGB + $package->getSpaceGb()) <= $possiblePlan->getHostingSpace()->getSpaceQuotaGb());
+                        $isActivePackagesNotOverQuota = ($countOfActivePackages < $solidcpHostingSpace->getMaxActiveNumber() + 1);
+
+                        if ($isHasStorageSpace && $isActivePackagesNotOverQuota) {
+                            $possibleSpacesAndPlans[] = $possiblePlan;
+                        }
                     }
+                } catch (\SoapFault $e) {
+                    $soapError = $e;
                 }
             }
+        }
+
+        if (count($possibleSpacesAndPlans) == 0 && $soapError !== null) { //we accept that some node can be down, so only throw error if all of them are down
+            throw $soapError;
         }
 
         return $possibleSpacesAndPlans;

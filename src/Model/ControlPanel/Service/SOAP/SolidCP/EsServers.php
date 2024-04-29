@@ -18,6 +18,9 @@ final class EsServers extends SoapExecute
         return $soap;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getMemory(int $serverId): array
     {
         try {
@@ -25,13 +28,14 @@ final class EsServers extends SoapExecute
                 self::SERVICE,
                 'GetMemory',
                 ['serverId' => $serverId])->GetMemoryResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetMemory Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetMemory Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getMemoryPackageId(int $packageId): array
     {
         try {
@@ -39,13 +43,14 @@ final class EsServers extends SoapExecute
                 self::SERVICE,
                 'GetMemoryPackageId',
                 ['packageId' => $packageId])->GetMemoryPackageIdResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetMemoryPackageId Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetMemoryPackageId Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getPackageUnassignedIPAddressesVpsExternalNetwork(int $packageId): array
     {
         try {
@@ -59,13 +64,17 @@ final class EsServers extends SoapExecute
                 ])->GetPackageUnassignedIPAddressesResult);
         } catch (NotFoundException $e) {
             throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("getPackageUnassignedIPAddressesVpsExternalNetwork Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "getPackageUnassignedIPAddressesVpsExternalNetwork Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
-    public function allocatePackageIPAddressesVpsExternalNetwork(int   $packageId, bool $allocateRandom, int $addressesNumber,
-                                                                 array $addressId = []
+    /**
+     * @throws \SoapFault
+     */
+    public function allocatePackageIPAddressesVpsExternalNetwork(
+        int   $packageId, bool $allocateRandom, int $addressesNumber,
+        array $addressId = []
     ): array
     {
         try {
@@ -81,13 +90,14 @@ final class EsServers extends SoapExecute
                     'addressesNumber' => $addressesNumber,
                     'addressId' => $addressId, //int array
                 ])->AllocatePackageIPAddressesResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("allocatePackageIPAddressesVpsExternalNetwork Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "allocatePackageIPAddressesVpsExternalNetwork Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getPackageIPAddressesVpsExternalNetwork(int $packageId): array
     {
         try {
@@ -105,10 +115,8 @@ final class EsServers extends SoapExecute
                     'maximumRows' => 100000000,
                     'recursive' => true,
                 ])->GetPackageIPAddressesResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("getPackageIPAddressesVpsExternalNetwork Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "getPackageIPAddressesVpsExternalNetwork Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 }

@@ -59,9 +59,9 @@ final readonly class EnterpriseDispatcherFetcher
                 'is_default',
                 'enabled',
             )
-            ->from('cp_solidcp_enterprise_dispatchers');
+            ->from('cp_solidcp_enterprise_dispatchers' /** @type EnterpriseDispatcher */);
 
-        if (!in_array($sort, ['name', 'url', 'is_default', 'enabled'], true)) {
+        if (!in_array($sort, ['id', 'name', 'url', 'is_default', 'enabled'], true)) {
             throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 

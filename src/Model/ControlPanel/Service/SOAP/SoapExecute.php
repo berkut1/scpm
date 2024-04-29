@@ -97,8 +97,7 @@ class SoapExecute implements SoapExecuteInterface
     }
 
     /**
-     * @return mixed
-     * @throws \Exception
+     * @throws \SoapFault
      */
     protected function execute(string $service, string $method, array $params): mixed
     {
@@ -112,7 +111,7 @@ class SoapExecute implements SoapExecuteInterface
     }
 
     /**
-     * @return mixed
+     * @throws \SoapFault
      * @throws \Exception
      */
     private function executeInternal(string $service, string $method, array $params): mixed
@@ -123,7 +122,7 @@ class SoapExecute implements SoapExecuteInterface
             // Execute the request and process the results
             return call_user_func([$this->soapClient, $method], $params);
         } catch (\SoapFault $e) {
-            throw new \Exception("SOAP Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+            throw new \SoapFault($e->faultcode, "SOAP Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         } catch (\Exception $e) {
             throw new \Exception("General Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
         }
@@ -131,10 +130,6 @@ class SoapExecute implements SoapExecuteInterface
 
     /**
      * Converts an object or an XML string to an array
-     *
-     * @param mixed $value Object or an XML string
-     * @param boolean $loadXml Loads the string into the SimpleXML object
-     * @return array
      */
     protected function convertArray(mixed $value, bool $loadXml = false): array
     {

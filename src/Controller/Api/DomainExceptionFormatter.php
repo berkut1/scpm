@@ -30,7 +30,7 @@ final readonly class DomainExceptionFormatter implements EventSubscriberInterfac
         $exception = $event->getThrowable();
         $request = $event->getRequest();
 
-        if (!$exception instanceof \DomainException) {
+        if (!($exception instanceof \DomainException || $exception instanceof \SoapFault)) {
             return;
         }
 
@@ -38,13 +38,24 @@ final readonly class DomainExceptionFormatter implements EventSubscriberInterfac
             return;
         }
 
-        $this->errors->handle($exception);
+        if ($exception instanceof \SoapFault) {
+            $this->errors->handleSoap($exception);
 
-        $event->setResponse(new JsonResponse([
-            'error' => [
-                'code' => 400,
-                'message' => $exception->getMessage(),
-            ],
-        ], Response::HTTP_BAD_REQUEST));
+            $event->setResponse(new JsonResponse([
+                'error' => [
+                    'code' => 500,
+                    'message' => $exception->getMessage(),
+                ],
+            ], Response::HTTP_INTERNAL_SERVER_ERROR));
+        } else {
+            $this->errors->handle($exception);
+
+            $event->setResponse(new JsonResponse([
+                'error' => [
+                    'code' => 400,
+                    'message' => $exception->getMessage(),
+                ],
+            ], Response::HTTP_BAD_REQUEST));
+        }
     }
 }
