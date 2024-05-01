@@ -14,7 +14,11 @@ final class Record implements \JsonSerializable
         $log = new self();
         $arr = [];
         foreach ($values as $value) {
-            $arr[] = new Value((string)$value); //everything to string
+            if ($value instanceof \DateTimeImmutable) {
+                $arr[] = new Value($value->format('Y-m-d'));
+            } else {
+                $arr[] = new Value((string)$value); //everything to string
+            }
         }
         $log->text = $text;
         $log->values = $arr;

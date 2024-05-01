@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 return [
+    'REMOVED_LOGS_BY_DATE_RANGE' => 'Removed logs between %s, and %s date',
     'LOGIN_USER_FROM_IP' => 'Logged the user %s, from IP: %s',
     'LOGIN_USER_FAILED_FROM_IP' => 'Tried to login via user %s, from IP: %s',
     'CREATE_USER_USER' => 'The user %s, created a user: %s',

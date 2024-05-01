@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\AuditLog\Entity\AuditLog;
+use App\Model\AuditLog\UseCase\AuditLog\{Remove};
 use App\ReadModel\AuditLog\AuditLogFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,8 +24,21 @@ final class AuditLogsController extends AbstractController
     public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
-    public function index(Request $request, AuditLogFetcher $fetcher): Response
+    public function index(Request $request, AuditLogFetcher $fetcher, Remove\Batch\Handler $handler): Response
     {
+        $command = new Remove\Batch\Command();
+        $form = $this->createForm(Remove\Batch\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+            } catch (\DomainException $e) {
+                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
         $pagination = $fetcher->all(
             $request->query->getInt('page', 1),
             self::PER_PAGE,
@@ -35,6 +49,7 @@ final class AuditLogsController extends AbstractController
         return $this->render('app/audit_logs/index.html.twig', [
             'page_title' => self::MAIN_TITLE,
             'pagination' => $pagination,
+            'form' => $form,
         ]);
     }
 
