@@ -10,6 +10,9 @@ final readonly class VirtualizationServer2012Service
 {
     public function __construct(private EnterpriseDispatcherRepository $enterpriseDispatcherRepository) {}
 
+    /**
+     * @throws \SoapFault
+     */
     public function allOsTemplateListFrom(int $id_enterprise_dispatcher, int $packageId): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);

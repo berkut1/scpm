@@ -50,7 +50,7 @@ final readonly class SolidcpHostingPlanFetcher
             ->from('cp_solidcp_hosting_plans', 'plans')
             ->leftJoin('plans', 'cp_solidcp_hosting_spaces', 'spaces', 'spaces.id = plans.id_hosting_space')
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
         return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }
@@ -65,7 +65,7 @@ final readonly class SolidcpHostingPlanFetcher
             ->from('cp_solidcp_hosting_plans', 'plans')
             ->leftJoin('plans', 'cp_solidcp_hosting_spaces', 'spaces', 'spaces.id = plans.id_hosting_space')
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
         return array_column($stmt->fetchAllAssociative(), 'name', 'solidcp_id_plan');
     }

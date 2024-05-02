@@ -16,10 +16,6 @@ final class Form extends AbstractType
         /** @var Command $data */
         $data = $options['data'];
         $builder
-//            ->add('id_hosting_space', Type\TextType::class, [
-//                'label' => 'PackageId',
-//                'disabled' => true,
-//            ])
             ->add('osTemplates', CollectionType::class, [
                 'label' => false,
                 'entry_type' => Collection\Form::class,

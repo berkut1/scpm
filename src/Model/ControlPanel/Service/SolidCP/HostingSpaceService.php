@@ -66,7 +66,7 @@ final readonly class HostingSpaceService
 //            ->where("NOT (id_hosting_space = ANY (string_to_array(:ids,',')::int[]))") //NOT IN ARRAY
 //            ->setParameter('ids', implode(',', array_keys($spaces)))
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
         $existSpaces = array_column($stmt->fetchAllAssociative(), 'name', 'solidcp_id_hosting_space');
         if ($exceptHostingSpaceId > 0) {

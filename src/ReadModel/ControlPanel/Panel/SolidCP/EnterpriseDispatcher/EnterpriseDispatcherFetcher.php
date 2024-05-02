@@ -44,7 +44,7 @@ final readonly class EnterpriseDispatcherFetcher
             )
             ->from('cp_solidcp_enterprise_dispatchers')
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
         return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }

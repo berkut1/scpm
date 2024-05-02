@@ -34,7 +34,7 @@ final readonly class SolidcpServerFetcher
             )
             ->from('cp_solidcp_servers')
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
         return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }
@@ -50,7 +50,7 @@ final readonly class SolidcpServerFetcher
             ->where('id_enterprise_dispatcher = :id_enterprise_dispatcher')
             ->setParameter('id_enterprise_dispatcher', $id_enterprise_dispatcher)
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
         return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }

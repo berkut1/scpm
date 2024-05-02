@@ -25,7 +25,7 @@ final class SolidcpServerFixture extends Fixture implements DependentFixtureInte
     {
         $faker = Factory::create();
         $max_node_num = count(EnterpriseDispatcherFixture::REFERENCE_ED);
-        $max_loc_num = count(EnterpriseDispatcherFixture::REFERENCE_ED);
+        $max_loc_num = count(LocationFixture::REFERENCE_LOCATIONS);
 
         for ($i = 0; $i < count(self::REFERENCE_NODES); $i++) {
             /** @var EnterpriseDispatcher $enterpriseDispatcher */

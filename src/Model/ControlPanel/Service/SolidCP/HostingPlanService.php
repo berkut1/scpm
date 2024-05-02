@@ -7,6 +7,7 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 final readonly class HostingPlanService
 {
@@ -32,16 +33,15 @@ final readonly class HostingPlanService
     //$idEnterprise - means a Reseller with his hosting space
 
     /**
-     * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \SoapFault
+     * @throws Exception
      */
-    public function allNotAddedHostingPlacesFrom(int $idHostingSpace): array
+    public function allNotAddedHostingPlanesFrom(int $idHostingSpace): array
     {
         $solidcpHostingSpace = $this->solidcpHostingSpaceRepository->get($idHostingSpace);
         $esPackages = EsPackages::createFromEnterpriseDispatcher($solidcpHostingSpace->getSolidcpServer()->getEnterprise());
         $userID = $solidcpHostingSpace->getSolidcpServer()->getEnterprise()->getSolidcpLoginId();
         $solidCpPlans = $esPackages->getHostingPlans($userID)['NewDataSet']['Table'];
-        //dump($solidCpPlans);
 
         $plans = [];
         foreach ($solidCpPlans as $value) {
@@ -63,7 +63,7 @@ final readonly class HostingPlanService
             ->andWhere('spaces.solidcp_id_hosting_space = :solidcp_id_hosting_space')
             ->setParameter('solidcp_id_hosting_space', $solidcpHostingSpace->getSolidCpIdHostingSpace())
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
         $existSpaces = array_column($stmt->fetchAllAssociative(), 'name', 'solidcp_id_plan');
 
