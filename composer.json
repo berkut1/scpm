@@ -47,6 +47,7 @@
         "zircote/swagger-php": "^4.0"
     },
     "require-dev": {
+        "dg/bypass-finals": "^1.6",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fakerphp/faker": "^1.23",
         "mockery/mockery": "^1.6",

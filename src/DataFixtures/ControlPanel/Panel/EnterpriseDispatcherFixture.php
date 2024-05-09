@@ -4,15 +4,17 @@ declare(strict_types=1);
 namespace App\DataFixtures\ControlPanel\Panel;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsersInterface;
+use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Mockery;
 
 final class EnterpriseDispatcherFixture extends Fixture
 {
+    public function __construct() {
+        \DG\BypassFinals::enable(); //We can put in bin/console.php before kernel load, but that will enable it for all commands, so it's probably not a good idea.
+    }
 
     public const array REFERENCE_ED = [
         'EnterpriseDispatcher_1',
@@ -48,9 +50,9 @@ final class EnterpriseDispatcherFixture extends Fixture
         $manager->flush();
     }
 
-    private function mockEsUsersWith($url, $login, $UserId, $password): EsUsersInterface
+    private function mockEsUsersWith($url, $login, $UserId, $password): EsUsers
     {
-        $esUsersMock = Mockery::mock(EsUsersInterface::class);
+        $esUsersMock = \Mockery::mock(EsUsers::class);
         $esUsersMock->shouldReceive('initManual')->with($url, $login, $password);
         $esUsersMock->shouldReceive('getUserByUsername')->with($login)->andReturn(['UserId' => $UserId, 'IsPeer' => false]);
         return $esUsersMock;
@@ -58,6 +60,6 @@ final class EnterpriseDispatcherFixture extends Fixture
 
     public function __destruct()
     {
-        Mockery::close();
+        \Mockery::close();
     }
 }

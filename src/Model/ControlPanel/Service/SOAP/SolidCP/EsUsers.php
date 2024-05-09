@@ -7,7 +7,7 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseD
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User\UserInfo;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
-final class EsUsers extends SoapExecute implements EsUsersInterface
+final class EsUsers extends SoapExecute
 {
     public const string SERVICE = 'esUsers.asmx';
 
