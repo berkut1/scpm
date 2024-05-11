@@ -8,5 +8,5 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class Command
 {
     #[Assert\NotBlank]
-    public string $name = '';
+    public ?string $name = '';
 }

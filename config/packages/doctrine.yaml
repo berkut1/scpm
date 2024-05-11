@@ -69,7 +69,8 @@ when@test:
     doctrine:
         dbal:
             # "TEST_TOKEN" is typically set by ParaTest
-            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+            #dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+            dbname_suffix: '' #cause we rollback translations we don't need a separate db.
 
 when@prod:
     doctrine:
