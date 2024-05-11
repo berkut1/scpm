@@ -34,19 +34,18 @@ class User implements AggregateRoot
     #[ORM\Column(name: "status", type: "user_user_status", length: 32, nullable: false)]
     private Status $status;
 
-    private function __construct(Id $id, \DateTimeImmutable $date, string $login, Role $role)
+    private function __construct(Id $id, \DateTimeImmutable $date, string $login)
     {
         $this->id = $id;
         $this->date = $date;
         $this->login = $login;
-        $this->role = $role;
+        $this->role = Role::default();
         $this->recordEvent(new Event\UserCreated($id));
     }
 
-    public static function create(Id $id, \DateTimeImmutable $date, string $login, string $hash, Role $role = null): self
+    public static function create(Id $id, \DateTimeImmutable $date, string $login, string $hash): self
     {
-        $role ??= Role::default();
-        $user = new self($id, $date, $login, $role);
+        $user = new self($id, $date, $login);
         $user->password = $hash;
         $user->status = Status::active();
         return $user;
