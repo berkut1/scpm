@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Location;
+namespace App\Tests\Functional\ControlPanel\Locations;
 
 use App\Model\User\Entity\User\UserRepository;
 use App\Tests\Builder\User\UserMapper;
@@ -20,7 +20,7 @@ final class CreateTest extends DbWebTestCase
     public function testUser(): void
     {
         $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('user');
+        $user = $userRepository->getByLogin('test_user');
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
 
         $this->client->request('GET', '/locations/create');
@@ -31,7 +31,7 @@ final class CreateTest extends DbWebTestCase
     public function testGet(): void
     {
         $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('berkut');
+        $user = $userRepository->getByLogin('test_admin');
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
 
         $crawler = $this->client->request('GET', '/locations/create');
@@ -43,7 +43,7 @@ final class CreateTest extends DbWebTestCase
     public function testCreate(): void
     {
         $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('berkut');
+        $user = $userRepository->getByLogin('test_admin');
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
 
         $this->client->request('GET', '/locations/create');
@@ -59,14 +59,12 @@ final class CreateTest extends DbWebTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsString('Locations', $crawler->filter('title')->text());
         $this->assertStringContainsString('Test Location', $crawler->filter('body')->text());
-
-        dump($crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
     {
         $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('berkut');
+        $user = $userRepository->getByLogin('test_admin');
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
 
         $this->client->request('GET', '/locations/create');
@@ -83,7 +81,7 @@ final class CreateTest extends DbWebTestCase
     public function testExists(): void
     {
         $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('berkut');
+        $user = $userRepository->getByLogin('test_admin');
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
 
         $this->client->request('GET', '/locations/create');

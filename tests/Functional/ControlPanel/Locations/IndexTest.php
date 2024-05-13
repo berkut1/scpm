@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Location;
+namespace App\Tests\Functional\ControlPanel\Locations;
 
 use App\Model\User\Entity\User\UserRepository;
 use App\Tests\Builder\User\UserMapper;
@@ -20,7 +20,7 @@ final class IndexTest extends DbWebTestCase
     public function testUser(): void
     {
         $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('user');
+        $user = $userRepository->getByLogin('test_user');
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
 
         $this->client->request('GET', '/locations');
@@ -30,7 +30,7 @@ final class IndexTest extends DbWebTestCase
     public function testAdmin(): void
     {
         $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('berkut');
+        $user = $userRepository->getByLogin('test_admin');
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
 
         $crawler = $this->client->request('GET', '/locations');

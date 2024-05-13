@@ -15,11 +15,16 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.6" />
+<!--        TODO: Enable SYMFONY_DEPRECATIONS_HELPER after doctrine orm will be updated to 3.0 -->
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled=1"/>
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+        <testsuite name="functional">
+            <directory>tests/Functional</directory>
+        </testsuite>
+        <testsuite name="unit">
+            <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
 
@@ -34,5 +39,6 @@
     </listeners>
 
     <extensions>
+        <extension class="App\Tests\BypassFinalHook"/>
     </extensions>
 </phpunit>

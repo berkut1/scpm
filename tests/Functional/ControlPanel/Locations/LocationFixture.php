@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Location;
+namespace App\Tests\Functional\ControlPanel\Locations;
 
 use App\Model\ControlPanel\Entity\Location\Location;
 use Doctrine\Bundle\FixturesBundle\Fixture;

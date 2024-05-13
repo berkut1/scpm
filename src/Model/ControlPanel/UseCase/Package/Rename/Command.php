@@ -13,7 +13,7 @@ final class Command
     public Id $id;
 
     #[Assert\NotBlank]
-    public string $name;
+    public ?string $name;
 
     private function __construct(Id $id)
     {
