@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\ControlPanel\Packages\VirtualMachines;
 
 use App\Model\ControlPanel\Entity\Package\Id;
-use App\Model\User\Entity\User\UserRepository;
-use App\Tests\Builder\User\UserMapper;
 use App\Tests\Functional\DbWebTestCase;
 
 final class ShowTest extends DbWebTestCase
@@ -20,9 +18,7 @@ final class ShowTest extends DbWebTestCase
 
     public function testUser(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_user');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
+        $this->loginAs('test_user');
 
         $this->client->request('GET', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID);
 
@@ -31,10 +27,7 @@ final class ShowTest extends DbWebTestCase
 
     public function testGet(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_admin');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
-
+        $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID);
 
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -45,10 +38,7 @@ final class ShowTest extends DbWebTestCase
 
     public function testNotFound(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_admin');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
-
+        $this->loginAs('test_admin');
         $this->client->request('GET', '/packages/virtual-machines/' . Id::next()->getValue());
 
         $this->assertSame(404, $this->client->getResponse()->getStatusCode());

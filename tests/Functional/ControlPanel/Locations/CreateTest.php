@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\ControlPanel\Locations;
 
-use App\Model\User\Entity\User\UserRepository;
-use App\Tests\Builder\User\UserMapper;
 use App\Tests\Functional\DbWebTestCase;
 
 final class CreateTest extends DbWebTestCase
@@ -19,9 +17,7 @@ final class CreateTest extends DbWebTestCase
 
     public function testUser(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_user');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
+        $this->loginAs('test_user');
 
         $this->client->request('GET', '/locations/create');
 
@@ -30,10 +26,7 @@ final class CreateTest extends DbWebTestCase
 
     public function testGet(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_admin');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
-
+        $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/locations/create');
 
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -42,10 +35,7 @@ final class CreateTest extends DbWebTestCase
 
     public function testCreate(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_admin');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
-
+        $this->loginAs('test_admin');
         $this->client->request('GET', '/locations/create');
 
         $this->client->submitForm('Create', [
@@ -63,10 +53,7 @@ final class CreateTest extends DbWebTestCase
 
     public function testNotValid(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_admin');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
-
+        $this->loginAs('test_admin');
         $this->client->request('GET', '/locations/create');
 
         $crawler = $this->client->submitForm('Create', [
@@ -80,10 +67,7 @@ final class CreateTest extends DbWebTestCase
 
     public function testExists(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_admin');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
-
+        $this->loginAs('test_admin');
         $this->client->request('GET', '/locations/create');
 
         $crawler = $this->client->submitForm('Create', [

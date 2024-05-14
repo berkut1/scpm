@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\ControlPanel\Packages\VirtualMachines;
 
-use App\Model\User\Entity\User\UserRepository;
-use App\Tests\Builder\User\UserMapper;
 use App\Tests\Functional\DbWebTestCase;
 
 final class RemoveTest extends DbWebTestCase
@@ -19,9 +17,7 @@ final class RemoveTest extends DbWebTestCase
 
     public function testUser(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_user');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
+        $this->loginAs('test_user');
 
         $this->client->request('POST', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/remove');
 
@@ -30,10 +26,7 @@ final class RemoveTest extends DbWebTestCase
 
     public function testPost(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_admin');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
-
+        $this->loginAs('test_admin');
         $this->client->request('POST', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/remove');
 
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -44,9 +37,7 @@ final class RemoveTest extends DbWebTestCase
 
     public function testDelete(): void
     {
-        $userRepository = $this->client->getContainer()->get(UserRepository::class);
-        $user = $userRepository->getByLogin('test_admin');
-        $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
+        $this->loginAs('test_admin');
 
         $crawler = $this->client->request('GET', '/packages/virtual-machines');
         $removeButton = $crawler->selectButton('REMOVE');
@@ -57,7 +48,7 @@ final class RemoveTest extends DbWebTestCase
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
-        
+
         $this->assertStringNotContainsString('Exist Test VM Package RDP23', $crawler->filter('body')->text());
     }
 }
