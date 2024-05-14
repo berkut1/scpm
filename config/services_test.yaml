@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autowire: true
+#    public: true
+
+##override classes for mocking
+  App\Service\CustomHttpClient:
+    public: true
+    class: App\Tests\Mock\CustomHttpClientMock
+
+  App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService:
+    public: true
+    class: App\Tests\Mock\EnterpriseDispatcherServiceMock
+
+#  App\Service\CustomHttpClientInterface:
+#    public: true
+#    alias: App\Service\CustomHttpClient

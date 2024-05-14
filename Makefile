@@ -4,6 +4,7 @@ restart: docker-down docker-up
 init: docker-down-clear docker-pull docker-build docker-up scpsc-init
 init-no-fixtures: docker-down-clear docker-pull docker-build docker-up scpsc-init-no-fixtures
 test: scpsc-test
+fixtures: scpsc-fixtures
 init-no-net: docker-down-clear docker-build docker-up scpsc-init
 
 docker-up:
@@ -28,7 +29,7 @@ scpsc-init-no-fixtures: scpsc-composer-install scpsc-assets-install scpsc-migrat
 scpsc-composer-install:
 	docker-compose run --rm scpsc-php-cli composer install
 
-# увеличиваем временно память чтобы выполнился весь скрипт, для вызываем композер через php и полный путь
+# We temporarily increase the memory to ensure the entire script executes. This is for calling Composer through PHP with the full path.
 scpsc-composer-install-memory:
 	docker-compose run --rm scpsc-php-cli php -d memory_limit=256M /bin/composer install
 

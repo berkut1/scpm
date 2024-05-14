@@ -1,54 +1,42 @@
 <?php
 declare(strict_types=1);
 
-namespace App\DataFixtures\ControlPanel\Panel;
+namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\EnterpriseDispatcher;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Tests\Builder\ControlPanel\Panel\EnterpriseDispatcherBuilder;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 final class EnterpriseDispatcherFixture extends Fixture
 {
-    public function __construct() {
+    public const string REFERENCE = 'enterprise_dispatcher';
+
+    public function __construct()
+    {
         //if renew a cache, then need to run double time fixture (first time will be exception)
         \DG\BypassFinals::setCacheDirectory('\var\cache');
         \DG\BypassFinals::enable(); //We can put in bin/console.php before kernel load, but that will enable it for all commands, so it's probably not a good idea.
     }
 
-    public const array REFERENCE_ED = [
-        'EnterpriseDispatcher_1',
-        'EnterpriseDispatcher_2',
-    ];
-
     #[\Override]
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create();
 
-        for ($i = 0; $i < count(self::REFERENCE_ED); $i++) {
-            $url = $faker->url();
-            $test_login = $faker->domainName();
-            $password = $faker->password();
-            $esUsersMock = $this->mockEsUsersWith(
-                $url,
-                $test_login,
-                random_int(1, 100),
-                $password);
+        $esUsersMock = $this->mockEsUsersWith(
+            $url = 'http://10.0.0.1:9002',
+            $login = 'test_es_login',
+            111,
+            $password = 'password');
 
-            $enterpriseDispatcherService = new EnterpriseDispatcherService($esUsersMock);
-            $enterpriseDispatcher = new EnterpriseDispatcher(
-                $enterpriseDispatcherService,
-                $faker->name(),
-                $url,
-                $test_login,
-                $password);
+        $enterpriseDispatcherService = new EnterpriseDispatcherService($esUsersMock);
+        $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($enterpriseDispatcherService))
+            ->via('Exist Test Enterprise', $url, $login, $password)
+            ->build();
 
-            $manager->persist($enterpriseDispatcher);
-            $this->setReference(self::REFERENCE_ED[$i], $enterpriseDispatcher);
-        }
+        $manager->persist($enterpriseDispatcher);
+        $this->setReference(self::REFERENCE, $enterpriseDispatcher);
         $manager->flush();
     }
 

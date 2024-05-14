@@ -39,4 +39,14 @@ class DbWebTestCase extends WebTestCase
         $user = $userRepository->getByLogin($name);
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
     }
+
+    protected function setCustomHttpClientRespond(string $url, array $willRespond): void
+    {
+        $httpClientMock = $this->client->getContainer()->get(CustomHttpClient::class);
+        if($httpClientMock === null){
+            $httpClientMock = new CustomHttpClientMock();
+            $this->client->getContainer()->set(CustomHttpClient::class, $httpClientMock);
+        }
+        $httpClientMock->addResponse($url, $willRespond);
+    }
 }

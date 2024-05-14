@@ -5,15 +5,17 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\Crea
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherServiceInterface;
 use App\Model\Flusher;
+use App\Service\CustomHttpClientInterface;
 
 final readonly class Handler
 {
     public function __construct(
-        private EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
-        private Flusher                        $flusher,
-        private EnterpriseDispatcherService    $enterpriseDispatcherService
+        private EnterpriseDispatcherRepository       $enterpriseDispatcherRepository,
+        private Flusher                              $flusher,
+        private EnterpriseDispatcherServiceInterface $enterpriseDispatcherService,
+        private CustomHttpClientInterface            $customHttpClient,
     ) {}
 
     public function handle(Command $command): void
@@ -21,8 +23,8 @@ final readonly class Handler
         if ($this->enterpriseDispatcherRepository->hasByName($command->name)) {
             throw new \DomainException('EnterpriseDispatcher with this name already exists.');
         }
-        $headers = @get_headers($command->url);
-        if (!($headers && strpos((string)$headers[0], '200'))) {
+        $headers = $this->customHttpClient->getHeaders($command->url);
+        if (empty($headers) || !strpos((string)$headers[0], '200')) {
             throw new \DomainException('EnterpriseDispatcher is unreachable.');
         }
 
