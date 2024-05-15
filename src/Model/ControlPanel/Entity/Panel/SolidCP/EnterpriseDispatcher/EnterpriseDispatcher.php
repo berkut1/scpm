@@ -57,7 +57,6 @@ class EnterpriseDispatcher implements AggregateRoot
         $this->url = $url;
         $this->login = $login;
         $this->password = $password;
-//        $this->solidcpLoginId = $solidcpLoginId;
         $this->solidcpLoginId = $service->getEnterpriseDispatcherRealUserId($url, $login, $password);
         $this->enabled = $enabled;
         $this->solidcpServers = new ArrayCollection();

@@ -5,11 +5,11 @@ namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\EnterpriseDispatcher;
 
 use App\Tests\Functional\DbWebTestCase;
 
-final class CreateTest extends DbWebTestCase
+final class EditTest extends DbWebTestCase
 {
     public function testGuest(): void
     {
-        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/create');
+        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
@@ -19,7 +19,7 @@ final class CreateTest extends DbWebTestCase
     {
         $this->loginAs('test_user');
 
-        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/create');
+        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
@@ -27,24 +27,27 @@ final class CreateTest extends DbWebTestCase
     public function testGet(): void
     {
         $this->loginAs('test_admin');
-        $crawler = $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/create');
+        $crawler = $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Add Enterprise Dispatcher', $crawler->filter('title')->text());
+        $this->assertStringContainsString('Edit Enterprise Dispatcher', $crawler->filter('title')->text());
     }
 
-    public function testCreate(): void
+    public function testEdit(): void
     {
         $this->loginAs('test_admin');
-        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/create');
+        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $this->setCustomHttpClientRespond('http://127.0.0.2:9003', ['HTTP/1.1 200 OK']);
+        $this->setCustomEnterpriseDispatcherRealUserIdRespond(
+            $login = 'rename_login', 12345);
+        $this->setCustomHttpClientRespond(
+            $url = 'http://10.0.10.10:9002', ['HTTP/1.1 200 OK']);
 
-        $this->client->submitForm('Create', [
-            'form[name]' => $name = 'Test Enterprise Dispatcher',
-            'form[url]' => 'http://127.0.0.2:9003',
-            'form[login]' => 'test_login',
-            'form[password]' => 'test_password',
+        $this->client->submitForm('Edit', [
+            'form[name]' => $name = 'Renamed Exist Test Enterprise Enabled',
+            'form[url]' => $url,
+            'form[login]' => $login,
+            'form[password]' => 'rename_password',
         ]);
 
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
@@ -54,17 +57,18 @@ final class CreateTest extends DbWebTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsString('Enterprise Dispatchers', $crawler->filter('title')->text());
         $this->assertStringContainsString($name, $crawler->filter('body')->text());
+        $this->assertStringContainsString($url, $crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
     {
         $this->loginAs('test_admin');
-        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/create');
+        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $crawler = $this->client->submitForm('Create', [
+        $crawler = $this->client->submitForm('Edit', [
             'form[name]' => '',
-            'form[url]' => '',
-            'form[login]' => null,
+            'form[url]' => null,
+            'form[login]' => '',
             'form[password]' => '',
         ]);
 
@@ -81,23 +85,5 @@ final class CreateTest extends DbWebTestCase
 
         $this->assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_password')->ancestors()->first()->filter('.invalid-feedback')->text());
-    }
-
-    public function testExists(): void
-    {
-        $this->loginAs('test_admin');
-        $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/create');
-
-        $this->setCustomHttpClientRespond('http://127.0.0.2:9003', ['HTTP/1.1 200 OK']);
-
-        $crawler = $this->client->submitForm('Create', [
-            'form[name]' => 'Exist Test Enterprise Enabled',
-            'form[url]' => 'http://127.0.0.2:9003',
-            'form[login]' => 'test_login',
-            'form[password]' => 'test_password',
-        ]);
-        //dd($crawler->filter('body')->text());
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('EnterpriseDispatcher with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
     }
 }

@@ -12,16 +12,16 @@ final class Command
     public int $id = 0;
 
     #[Assert\NotBlank]
-    public string $name = '';
+    public ?string $name = '';
 
     #[Assert\NotBlank]
-    public string $url = '';
+    public ?string $url = '';
 
     #[Assert\NotBlank]
-    public string $login = '';
+    public ?string $login = '';
 
     #[Assert\NotBlank]
-    public string $password = '';
+    public ?string $password = '';
 
     private function __construct(int $id)
     {

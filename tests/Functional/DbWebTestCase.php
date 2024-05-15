@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
 use App\Model\User\Entity\User\UserRepository;
 use App\Service\CustomHttpClient;
 use App\Tests\Builder\User\UserMapper;
 use App\Tests\Mock\CustomHttpClientMock;
+use App\Tests\Mock\EnterpriseDispatcherServiceMock;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -43,10 +45,20 @@ class DbWebTestCase extends WebTestCase
     protected function setCustomHttpClientRespond(string $url, array $willRespond): void
     {
         $httpClientMock = $this->client->getContainer()->get(CustomHttpClient::class);
-        if($httpClientMock === null){
+        if ($httpClientMock === null) {
             $httpClientMock = new CustomHttpClientMock();
             $this->client->getContainer()->set(CustomHttpClient::class, $httpClientMock);
         }
         $httpClientMock->addResponse($url, $willRespond);
+    }
+
+    protected function setCustomEnterpriseDispatcherRealUserIdRespond(string $login, int $willRespond): void
+    {
+        $serviceMock = $this->client->getContainer()->get(EnterpriseDispatcherService::class);
+        if ($serviceMock === null) {
+            $serviceMock = new EnterpriseDispatcherServiceMock();
+            $this->client->getContainer()->set(EnterpriseDispatcherService::class, $serviceMock);
+        }
+        $serviceMock->addResponse($login, $willRespond);
     }
 }
