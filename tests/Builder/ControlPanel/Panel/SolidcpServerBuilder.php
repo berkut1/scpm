@@ -18,7 +18,7 @@ final class SolidcpServerBuilder
     private bool $enabled;
 
     public function __construct(
-        EnterpriseDispatcher $enterprise
+        EnterpriseDispatcher $enterprise, bool $enabled = true
     )
     {
         $this->enterprise = $enterprise;
@@ -27,7 +27,17 @@ final class SolidcpServerBuilder
         $this->cores = 32;
         $this->threads = 64;
         $this->memoryMb = 1024 * 256;
-        $this->enabled = true;
+        $this->enabled = $enabled;
+    }
+
+    public function withServerDetails(string $name, int $cores, int $threads, int $memoryMb): self
+    {
+        $clone = clone $this;
+        $clone->name = $name;
+        $clone->cores = $cores;
+        $clone->threads = $threads;
+        $clone->memoryMb = $memoryMb;
+        return $clone;
     }
 
     public function withLocation(string $name): self
@@ -46,6 +56,7 @@ final class SolidcpServerBuilder
             $this->cores,
             $this->threads,
             $this->memoryMb,
+            $this->enabled,
         );
     }
 }
