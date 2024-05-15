@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\EnterpriseDispatcher;
 
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
 use App\Tests\Functional\DbWebTestCase;
 
 final class EditTest extends DbWebTestCase
@@ -35,18 +36,22 @@ final class EditTest extends DbWebTestCase
 
     public function testEdit(): void
     {
+        $service = $this->getMockBuilder(EnterpriseDispatcherService::class)->disableOriginalConstructor()->getMock();
+        $service->expects($this->once())
+            ->method('getEnterpriseDispatcherRealUserId')
+            ->willReturn(12345);
+        self::getContainer()->set(EnterpriseDispatcherService::class, $service);
+
         $this->loginAs('test_admin');
         $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $this->setCustomEnterpriseDispatcherRealUserIdRespond(
-            $login = 'rename_login', 12345);
         $this->setCustomHttpClientRespond(
             $url = 'http://10.0.10.10:9002', ['HTTP/1.1 200 OK']);
 
         $this->client->submitForm('Edit', [
             'form[name]' => $name = 'Renamed Exist Test Enterprise Enabled',
             'form[url]' => $url,
-            'form[login]' => $login,
+            'form[login]' => 'rename_login',
             'form[password]' => 'rename_password',
         ]);
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\EnterpriseDispatcher;
 
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
 use App\Tests\Functional\DbWebTestCase;
 
 final class CreateTest extends DbWebTestCase
@@ -35,7 +36,14 @@ final class CreateTest extends DbWebTestCase
 
     public function testCreate(): void
     {
+        $service = $this->getMockBuilder(EnterpriseDispatcherService::class)->disableOriginalConstructor()->getMock();
+        $service->expects($this->once())
+            ->method('getEnterpriseDispatcherRealUserId')
+            ->willReturn(12333);
+        self::getContainer()->set(EnterpriseDispatcherService::class, $service);
+
         $this->loginAs('test_admin');
+
         $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/create');
 
         $this->setCustomHttpClientRespond('http://127.0.0.2:9003', ['HTTP/1.1 200 OK']);
@@ -88,7 +96,7 @@ final class CreateTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/create');
 
-        $this->setCustomHttpClientRespond('http://127.0.0.2:9003', ['HTTP/1.1 200 OK']);
+        //$this->setCustomHttpClientRespond('http://127.0.0.2:9003', ['HTTP/1.1 200 OK']);
 
         $crawler = $this->client->submitForm('Create', [
             'form[name]' => 'Exist Test Enterprise Enabled',
@@ -96,7 +104,7 @@ final class CreateTest extends DbWebTestCase
             'form[login]' => 'test_login',
             'form[password]' => 'test_password',
         ]);
-        //dd($crawler->filter('body')->text());
+
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsString('EnterpriseDispatcher with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
     }

@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher;
 
 use App\Model\AggregateRoot;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherServiceInterface;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
 use App\Model\EventsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -50,7 +50,7 @@ class EnterpriseDispatcher implements AggregateRoot
     private array|Collection|ArrayCollection $solidcpServers;
 
     public function __construct(
-        EnterpriseDispatcherServiceInterface $service, string $name, string $url, string $login, string $password, bool $enabled = true
+        EnterpriseDispatcherService $service, string $name, string $url, string $login, string $password, bool $enabled = true
     )
     {
         $this->name = $name;
@@ -63,7 +63,7 @@ class EnterpriseDispatcher implements AggregateRoot
         $this->recordEvent(new Event\EnterpriseDispatcherCreated($this));
     }
 
-    public function edit(EnterpriseDispatcherServiceInterface $service, string $name, string $url, string $login, string $password): void
+    public function edit(EnterpriseDispatcherService $service, string $name, string $url, string $login, string $password): void
     {
         $this->name = $name;
         $this->url = $url;

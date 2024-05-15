@@ -5,17 +5,17 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\Crea
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherServiceInterface;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
 use App\Model\Flusher;
 use App\Service\CustomHttpClientInterface;
 
 final readonly class Handler
 {
     public function __construct(
-        private EnterpriseDispatcherRepository       $enterpriseDispatcherRepository,
-        private Flusher                              $flusher,
-        private EnterpriseDispatcherServiceInterface $enterpriseDispatcherService,
-        private CustomHttpClientInterface            $customHttpClient,
+        private EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
+        private Flusher                        $flusher,
+        private EnterpriseDispatcherService    $enterpriseDispatcherService,
+        private CustomHttpClientInterface      $customHttpClient,
     ) {}
 
     public function handle(Command $command): void

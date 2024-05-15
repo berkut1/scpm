@@ -39,6 +39,7 @@
     </listeners>
 
     <extensions>
+        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
         <extension class="App\Tests\BypassFinalHook"/>
     </extensions>
 </phpunit>

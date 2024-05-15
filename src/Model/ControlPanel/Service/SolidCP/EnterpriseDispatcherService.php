@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Service\SolidCP;
 
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 
-final readonly class EnterpriseDispatcherService implements EnterpriseDispatcherServiceInterface
+final readonly class EnterpriseDispatcherService
 {
     public function __construct(
         private EsUsers $esUsers

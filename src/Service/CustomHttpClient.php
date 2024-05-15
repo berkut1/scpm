@@ -9,7 +9,7 @@ final readonly class CustomHttpClient implements CustomHttpClientInterface
 {
     public function __construct(private LoggerInterface $logger) {}
 
-        public function getHeaders(string $url): array
+    public function getHeaders(string $url): array
     {
         try {
             return get_headers($url);
