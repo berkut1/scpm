@@ -3,15 +3,23 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\EnterpriseDispatcher;
 
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
 use App\Tests\Builder\ControlPanel\Panel\EnterpriseDispatcherBuilder;
+use App\Tests\Utils;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 final class EnterpriseDispatcherFixture extends Fixture
 {
-    public const string REFERENCE = 'enterprise_dispatcher';
+    public const int EXISTING_ID_ENABLED = 100001;
+    public const int EXISTING_ID_DISABLED = 100002;
+    public const array REFERENCES = [
+        self::EXISTING_ID_ENABLED => 'enterprise_dispatcher_1',
+        self::EXISTING_ID_DISABLED => 'enterprise_dispatcher_2',
+    ];
+
 
     public function __construct()
     {
@@ -32,13 +40,34 @@ final class EnterpriseDispatcherFixture extends Fixture
 
         $enterpriseDispatcherService = new EnterpriseDispatcherService($esUsersMock);
         $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($enterpriseDispatcherService))
-            ->via('Exist Test Enterprise', $url, $login, $password)
+            ->via('Exist Test Enterprise Enabled', $url, $login, $password)
+            ->withId(self::EXISTING_ID_ENABLED)
             ->build();
 
         $manager->persist($enterpriseDispatcher);
-        $this->setReference(self::REFERENCE, $enterpriseDispatcher);
-        $manager->flush();
+        $this->setReference(self::REFERENCES[self::EXISTING_ID_ENABLED], $enterpriseDispatcher);
+
+        $esUsersMock = $this->mockEsUsersWith(
+            $url = 'http://10.0.0.2:9002',
+            $login = 'test_es_login2',
+            112,
+            $password = 'password2');
+
+        $enterpriseDispatcherService = new EnterpriseDispatcherService($esUsersMock);
+        $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($enterpriseDispatcherService))
+            ->via('Exist Test Enterprise Disabled', $url, $login, $password)
+            ->withId(self::EXISTING_ID_DISABLED)
+            ->byDefaultDisabled()
+            ->build();
+
+
+        $this->setReference(self::REFERENCES[self::EXISTING_ID_DISABLED], $enterpriseDispatcher);
+        $manager->persist($enterpriseDispatcher);
+
+        Utils::flushEntityWithCustomId($manager, EnterpriseDispatcher::class);
+//        $manager->flush();
     }
+
 
     private function mockEsUsersWith($url, $login, $UserId, $password): EsUsers
     {

@@ -14,6 +14,7 @@ final class EnterpriseDispatcherBuilder
     private string $login;
     private string $password;
     private bool $enabled;
+    private ?int $id = null;
 
     public function __construct(EnterpriseDispatcherService $service)
     {
@@ -25,7 +26,7 @@ final class EnterpriseDispatcherBuilder
         $this->enabled = true;
     }
 
-    public function via(string $name, string $url,string $login, string $password): self
+    public function via(string $name, string $url, string $login, string $password): self
     {
         $clone = clone $this;
         $clone->name = $name;
@@ -35,14 +36,37 @@ final class EnterpriseDispatcherBuilder
         return $clone;
     }
 
+    public function withId(int $id): self
+    {
+        $clone = clone $this;
+        $clone->id = $id;
+        return $clone;
+    }
+
+    public function byDefaultDisabled(): self
+    {
+        $clone = clone $this;
+        $clone->enabled = false;
+        return $clone;
+    }
+
     public function build(): EnterpriseDispatcher
     {
-        return new EnterpriseDispatcher(
+        $entity = new EnterpriseDispatcher(
             $this->service,
             $this->name,
             $this->url,
             $this->login,
             $this->password,
+            $this->enabled,
         );
+
+        if ($this->id !== null) {
+            $reflection = new \ReflectionClass($entity);
+            $property = $reflection->getProperty('id');
+            $property->setValue($entity, $this->id);
+        }
+
+        return $entity;
     }
 }
