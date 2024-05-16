@@ -16,6 +16,7 @@ final class SolidcpServerBuilder
     private int $threads;
     private int $memoryMb;
     private bool $enabled;
+    private ?int $id = null;
 
     public function __construct(
         EnterpriseDispatcher $enterprise, bool $enabled = true
@@ -40,16 +41,30 @@ final class SolidcpServerBuilder
         return $clone;
     }
 
-    public function withLocation(string $name): self
+    public function withLocation(Location $location): self
+    {
+        $clone = clone $this;
+        $clone->location = $location;
+        return $clone;
+    }
+
+    public function withNewLocation(string $name): self
     {
         $clone = clone $this;
         $clone->location = new Location($name);
         return $clone;
     }
 
+    public function withId(int $id): self
+    {
+        $clone = clone $this;
+        $clone->id = $id;
+        return $clone;
+    }
+
     public function build(): SolidcpServer
     {
-        return new SolidcpServer(
+        $entity = new SolidcpServer(
             $this->enterprise,
             $this->location,
             $this->name,
@@ -58,5 +73,13 @@ final class SolidcpServerBuilder
             $this->memoryMb,
             $this->enabled,
         );
+
+        if ($this->id !== null) {
+            $reflection = new \ReflectionClass($entity);
+            $property = $reflection->getProperty('id');
+            $property->setValue($entity, $this->id);
+        }
+
+        return $entity;
     }
 }

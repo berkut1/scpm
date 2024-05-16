@@ -19,7 +19,7 @@ final class RemoveTest extends DbWebTestCase
     {
         $this->loginAs('test_user');
 
-        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/remove');
+        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/remove');
 
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
@@ -27,12 +27,12 @@ final class RemoveTest extends DbWebTestCase
     public function testPost(): void
     {
         $this->loginAs('test_admin');
-        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/remove');
+        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/remove');
 
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringContainsString('Exist Test Enterprise Enabled', $crawler->filter('body')->text());
+        $this->assertStringContainsString('Exist Test Enterprise Enabled', $crawler->filter('table > tbody')->text());
     }
 
     public function testDelete(): void
@@ -40,6 +40,33 @@ final class RemoveTest extends DbWebTestCase
         $this->loginAs('test_admin');
 
         $crawler = $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers');
+
+        $removeButton = $crawler->selectButton('REMOVE');
+        $form = $removeButton->form([], 'POST');
+        $csrfToken = $form->getValues()['token'];
+
+        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/remove', ['token' => $csrfToken]);
+        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->followRedirect();
+
+        $result = '';
+        $crawler->filter('table > tbody > tr')
+            ->each(function ($row) use (&$result) {
+                if ($row->filter('td')->first()->text() === (string)EnterpriseDispatcherFixture::EXISTING_ID_DISABLED) {
+                    $result = $row->text();
+                }
+            });
+
+        $this->assertStringNotContainsString((string)EnterpriseDispatcherFixture::EXISTING_ID_DISABLED, $result);
+    }
+
+    public function testFaultDelete(): void
+    {
+        $this->loginAs('test_admin');
+
+        $crawler = $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers');
+
         $removeButton = $crawler->selectButton('REMOVE');
         $form = $removeButton->form([], 'POST');
         $csrfToken = $form->getValues()['token'];
@@ -49,6 +76,15 @@ final class RemoveTest extends DbWebTestCase
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringNotContainsString('Exist Test Enterprise Enabled', $crawler->filter('body')->text());
+        $result = '';
+        $crawler->filter('table > tbody > tr')
+            ->each(function ($row) use (&$result) {
+                if ($row->filter('td')->first()->text() === (string)EnterpriseDispatcherFixture::EXISTING_ID_ENABLED) {
+                    $result = $row->text();
+                }
+            });
+
+        $this->assertStringContainsString((string)EnterpriseDispatcherFixture::EXISTING_ID_ENABLED, $result);
+        $this->assertStringContainsString('Enterprise Dispatcher Exist Test Enterprise Enabled assigned to Nodes', $crawler->filter('.alert.alert-danger')->text());
     }
 }

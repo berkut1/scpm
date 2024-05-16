@@ -13,26 +13,26 @@ final class Command
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_enterprise_dispatcher;
+    public ?int $id_enterprise_dispatcher;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_location;
+    public ?int $id_location;
 
     #[Assert\NotBlank]
-    public string $name;
-
-    #[Assert\NotBlank]
-    #[Assert\Positive]
-    public int $cores;
+    public ?string $name;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $threads;
+    public ?int $cores;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $ram_mb;
+    public ?int $threads;
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    public ?int $ram_mb;
 
     private function __construct(int $id)
     {

@@ -16,7 +16,7 @@ final class CreateTest extends TestCase
     public function testSuccess(): void
     {
         $solidcpServer = (new SolidcpServerBuilder($this->enterpriseDispatcher))
-            ->withLocation($locName = 'Test Node Location')
+            ->withNewLocation($locName = 'Test Node Location')
             ->withServerDetails($name = 'Test Node', $cores = 16, $threads = 32, $memoryMb = 1024 * 512)
             ->build();
 

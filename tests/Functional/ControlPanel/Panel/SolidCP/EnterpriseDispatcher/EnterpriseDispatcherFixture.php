@@ -13,8 +13,8 @@ use Doctrine\Persistence\ObjectManager;
 
 final class EnterpriseDispatcherFixture extends Fixture
 {
-    public const int EXISTING_ID_ENABLED = 100001;
-    public const int EXISTING_ID_DISABLED = 100002;
+    public const int EXISTING_ID_ENABLED = 1001;
+    public const int EXISTING_ID_DISABLED = 1002;
     public const array REFERENCES = [
         self::EXISTING_ID_ENABLED => 'enterprise_dispatcher_1',
         self::EXISTING_ID_DISABLED => 'enterprise_dispatcher_2',
