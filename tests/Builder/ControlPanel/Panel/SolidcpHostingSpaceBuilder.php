@@ -15,10 +15,12 @@ final class SolidcpHostingSpaceBuilder
     private int $maxReservedMemoryKb;
     private int $spaceQuotaGb;
     private bool $enabled;
+    private ?int $id = null;
 
     public function __construct(
         SolidcpServer $solidcpServer,
         int           $solidCpIdHostingSpace,
+        bool          $enabled = true,
     )
     {
         $this->solidcpServer = $solidcpServer;
@@ -27,18 +29,44 @@ final class SolidcpHostingSpaceBuilder
         $this->maxActiveNumber = 70;
         $this->maxReservedMemoryKb = 1024 * 1024 * 64;
         $this->spaceQuotaGb = 500;
-        $this->enabled = true;
+        $this->enabled = $enabled;
+    }
+
+    public function withDetails(string $name, int $maxActiveNumber, int $maxReservedMemoryKb, int $spaceQuotaGb): self
+    {
+        $clone = clone $this;
+        $clone->name = $name;
+        $clone->maxActiveNumber = $maxActiveNumber;
+        $clone->maxReservedMemoryKb = $maxReservedMemoryKb;
+        $clone->spaceQuotaGb = $spaceQuotaGb;
+        return $clone;
+    }
+
+    public function withId(int $id): self
+    {
+        $clone = clone $this;
+        $clone->id = $id;
+        return $clone;
     }
 
     public function build(): SolidcpHostingSpace
     {
-        return new SolidcpHostingSpace(
+        $entity = new SolidcpHostingSpace(
             $this->solidcpServer,
             $this->solidCpIdHostingSpace,
             $this->name,
             $this->maxActiveNumber,
             $this->maxReservedMemoryKb,
             $this->spaceQuotaGb,
+            $this->enabled,
         );
+
+        if ($this->id !== null) {
+            $reflection = new \ReflectionClass($entity);
+            $property = $reflection->getProperty('id');
+            $property->setValue($entity, $this->id);
+        }
+
+        return $entity;
     }
 }
