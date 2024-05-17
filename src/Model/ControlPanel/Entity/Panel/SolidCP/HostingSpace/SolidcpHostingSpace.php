@@ -106,7 +106,7 @@ class SolidcpHostingSpace implements AggregateRoot
     {
         foreach ($this->hostingPlans as $current) {
             if ($current->getSolidcpIdPlan() === $solidcpHostingPlan->getSolidcpIdPlan()) {
-                throw new EntityNotFoundException('Hosting Plan already exists');
+                throw new \DomainException('Hosting Plan already exists');
                 //return;
             }
         }
@@ -130,7 +130,7 @@ class SolidcpHostingSpace implements AggregateRoot
     {
         foreach ($this->osTemplates as $current) {
             if ($current->getPath() === $path) {
-                throw new EntityNotFoundException("TemplateOs $name already added");
+                throw new \DomainException("TemplateOs $name already added");
             }
         }
         $osTemplate = new OsTemplate($this, $path, $name);
