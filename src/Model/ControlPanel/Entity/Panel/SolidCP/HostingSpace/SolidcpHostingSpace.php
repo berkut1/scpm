@@ -126,14 +126,14 @@ class SolidcpHostingSpace implements AggregateRoot
         throw new EntityNotFoundException('Hosting Plan was not found');
     }
 
-    public function addOsTemplate(string $path, string $name): void
+    public function addOsTemplate(string $fileName, string $name): void
     {
         foreach ($this->osTemplates as $current) {
-            if ($current->getPath() === $path) {
+            if ($current->getFileName() === $fileName) {
                 throw new \DomainException("TemplateOs $name already added");
             }
         }
-        $osTemplate = new OsTemplate($this, $path, $name);
+        $osTemplate = new OsTemplate($this, $fileName, $name);
         $this->osTemplates->add($osTemplate);
         $this->recordEvent(new Event\SolidcpHostingSpaceAddedOsTemplate($this, $osTemplate));
     }

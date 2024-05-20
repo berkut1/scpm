@@ -122,7 +122,7 @@ final readonly class SolidcpHostingSpaceSubscriber implements EventSubscriberInt
         $records = [
             Record::create('ADDED_OS_TEMPLATE_NAME_WITH_PATH_TO_HOSTING_SPACE_NAME', [
                 $event->osTemplate->getName(),
-                $event->osTemplate->getPath(),
+                $event->osTemplate->getFileName(),
                 $event->solidcpHostingSpace->getName(),
             ]),
         ];
@@ -136,7 +136,7 @@ final readonly class SolidcpHostingSpaceSubscriber implements EventSubscriberInt
         $records = [
             Record::create('REMOVED_OS_TEMPLATE_NAME_WITH_PATH_FROM_HOSTING_SPACE_NAME', [
                 $event->osTemplate->getName(),
-                $event->osTemplate->getPath(),
+                $event->osTemplate->getFileName(),
                 $event->solidcpHostingSpace->getName(),
             ]),
         ];

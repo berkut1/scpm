@@ -45,7 +45,7 @@ final class Command
     {
         $array = [];
         foreach ($osTemplates as $osTemplate) {
-            $array[] = Collection\Command::create($osTemplate->getPath(), $osTemplate->getName());
+            $array[] = Collection\Command::create($osTemplate->getFileName(), $osTemplate->getName());
         }
         return $array;
     }

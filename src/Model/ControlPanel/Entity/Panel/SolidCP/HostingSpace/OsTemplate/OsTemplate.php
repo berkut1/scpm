@@ -29,10 +29,10 @@ class OsTemplate
     #[ORM\Column(name: "name", type: Types::STRING, length: 128, nullable: false)]
     private string $name;
 
-    public function __construct(SolidcpHostingSpace $hostingSpace, string $path, string $name)
+    public function __construct(SolidcpHostingSpace $hostingSpace, string $fileName, string $name)
     {
         $this->hostingSpace = $hostingSpace;
-        $this->path = $path;
+        $this->path = $fileName;
         $this->name = $name;
     }
 
@@ -46,7 +46,7 @@ class OsTemplate
         return $this->hostingSpace;
     }
 
-    public function getPath(): string
+    public function getFileName(): string
     {
         return $this->path;
     }

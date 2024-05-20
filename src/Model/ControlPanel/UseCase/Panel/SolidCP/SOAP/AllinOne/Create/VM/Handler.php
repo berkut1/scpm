@@ -135,7 +135,7 @@ final class Handler
         $commandVm = SOAPVirtualizationServer2012\CreateVM\Command::createDefault(
             $packageId,
             $package->getId()->getValue(),
-            $osTemplate->getPath(),
+            $osTemplate->getFileName(),
             $command->server_password,
             $command->server_ip_amount,
             $this->enterpriseDispatcher->getId()
