@@ -9,11 +9,11 @@ final class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id = 0;
+    public ?int $id = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_plan = 0;
+    public ?int $id_plan = 0;
 
     public function __construct(int $id, int $id_plan)
     {

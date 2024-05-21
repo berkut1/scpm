@@ -9,31 +9,31 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class Command
 {
     #[Assert\NotBlank]
-    public string $name = '';
+    public ?string $name = '';
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    private int $id_enterprise_dispatcher = 0;
+    private ?int $id_enterprise_dispatcher = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    private readonly int $id_server;
+    private readonly ?int $id_server;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_hosting_space = 0;
+    public ?int $id_hosting_space = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $max_active_number = 0;
+    public ?int $max_active_number = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $max_reserved_memory_mb = 0;
+    public ?int $max_reserved_memory_mb = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $space_quota_gb = 0;
+    public ?int $space_quota_gb = 0;
 
     private function __construct(int $id_server)
     {

@@ -34,6 +34,7 @@ services:
     App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository: ~
     App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServerRepository: ~
     App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceRepository: ~
+    App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanRepository: ~
 
 
     # controllers are imported separately to make sure services can be injected

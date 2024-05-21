@@ -9,7 +9,7 @@ final class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_enterprise_dispatcher_server = 0;
+    public ?int $id_enterprise_dispatcher_server = 0;
 
     public function __construct(int $id_enterprise_dispatcher_server)
     {

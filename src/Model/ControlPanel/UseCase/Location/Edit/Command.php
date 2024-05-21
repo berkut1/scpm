@@ -9,10 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class Command
 {
     #[Assert\NotBlank]
-    public int $id;
+    public ?int $id;
 
     #[Assert\NotBlank]
-    public string $name;
+    public ?string $name;
 
     private function __construct(int $id)
     {

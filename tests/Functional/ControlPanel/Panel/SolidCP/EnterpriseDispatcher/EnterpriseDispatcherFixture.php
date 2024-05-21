@@ -69,7 +69,7 @@ final class EnterpriseDispatcherFixture extends Fixture
     }
 
 
-    private function mockEsUsersWith($url, $login, $UserId, $password): EsUsers
+    private function mockEsUsersWith(string $url, string $login, int $UserId, string $password): EsUsers
     {
         $esUsersMock = \Mockery::mock(EsUsers::class);
         $esUsersMock->shouldReceive('initManual')->with($url, $login, $password);

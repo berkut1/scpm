@@ -10,15 +10,15 @@ final class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    private readonly int $id_hosting_space;
+    private readonly ?int $id_hosting_space;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    private int $id_enterprise_dispatcher = 0;
+    private ?int $id_enterprise_dispatcher = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_server = 0;
+    public ?int $id_server = 0;
 
     private function __construct(int $id_hosting_space)
     {

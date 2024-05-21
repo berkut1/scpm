@@ -9,7 +9,7 @@ final class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_hosting_space = 0;
+    public ?int $id_hosting_space = 0;
 
     public function __construct(int $id_hosting_space)
     {

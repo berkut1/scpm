@@ -10,13 +10,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class Command
 {
     #[Assert\NotBlank]
-    private readonly string $id_package;
+    private readonly ?string $id_package;
 
     #[Assert\Positive]
-    public array $id_plans = [];
+    public ?array $id_plans = [];
 
     #[Assert\NotBlank]
-    private string $packageType;
+    private ?string $packageType;
 
     private function __construct(string $id_package)
     {

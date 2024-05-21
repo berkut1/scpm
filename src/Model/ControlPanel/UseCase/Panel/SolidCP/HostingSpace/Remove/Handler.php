@@ -19,18 +19,18 @@ final readonly class Handler
 
     public function handle(Command $command): void
     {
-        $solidcpServer = $this->repository->get($command->id);
-        if ($solidcpServer->hasPlans()) {
-            throw new \DomainException("Solidcp Hosting Space {$solidcpServer->getName()} has Plans");
+        $solidcpHostingSpace = $this->repository->get($command->id);
+        if ($solidcpHostingSpace->hasPlans()) {
+            throw new \DomainException("Solidcp Hosting Space {$solidcpHostingSpace->getName()} has Plans");
         }
-        $this->repository->remove($solidcpServer);
+        $this->repository->remove($solidcpHostingSpace);
         //$this->flusher->flush($solidcpServer); flush in audit log
         $records = [
             Record::create('REMOVED_SOLIDCP_HOSTING_SPACE_WITH_NAME', [
-                $solidcpServer->getName(),
+                $solidcpHostingSpace->getName(),
             ]),
         ];
-        $entity = new Entity(EntityType::cpSolidcpHostingSpace(), (string)$solidcpServer->getId());
+        $entity = new Entity(EntityType::cpSolidcpHostingSpace(), (string)$solidcpHostingSpace->getId());
         $auditLogCommand = new AuditLog\Add\Command(
             $entity,
             TaskName::removeCpSolidcpHostingSpace(),

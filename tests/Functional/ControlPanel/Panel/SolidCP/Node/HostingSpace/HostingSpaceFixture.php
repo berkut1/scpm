@@ -25,14 +25,14 @@ final class HostingSpaceFixture extends Fixture implements DependentFixtureInter
         $server = $this->getReference(NodeFixture::REFERENCES[NodeFixture::EXISTING_ID_ENABLED]);
 
         $hostingSpace = (new SolidcpHostingSpaceBuilder($server, random_int(100, 999)))
-            ->withDetails('Exist Node Enabled', 40, 24 * 1024 * 1024, 500)
+            ->withDetails('Exist Hosting Space Enabled', 40, 24 * 1024 * 1024, 500)
             ->withId(self::EXISTING_ID_ENABLED)
             ->build();
         $manager->persist($hostingSpace);
         $this->setReference(self::REFERENCES[self::EXISTING_ID_ENABLED], $hostingSpace);
 
         $hostingSpace = (new SolidcpHostingSpaceBuilder($server, random_int(1, 99), false))
-            ->withDetails('Exist Node Disabled', 20, 28 * 1024 * 1024, 300)
+            ->withDetails('Exist Hosting Space Disabled', 20, 28 * 1024 * 1024, 300)
             ->withId(self::EXISTING_ID_DISABLED)
             ->build();
         $manager->persist($hostingSpace);

@@ -9,15 +9,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class Command
 {
     #[Assert\NotBlank]
-    public int $id;
+    public ?int $id;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_enterprise_dispatcher = 0;
+    public ?int $id_enterprise_dispatcher = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_server = 0;
+    public ?int $id_server = 0;
 
     private function __construct(int $id)
     {
