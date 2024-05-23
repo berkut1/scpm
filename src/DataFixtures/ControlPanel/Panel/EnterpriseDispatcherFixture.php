@@ -5,7 +5,7 @@ namespace App\DataFixtures\ControlPanel\Panel;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -38,7 +38,7 @@ final class EnterpriseDispatcherFixture extends Fixture
                 random_int(1, 100),
                 $password);
 
-            $enterpriseDispatcherService = new EnterpriseDispatcherService($esUsersMock);
+            $enterpriseDispatcherService = new EnterpriseUserValidator($esUsersMock);
             $enterpriseDispatcher = new EnterpriseDispatcher(
                 $enterpriseDispatcherService,
                 $faker->name(),

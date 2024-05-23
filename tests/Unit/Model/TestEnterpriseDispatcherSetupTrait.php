@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Model;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 use App\Tests\Builder\ControlPanel\Panel\EnterpriseDispatcherBuilder;
 
 trait TestEnterpriseDispatcherSetupTrait
 {
-    protected EnterpriseDispatcherService $service;
+    protected EnterpriseUserValidator $service;
     protected EnterpriseDispatcher $enterpriseDispatcher;
 
     protected function setUp(): void
@@ -18,7 +18,7 @@ trait TestEnterpriseDispatcherSetupTrait
 //        $this->service = $this->getMockBuilder(EnterpriseDispatcherService::class)
 //            ->disableOriginalConstructor()
 //            ->getMock();
-        $this->service = $this->createMock(EnterpriseDispatcherService::class);
+        $this->service = $this->createMock(EnterpriseUserValidator::class);
         $this->service->expects($this->atLeastOnce())
             ->method('getEnterpriseDispatcherRealUserId')
             ->willReturn(123);

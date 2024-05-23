@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\Edit;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 use App\Model\Flusher;
 use App\Service\CustomHttpClientInterface;
 
@@ -13,7 +13,7 @@ final readonly class Handler
     public function __construct(
         private Flusher                        $flusher,
         private EnterpriseDispatcherRepository $repository,
-        private EnterpriseDispatcherService    $enterpriseDispatcherService,
+        private EnterpriseUserValidator        $enterpriseDispatcherService,
         private CustomHttpClientInterface      $customHttpClient,
     ) {}
 

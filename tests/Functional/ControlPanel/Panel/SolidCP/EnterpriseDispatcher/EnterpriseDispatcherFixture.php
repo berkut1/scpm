@@ -5,7 +5,7 @@ namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\EnterpriseDispatcher;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 use App\Tests\Builder\ControlPanel\Panel\EnterpriseDispatcherBuilder;
 use App\Tests\Utils;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -38,7 +38,7 @@ final class EnterpriseDispatcherFixture extends Fixture
             111,
             $password = 'password');
 
-        $enterpriseDispatcherService = new EnterpriseDispatcherService($esUsersMock);
+        $enterpriseDispatcherService = new EnterpriseUserValidator($esUsersMock);
         $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($enterpriseDispatcherService))
             ->via('Exist Test Enterprise Enabled', $url, $login, $password)
             ->withId(self::EXISTING_ID_ENABLED)
@@ -53,7 +53,7 @@ final class EnterpriseDispatcherFixture extends Fixture
             112,
             $password = 'password2');
 
-        $enterpriseDispatcherService = new EnterpriseDispatcherService($esUsersMock);
+        $enterpriseDispatcherService = new EnterpriseUserValidator($esUsersMock);
         $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($enterpriseDispatcherService))
             ->via('Exist Test Enterprise Disabled', $url, $login, $password)
             ->withId(self::EXISTING_ID_DISABLED)

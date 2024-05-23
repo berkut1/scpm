@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Service\SolidCP;
 
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsUsers;
 
-final readonly class EnterpriseDispatcherService
+final readonly class EnterpriseUserValidator
 {
     public function __construct(
         private EsUsers $esUsers

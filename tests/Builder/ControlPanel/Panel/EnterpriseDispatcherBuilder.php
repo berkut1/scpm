@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace App\Tests\Builder\ControlPanel\Panel;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 
 final class EnterpriseDispatcherBuilder
 {
-    private EnterpriseDispatcherService $service;
+    private EnterpriseUserValidator $service;
     private string $name;
     private string $url;
     private string $login;
@@ -16,7 +16,7 @@ final class EnterpriseDispatcherBuilder
     private bool $enabled;
     private ?int $id = null;
 
-    public function __construct(EnterpriseDispatcherService $service)
+    public function __construct(EnterpriseUserValidator $service)
     {
         $this->service = $service;
         $this->name = 'Test Enterprise';

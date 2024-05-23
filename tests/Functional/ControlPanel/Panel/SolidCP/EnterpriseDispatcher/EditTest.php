@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\EnterpriseDispatcher;
 
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 use App\Tests\Functional\DbWebTestCase;
 
 final class EditTest extends DbWebTestCase
@@ -36,11 +36,11 @@ final class EditTest extends DbWebTestCase
 
     public function testEdit(): void
     {
-        $service = $this->getMockBuilder(EnterpriseDispatcherService::class)->disableOriginalConstructor()->getMock();
+        $service = $this->getMockBuilder(EnterpriseUserValidator::class)->disableOriginalConstructor()->getMock();
         $service->expects($this->once())
             ->method('getEnterpriseDispatcherRealUserId')
             ->willReturn(12345);
-        self::getContainer()->set(EnterpriseDispatcherService::class, $service);
+        self::getContainer()->set(EnterpriseUserValidator::class, $service);
 
         $this->loginAs('test_admin');
         $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');

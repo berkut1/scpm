@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\Event\EnterpriseDispatcherDisabled;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 use App\Tests\Builder\ControlPanel\Panel\EnterpriseDispatcherBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -12,7 +12,7 @@ final class DisableTest extends TestCase
 {
     public function testSuccess(): void
     {
-        $service = $this->createMock(EnterpriseDispatcherService::class);
+        $service = $this->createMock(EnterpriseUserValidator::class);
         $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($service))->build();
         $enterpriseDispatcher->disable();
 
@@ -21,7 +21,7 @@ final class DisableTest extends TestCase
 
     public function testAlready(): void
     {
-        $service = $this->createMock(EnterpriseDispatcherService::class);
+        $service = $this->createMock(EnterpriseUserValidator::class);
         $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($service))->build();
         $enterpriseDispatcher->disable();
 
@@ -31,7 +31,7 @@ final class DisableTest extends TestCase
 
     public function testRecordEvent(): void
     {
-        $service = $this->createMock(EnterpriseDispatcherService::class);
+        $service = $this->createMock(EnterpriseUserValidator::class);
         $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($service))->build();
         $enterpriseDispatcher->disable();
 

@@ -5,7 +5,7 @@ namespace App\Tests\Unit\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispa
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\Event\EnterpriseDispatcherCreated;
-use App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService;
+use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 use App\Tests\Builder\ControlPanel\Panel\EnterpriseDispatcherBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +13,7 @@ final class CreateTest extends TestCase
 {
     public function testSuccess(): void
     {
-        $service = $this->createMock(EnterpriseDispatcherService::class);
+        $service = $this->createMock(EnterpriseUserValidator::class);
         $service->expects($this->once())
             ->method('getEnterpriseDispatcherRealUserId')
             ->willReturn($userId = 123);
@@ -38,7 +38,7 @@ final class CreateTest extends TestCase
 
     public function testRecordEvent(): void
     {
-        $service = $this->createMock(EnterpriseDispatcherService::class);
+        $service = $this->createMock(EnterpriseUserValidator::class);
         $enterpriseDispatcher = (new EnterpriseDispatcherBuilder($service))->build();
 
         $recordedEvents = $enterpriseDispatcher->releaseEvents();
