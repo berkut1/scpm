@@ -58,7 +58,6 @@ jobs:
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create Database
       run: |
-        php bin/console doctrine:database:create --env=test
         php bin/console doctrine:migrations:migrate --no-interaction --env=test
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
