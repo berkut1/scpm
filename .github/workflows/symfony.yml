@@ -34,7 +34,7 @@ jobs:
           --health-retries 5
         ports:
           # Maps tcp port 5432 on service container to the host
-          - 54321:5432
+          - 5432:5432
     
     steps:
     #  To automatically get bug fixes and new Php versions for shivammathur/setup-php,
@@ -58,7 +58,7 @@ jobs:
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create Database
       env:
-        DATABASE_URL: postgresql://app_user:secret@localhost:5432/app_db
+        DATABASE_URL: postgresql://app_user:secret@scpsc-postgres:5432/app_db
       run: |
         php bin/console doctrine:migrations:migrate --no-interaction --env=test
     - name: Execute tests (Unit and Feature tests) via PHPUnit
