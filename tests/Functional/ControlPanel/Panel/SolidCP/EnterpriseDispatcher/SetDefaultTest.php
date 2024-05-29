@@ -7,9 +7,11 @@ use App\Tests\Functional\DbWebTestCase;
 
 final class SetDefaultTest extends DbWebTestCase
 {
+    private const string URI = '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/set-default';
+
     public function testGuest(): void
     {
-        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/set-default');
+        $this->client->request('POST', self::URI);
 
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
@@ -19,14 +21,14 @@ final class SetDefaultTest extends DbWebTestCase
     {
         $this->loginAs('test_user');
 
-        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/set-default');
+        $this->client->request('POST', self::URI);
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost(): void
     {
         $this->loginAs('test_admin');
-        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/set-default');
+        $this->client->request('POST', self::URI);
 
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
@@ -34,7 +36,7 @@ final class SetDefaultTest extends DbWebTestCase
         $result = '';
         $crawler->filter('table > tbody > tr')
             ->each(function ($row) use (&$result) {
-                if ($row->filter('td')->first()->text() === (string)EnterpriseDispatcherFixture::EXISTING_ID_ENABLED) {
+                if ($row->filter('td')->first()->text() === (string)EnterpriseDispatcherFixture::EXISTING_ID_DISABLED) {
                     $result = $row->text();
                 }
             });
@@ -51,7 +53,7 @@ final class SetDefaultTest extends DbWebTestCase
         $form = $removeButton->form([], 'POST');
         $csrfToken = $form->getValues()['token'];
 
-        $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/set-default', ['token' => $csrfToken]);
+        $this->client->request('POST', self::URI, ['token' => $csrfToken]);
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
@@ -59,10 +61,10 @@ final class SetDefaultTest extends DbWebTestCase
         $result = '';
         $crawler->filter('table > tbody > tr')
             ->each(function ($row) use (&$result) {
-                if ($row->filter('td')->first()->text() === (string)EnterpriseDispatcherFixture::EXISTING_ID_ENABLED) {
+                if ($row->filter('td')->first()->text() === (string)EnterpriseDispatcherFixture::EXISTING_ID_DISABLED) {
                     $result = $row->text();
                 }
             });
-        $this->assertStringContainsString('http://10.0.0.1:9002 Yes', $result); //after url is Default section
+        $this->assertStringContainsString('http://10.0.0.2:9002 Yes', $result); //after url is Default section
     }
 }

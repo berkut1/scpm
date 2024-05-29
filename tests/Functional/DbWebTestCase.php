@@ -46,6 +46,24 @@ class DbWebTestCase extends WebTestCase
         $this->client->loginUser(UserMapper::mapUserToUserIdentity($user));
     }
 
+    protected function apiLoginAs(string $username, string $password = 'password'): void
+    {
+        $this->client->request(
+            'POST',
+            '/api/login/authentication_token',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'username' => $username,
+                'password' => $password,
+            ])
+        );
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $data['token']));
+    }
+
     protected function setCustomHttpClientRespond(string $url, array $willRespond): void
     {
         $httpClientMock = $this->client->getContainer()->get(CustomHttpClient::class);

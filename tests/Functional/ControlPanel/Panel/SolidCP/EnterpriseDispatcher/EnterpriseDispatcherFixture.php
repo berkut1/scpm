@@ -43,6 +43,7 @@ final class EnterpriseDispatcherFixture extends Fixture
             ->via('Exist Test Enterprise Enabled', $url, $login, $password)
             ->withId(self::EXISTING_ID_ENABLED)
             ->build();
+        $enterpriseDispatcher->setDefault();
 
         $manager->persist($enterpriseDispatcher);
         $this->setReference(self::REFERENCES[self::EXISTING_ID_ENABLED], $enterpriseDispatcher);
