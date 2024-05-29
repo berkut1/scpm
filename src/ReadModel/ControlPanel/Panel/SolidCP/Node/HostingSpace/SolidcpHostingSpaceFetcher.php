@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class SolidcpHostingSpaceFetcher
+final readonly class SolidcpHostingSpaceFetcher
 {
     private Connection $connection;
     private EntityRepository $repository;

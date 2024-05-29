@@ -3,37 +3,39 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\Status;
 use App\Model\User\Entity\User\User;
-use App\Model\User\Entity\User\Id;
 use App\Model\User\Service\PasswordHasher;
 use App\Security\UserIdentity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class UserFixture extends Fixture
+final class UserFixture extends Fixture
 {
-    private PasswordHasher $hasher;
+    public const array REFERENCE_USERS = [
+        'user_1',
+        'user_2',
+    ];
 
-    public function __construct(PasswordHasher $hasher)
-    {
-        $this->hasher = $hasher;
-    }
+    public function __construct(private readonly PasswordHasher $hasher) {}
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $textPassword = 'password';
         $admin = $this->createUser('berkut', $textPassword);
         $admin->changeRole(Role::admin());
         $manager->persist($admin);
+        $this->setReference(self::REFERENCE_USERS[0], $admin);
 
         $user = $this->createUser('user', $textPassword);
         $manager->persist($user);
+        $this->setReference(self::REFERENCE_USERS[1], $user);
 
         $manager->flush();
     }
-
 
     private function createUser(string $login, string $textPassword): User
     {
@@ -44,7 +46,7 @@ class UserFixture extends Fixture
             Role::user()->getName(),
             Status::active()->getName()
         );
-        $hash = $this->hasher->hash($userIdentity,$textPassword);
+        $hash = $this->hasher->hash($userIdentity, $textPassword);
         return User::create(
             new Id($userIdentity->getId()),
             new \DateTimeImmutable(),

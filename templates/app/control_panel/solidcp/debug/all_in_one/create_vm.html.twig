@@ -27,7 +27,8 @@
 {% block javascripts %}
     {# <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
     {{ parent() }}
-    <script>
+    <script type="module"> {# need type="module" for import #}
+        import $ from 'jquery';
         let id_enterprise_dispatcher;
         $('#form_id_enterprise_dispatcher').change(function () {
             id_enterprise_dispatcher = $(this).val();
@@ -36,7 +37,7 @@
         $('#form_packageId').change(function () {
             let firstSelector = $(this);
             $.ajax({
-                url: "{{ path('solidCpAjax.allOsTempaltesArrayFromEnterpriseAndPackageId') }}",
+                url: "{{ path('solidCpAjax.allOsTemplatesArrayFromEnterpriseAndPackageId') }}",
                 type: "GET",
                 dataType: "JSON",
                 data: {

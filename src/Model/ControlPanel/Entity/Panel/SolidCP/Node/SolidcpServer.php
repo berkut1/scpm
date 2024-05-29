@@ -10,8 +10,8 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace
 use App\Model\EventsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 
 #[ORM\Table(name: "cp_solidcp_servers")]
 #[ORM\Index(columns: ["id_location"], name: "cp_solidcp_servers_id_location_idx")]
@@ -22,7 +22,7 @@ class SolidcpServer implements AggregateRoot
     use EventsTrait;
 
     #[ORM\Id]
-    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\Column(name: "id", type: Types::INTEGER, nullable: false)]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
@@ -34,26 +34,28 @@ class SolidcpServer implements AggregateRoot
     #[ORM\JoinColumn(name: "id_location", referencedColumnName: "id", nullable: false)]
     private Location $location;
 
-    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
+    #[ORM\Column(name: "name", type: Types::STRING, length: 128, nullable: false)]
     private string $name;
 
-    #[ORM\Column(name: "cores", type: "integer", nullable: false, options: ["default" => 1])]
+    #[ORM\Column(name: "cores", type: Types::INTEGER, nullable: false, options: ["default" => 1])]
     private int $cores;
 
-    #[ORM\Column(name: "threads", type: "integer", nullable: false, options: ["default" => 1])]
+    #[ORM\Column(name: "threads", type: Types::INTEGER, nullable: false, options: ["default" => 1])]
     private int $threads;
 
-    #[ORM\Column(name: "memory_mb", type: "bigint", nullable: false, options: ["default" => 1024])]
+    #[ORM\Column(name: "memory_mb", type: Types::BIGINT, nullable: false, options: ["default" => 1024])]
     private int $memoryMb = 1024;
 
-    #[ORM\Column(name: "enabled", type: "boolean", nullable: false, options: ["default" => 1])]
+    #[ORM\Column(name: "enabled", type: Types::BOOLEAN, nullable: false, options: ["default" => 1])]
     private bool $enabled;
 
     /** @var Collection|SolidcpHostingSpace[] */
     #[ORM\OneToMany(mappedBy: "solidcpServer", targetEntity: SolidcpHostingSpace::class, cascade: ["persist"], orphanRemoval: true)]
     private array|Collection|ArrayCollection $hostingSpaces;
 
-    public function __construct(EnterpriseDispatcher $enterprise, Location $location, string $name, int $cores, int $threads, int $memoryMb, bool $enabled = true)
+    public function __construct(
+        EnterpriseDispatcher $enterprise, Location $location, string $name, int $cores, int $threads, int $memoryMb, bool $enabled = true
+    )
     {
         $this->enterprise = $enterprise;
         $this->location = $location;
@@ -100,7 +102,6 @@ class SolidcpServer implements AggregateRoot
         return !$this->hostingSpaces->isEmpty();
     }
 
-    #[Pure]
     public function isEqualName(string $name): bool
     {
         return $this->getName() === $name;

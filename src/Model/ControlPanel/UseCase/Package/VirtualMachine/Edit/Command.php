@@ -5,44 +5,42 @@ namespace App\Model\ControlPanel\UseCase\Package\VirtualMachine\Edit;
 
 use App\Model\ControlPanel\Entity\Package\Id;
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackage;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public Id $id;
+    public ?Id $id;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $cores;
+    public ?int $cores;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $threads;
+    public ?int $threads;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $ram_mb;
+    public ?int $ram_mb;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $space_gb;
+    public ?int $space_gb;
 
     #[Assert\NotBlank]
     #[Assert\PositiveOrZero]
-    public int $iops_min;
+    public ?int $iops_min;
 
     #[Assert\NotBlank]
     #[Assert\PositiveOrZero]
-    public int $iops_max;
+    public ?int $iops_max;
 
     private function __construct(Id $id)
     {
         $this->id = $id;
     }
 
-    #[Pure]
     public static function fromVirtualMachine(VirtualMachinePackage $virtualMachinePackage): self
     {
         $command = new self($virtualMachinePackage->getId());

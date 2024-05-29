@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     public ?int $id_enterprise_dispatcher = null;
 
@@ -15,31 +15,6 @@ class Command
 
     #[Assert\NotBlank]
     public string $id_package_virtual_machines = '';
-//    /**
-//     * @Assert\NotBlank()
-//     * @Assert\Positive()
-//     */
-//    public int $cpuCores = 0;
-//    /**
-//     * @Assert\NotBlank()
-//     * @Assert\Positive()
-//     */
-//    public int $ramSize = 0;
-//    /**
-//     * @Assert\NotBlank()
-//     * @Assert\Positive()
-//     */
-//    public int $hddSize = 0;
-//    /**
-//     * @Assert\NotBlank()
-//     * @Assert\PositiveOrZero()
-//     */
-//    public int $hddMinimumIOPS = 0;
-//    /**
-//     * @Assert\NotBlank()
-//     * @Assert\PositiveOrZero()
-//     */
-//    public int $hddMaximumIOPS = 0;
 
     #[Assert\NotBlank]
     #[Assert\PositiveOrZero]
@@ -104,7 +79,10 @@ class Command
     #[Assert\Type(type: 'bool')]
     public bool $randomPrivateAddresses = false;
 
-    public static function createDefault(int $packageId, string $id_package_virtual_machines, string $osTemplateFile, string $password, int $externalAddressesNumber, ?int $id_enterprise_dispatcher = null):self
+    public static function createDefault(
+        int  $packageId, string $id_package_virtual_machines, string $osTemplateFile, string $password, int $externalAddressesNumber,
+        ?int $id_enterprise_dispatcher = null
+    ): self
     {
         $command = new self();
         $command->id_enterprise_dispatcher = $id_enterprise_dispatcher;

@@ -8,24 +8,20 @@ use App\Model\ControlPanel\UseCase\Location\{Create, Edit, Remove};
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/locations', name: 'locations')]
 #[IsGranted('ROLE_MODERATOR')]
-class LocationsController extends AbstractController
+final class LocationsController extends AbstractController
 {
-    private const PER_PAGE = 25;
-    private const MAIN_TITLE = 'Locations';
+    private const int PER_PAGE = 25;
+    private const string MAIN_TITLE = 'Locations';
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, LocationFetcher $fetcher): Response
@@ -69,7 +65,7 @@ class LocationsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '.edit')]
+    #[Route('/{id}/edit', name: '.edit', requirements: ['id' => Requirement::DIGITS])]
     public function edit(Location $location, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromLocation($location);
@@ -93,7 +89,7 @@ class LocationsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
+    #[Route('/{id}/remove', name: '.remove', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function remove(Location $location, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {

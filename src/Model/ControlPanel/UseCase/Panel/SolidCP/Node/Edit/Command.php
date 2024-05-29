@@ -3,37 +3,36 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\Edit;
 
-use App\Model\ControlPanel\Entity\Location\Location;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public int $id;
+    public ?int $id;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_enterprise_dispatcher;
+    public ?int $id_enterprise_dispatcher;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_location;
+    public ?int $id_location;
 
     #[Assert\NotBlank]
-    public string $name;
-
-    #[Assert\NotBlank]
-    #[Assert\Positive]
-    public int $cores;
+    public ?string $name;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $threads;
+    public ?int $cores;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $ram_mb;
+    public ?int $threads;
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    public ?int $ram_mb;
 
     private function __construct(int $id)
     {

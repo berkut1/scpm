@@ -6,14 +6,9 @@ namespace App\Model\ControlPanel\UseCase\AuditLog\Add\SolidCP;
 use App\Model\AuditLog\Entity\Record\Record;
 use App\Model\AuditLog\UseCase\AuditLog;
 
-class Handler
+final readonly class Handler
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(private AuditLog\Add\Handler $auditLogHandler) {}
 
     public function handle(Command $command): void
     {

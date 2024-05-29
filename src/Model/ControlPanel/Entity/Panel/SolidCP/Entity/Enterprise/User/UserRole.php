@@ -5,9 +5,9 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User;
 
 use Webmozart\Assert\Assert;
 
-class UserRole
+final class UserRole implements \Stringable
 {
-    const USER = 'User';
+    public const string USER = 'User';
     private string $name;
 
     public function __construct(string $name)
@@ -33,14 +33,15 @@ class UserRole
 
     public function getId(): int
     {
-        foreach (self::list() as $key => $value){
-            if($this->name === $value){
+        foreach (self::list() as $key => $value) {
+            if ($this->name === $value) {
                 return $key;
             }
         }
         return -1;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;

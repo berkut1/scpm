@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     public ?int $id_enterprise_dispatcher = null;
 

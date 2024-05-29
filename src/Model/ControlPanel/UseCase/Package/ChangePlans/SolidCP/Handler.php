@@ -9,18 +9,13 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\Solidcp
 use App\Model\Flusher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanFetcher;
 
-class Handler
+final readonly class Handler
 {
-    private Flusher $flusher;
-    private PackageRepository $packageRepository;
-    private SolidcpHostingPlanFetcher $hostingPlanFetcher;
-
-    public function __construct(Flusher $flusher, PackageRepository $packageRepository, SolidcpHostingPlanFetcher $hostingPlanFetcher)
-    {
-        $this->flusher = $flusher;
-        $this->packageRepository = $packageRepository;
-        $this->hostingPlanFetcher = $hostingPlanFetcher;
-    }
+    public function __construct(
+        private Flusher                   $flusher,
+        private PackageRepository         $packageRepository,
+        private SolidcpHostingPlanFetcher $hostingPlanFetcher
+    ) {}
 
     public function handle(Command $command): void
     {

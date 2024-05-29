@@ -4,28 +4,24 @@ declare(strict_types=1);
 namespace App\Controller\ControlPanel\SolidCP;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\{Create, Edit, Enable, Disable, Remove, SetDefault};
+use App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\{Create, Disable, Edit, Enable, Remove, SetDefault};
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/panel/solidcp/enterprise-dispatchers', name: 'enterpriseDispatchers')]
 #[IsGranted('ROLE_MODERATOR')]
-class EnterpriseDispatchersController extends AbstractController
+final class EnterpriseDispatchersController extends AbstractController
 {
-    private const PER_PAGE = 25;
-    private const MAIN_TITLE = 'Enterprise Dispatchers';
+    private const int PER_PAGE = 25;
+    private const string MAIN_TITLE = 'Enterprise Dispatchers';
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, EnterpriseDispatcherFetcher $fetcher): Response
@@ -69,7 +65,7 @@ class EnterpriseDispatchersController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '.edit')]
+    #[Route('/{id}/edit', name: '.edit', requirements: ['id' => Requirement::DIGITS])]
     public function edit(EnterpriseDispatcher $enterpriseDispatcher, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromEnterpriseDispatcher($enterpriseDispatcher);
@@ -93,7 +89,7 @@ class EnterpriseDispatchersController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/enable', name: '.enable', methods: ['POST'])]
+    #[Route('/{id}/enable', name: '.enable', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function enable(int $id, Request $request, Enable\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('enable', $request->request->get('token'))) {
@@ -112,7 +108,7 @@ class EnterpriseDispatchersController extends AbstractController
         return $this->redirectToRoute('enterpriseDispatchers');
     }
 
-    #[Route('/{id}/disable', name: '.disable', methods: ['POST'])]
+    #[Route('/{id}/disable', name: '.disable', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function disable(int $id, Request $request, Disable\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('disable', $request->request->get('token'))) {
@@ -131,7 +127,7 @@ class EnterpriseDispatchersController extends AbstractController
         return $this->redirectToRoute('enterpriseDispatchers');
     }
 
-    #[Route('/{id}/set-default', name: '.setDefault', methods: ['POST'])]
+    #[Route('/{id}/set-default', name: '.setDefault', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function setDefault(EnterpriseDispatcher $enterpriseDispatcher, Request $request, SetDefault\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('setDefault', $request->request->get('token'))) {
@@ -150,7 +146,7 @@ class EnterpriseDispatchersController extends AbstractController
         return $this->redirectToRoute('enterpriseDispatchers');
     }
 
-    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
+    #[Route('/{id}/remove', name: '.remove', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function remove(int $id, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {

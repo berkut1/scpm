@@ -28,7 +28,10 @@
 {% block javascripts %}
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
     {{ parent() }}
-    <script>
+    <script type="module"> {# need type="module" for import #}
+        import $ from 'jquery';
+
+        let id_es_dispatcher = -1;
 
         $('#form_id_enterprise_dispatcher').change(function () {
             let firstSelector = $(this);
@@ -40,6 +43,7 @@
                     id_enterprise_dispatcher: firstSelector.val()
                 },
                 success: function (items) {
+                    id_es_dispatcher = firstSelector.val();
                     onSuccess(items, $("#form_id_server"), 'Select a Node');
                 },
                 error: function (err) {
@@ -55,13 +59,14 @@
                 type: "GET",
                 dataType: "JSON",
                 data: {
-                    id_enterprise_dispatcher: firstSelector.val()
+                    id_enterprise_dispatcher: id_es_dispatcher
                 },
                 success: function (items) {
                     onSuccess(items, $("#form_id_hosting_space"), 'Select a Hosting Space');
                 },
                 error: function (err) {
-                    alert("An error ocurred while loading data ...");
+                    //console.log(err.responseJSON.detail);
+                    alert("An error ocurred while loading data ..." + err.responseJSON.detail);
                 }
             });
         });

@@ -4,6 +4,10 @@ restart: docker-down docker-up
 init: docker-down-clear docker-pull docker-build docker-up scpsc-init
 init-no-fixtures: docker-down-clear docker-pull docker-build docker-up scpsc-init-no-fixtures
 test: scpsc-test
+test-unit: scpsc-test-unit
+test-func: scpsc-test-func
+fixtures: scpsc-fixtures
+fixtures-cache: scpsc-clear-cache scpsc-fixtures
 init-no-net: docker-down-clear docker-build docker-up scpsc-init
 
 docker-up:
@@ -21,14 +25,14 @@ docker-pull:
 docker-build:
 	docker-compose build
 
-scpsc-init: scpsc-composer-install scpsc-assets-install scpsc-migrations scpsc-fixtures scpsc-generate-ssl-key
+scpsc-init: scpsc-composer-install scpsc-migrations scpsc-clear-cache scpsc-fixtures scpsc-generate-ssl-key
 
 scpsc-init-no-fixtures: scpsc-composer-install scpsc-assets-install scpsc-migrations scpsc-generate-ssl-key
 
 scpsc-composer-install:
 	docker-compose run --rm scpsc-php-cli composer install
 
-# увеличиваем временно память чтобы выполнился весь скрипт, для вызываем композер через php и полный путь
+# We temporarily increase the memory to ensure the entire script executes. This is for calling Composer through PHP with the full path.
 scpsc-composer-install-memory:
 	docker-compose run --rm scpsc-php-cli php -d memory_limit=256M /bin/composer install
 
@@ -44,7 +48,16 @@ scpsc-fixtures:
 scpsc-test:
 	docker-compose run --rm scpsc-php-cli php bin/phpunit
 
+scpsc-test-unit:
+	docker-compose run --rm scpsc-php-cli php bin/phpunit --testsuite=unit
+
+scpsc-test-func:
+	docker-compose run --rm scpsc-php-cli php bin/phpunit --testsuite=functional
+
 scpsc-clear-cache:
+	docker-compose run --rm scpsc-php-cli php bin/console cache:clear
+
+scpsc-clear-cache-memory-limit:
 	docker-compose run --rm scpsc-php-cli php -d memory_limit=256M bin/console cache:clear
 
 scpsc-generate-ssl-key:
@@ -72,4 +85,10 @@ gitreset:
 	docker-compose run --rm scpsc-php-cli git reset HEAD --hard
 
 gitpull:
-	docker-compose run --rm scpsc-php-cli git pull origin master -r
+	docker-compose run --rm scpsc-php-cli git pull origin dev -r
+
+rector:
+	docker-compose run --rm scpsc-php-cli vendor/bin/rector
+
+rector-dry:
+	docker-compose run --rm scpsc-php-cli vendor/bin/rector --dry-run

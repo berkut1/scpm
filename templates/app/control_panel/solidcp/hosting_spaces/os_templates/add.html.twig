@@ -54,7 +54,9 @@
 {% block javascripts %}
     {{ parent() }}
     {# <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
-    <script>
+    <script type="module"> {# need type="module" for import #}
+        import $ from 'jquery';
+
         let $collectionHolder;
         let $afterCollectionHolder;
         let $card;

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\AuditLog\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Webmozart\Assert\Assert;
 
@@ -13,7 +14,7 @@ class Entity
     private EntityTypeInterface $type;
 
     /** We use string because not only UUID is possible to be here */
-    #[ORM\Column(type: "string", length: 36, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 36, nullable: false)]
     private string $id;
 
     public function __construct(EntityTypeInterface $type, string $id)

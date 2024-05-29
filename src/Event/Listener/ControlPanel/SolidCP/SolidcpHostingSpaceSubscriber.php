@@ -20,14 +20,9 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\Event\SolidcpHostin
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SolidcpHostingSpaceSubscriber implements EventSubscriberInterface
+final readonly class SolidcpHostingSpaceSubscriber implements EventSubscriberInterface
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(private AuditLog\Add\Handler $auditLogHandler) {}
 
     #[ArrayShape([
         SolidcpHostingSpaceCreated::class => "string",
@@ -40,6 +35,7 @@ class SolidcpHostingSpaceSubscriber implements EventSubscriberInterface
         SolidcpHostingSpaceDisabled::class => "string",
         SolidcpHostingSpaceEnabled::class => "string",
     ])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [
@@ -126,7 +122,7 @@ class SolidcpHostingSpaceSubscriber implements EventSubscriberInterface
         $records = [
             Record::create('ADDED_OS_TEMPLATE_NAME_WITH_PATH_TO_HOSTING_SPACE_NAME', [
                 $event->osTemplate->getName(),
-                $event->osTemplate->getPath(),
+                $event->osTemplate->getFileName(),
                 $event->solidcpHostingSpace->getName(),
             ]),
         ];
@@ -140,7 +136,7 @@ class SolidcpHostingSpaceSubscriber implements EventSubscriberInterface
         $records = [
             Record::create('REMOVED_OS_TEMPLATE_NAME_WITH_PATH_FROM_HOSTING_SPACE_NAME', [
                 $event->osTemplate->getName(),
-                $event->osTemplate->getPath(),
+                $event->osTemplate->getFileName(),
                 $event->solidcpHostingSpace->getName(),
             ]),
         ];

@@ -5,9 +5,9 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachi
 
 use Webmozart\Assert\Assert;
 
-class VirtualMachineProvisioningStatus
+final class VirtualMachineProvisioningStatus implements \Stringable
 {
-    const UNKNOWN = 'Unknown';
+    public const string UNKNOWN = 'Unknown';
     private string $name;
 
     public function __construct(string $name)
@@ -30,6 +30,7 @@ class VirtualMachineProvisioningStatus
         return new self(self::UNKNOWN);
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;

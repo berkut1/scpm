@@ -5,11 +5,11 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User;
 
 use Webmozart\Assert\Assert;
 
-class UserLoginStatus
+final class UserLoginStatus implements \Stringable
 {
-    const ENABLED = 'Enabled';
-    const DISABLED = 'Disabled';
-    const LOCKEDOUT = 'Lockedout';
+    public const string ENABLED = 'Enabled';
+    public const string DISABLED = 'Disabled';
+    public const string LOCKEDOUT = 'Lockedout';
     private string $name;
 
     public function __construct(string $name)
@@ -34,8 +34,8 @@ class UserLoginStatus
 
     public function getId(): int
     {
-        foreach (self::list() as $key => $value){
-            if($this->name === $value){
+        foreach (self::list() as $key => $value) {
+            if ($this->name === $value) {
                 return $key;
             }
         }
@@ -57,6 +57,7 @@ class UserLoginStatus
         return $this->name;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;

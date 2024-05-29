@@ -6,7 +6,7 @@ namespace App\Model\User\Entity\User;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
-class Id
+final class Id implements \Stringable
 {
     private string $value;
 
@@ -18,7 +18,7 @@ class Id
 
     public static function next(): self
     {
-        return new self(Uuid::uuid6()->toString());
+        return new self(Uuid::uuid7()->toString());
     }
 
     public function getValue(): string
@@ -26,6 +26,7 @@ class Id
         return $this->value;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->getValue();

@@ -6,14 +6,9 @@ namespace App\Model\User\Service;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-class PasswordHasher
+final readonly class PasswordHasher
 {
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
-    {
-        $this->passwordHasher = $passwordHasher;
-    }
+    public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
 
     public function hash(PasswordAuthenticatedUserInterface $user, string $plainPassword): string
     {

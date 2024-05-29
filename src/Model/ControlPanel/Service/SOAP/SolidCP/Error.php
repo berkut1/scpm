@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
-class Error
+final class Error
 {
     public static function getFriendlyError(int $code): string
     {
@@ -18,14 +18,14 @@ class Error
             -511 => 'Instant alias is enabled, but not configured',
             -601 => 'The website already exists on the target hosting space or server',
             -700 => 'The email domain already exists on the target hosting space or server',
-            -1100 => 'User already exists'
+            -1100 => 'User already exists',
         ];
 
         // Find the error and return it, else a general error will do!
         if (array_key_exists($code, $errors)) {
             return $errors[$code];
         } else {
-            return "An unknown error occured (Code: {$code}). Please reference SolidCP BusinessErrorCodes for further information";
+            return "An unknown error occurred (Code: $code). Please reference SolidCP BusinessErrorCodes for further information";
         }
     }
 }

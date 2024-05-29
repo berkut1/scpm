@@ -5,17 +5,17 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\Crea
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public string $name = '';
+    public ?string $name = '';
 
     #[Assert\NotBlank]
-    public string $url = '';
+    public ?string $url = '';
 
     #[Assert\NotBlank]
-    public string $login = '';
+    public ?string $login = '';
 
     #[Assert\NotBlank]
-    public string $password = '';
+    public ?string $password = '';
 }

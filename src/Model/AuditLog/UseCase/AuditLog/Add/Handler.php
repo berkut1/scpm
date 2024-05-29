@@ -9,31 +9,28 @@ use App\Model\AuditLog\Entity\Id;
 use App\Model\AuditLog\Entity\UserId;
 use App\Model\Flusher;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
-class Handler
+final class Handler
 {
-    private Flusher $flusher;
-    private Security $security;
-    private RequestStack $requestStack;
-    private AuditLogRepository $auditLogRepository;
     private string $clientIP = '127.0.0.1';
 
-    public function __construct(Flusher $flusher, Security $security, RequestStack $requestStack, AuditLogRepository $auditLogRepository)
+    public function __construct(
+        private readonly Flusher            $flusher,
+        private readonly Security           $security,
+        private readonly RequestStack       $requestStack,
+        private readonly AuditLogRepository $auditLogRepository
+    )
     {
-        $this->flusher = $flusher;
-        $this->security = $security;
-        $this->requestStack = $requestStack;
-        if($this->requestStack->getMainRequest() !== null){
+        if ($this->requestStack->getMainRequest() !== null) {
             $this->clientIP = $this->requestStack->getMainRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
         }
-        $this->auditLogRepository = $auditLogRepository;
     }
 
     public function handle(Command $command): void
     {
         $executor = $this->security->getUser();
-        if($executor === null){
+        if ($executor === null) {
             $auditLog = AuditLog::createAsSystem(
                 Id::next(),
                 $this->clientIP,
@@ -41,7 +38,7 @@ class Handler
                 $command->taskName,
                 $command->records
             );
-        }else{
+        } else {
             $userId = new UserId($executor->getId());
             $auditLog = AuditLog::create(
                 Id::next(),

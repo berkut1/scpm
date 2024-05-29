@@ -1,39 +1,29 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Event\Listener\User;
 
-use App\Model\AuditLog\UseCase\AuditLog;
 use App\Model\AuditLog\Entity\Entity;
 use App\Model\AuditLog\Entity\Record\Record;
+use App\Model\AuditLog\UseCase\AuditLog;
 use App\Model\User\Entity\AuditLog\EntityType;
 use App\Model\User\Entity\AuditLog\TaskName;
 use App\Model\User\Entity\User\Event\UserCreated;
 use App\Model\User\Entity\User\UserRepository;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
-class UserSubscriber implements EventSubscriberInterface
+final readonly class UserSubscriber implements EventSubscriberInterface
 {
-    private Security $security;
-    private UserRepository $userRepository;
-    private RequestStack $requestStack;
-    private AuditLog\Add\Handler $auditLogHandler;
-    private string $clientIP;
+    public function __construct(
+        private Security             $security,
+        private UserRepository       $userRepository,
+        private AuditLog\Add\Handler $auditLogHandler
+    ) {}
 
-    public function __construct(Security $security, UserRepository $userRepository, RequestStack $requestStack, AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->security = $security;
-        $this->userRepository = $userRepository;
-        $this->requestStack = $requestStack;
-        $this->auditLogHandler = $auditLogHandler;
-        if($this->requestStack->getMainRequest() !== null){
-            $this->clientIP = $this->requestStack->getMainRequest()->getClientIp() ?? '127.0.0.1'; //if null the probably was called from system
-        }
-    }
     #[ArrayShape([UserCreated::class => "string"])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [
@@ -48,18 +38,18 @@ class UserSubscriber implements EventSubscriberInterface
         $user = $this->userRepository->get($event->id_createdUser);
         $entity = new Entity(EntityType::userUser(), $user->getId()->getValue());
 
-        if($executor === null){
+        if ($executor === null) {
             $records = [
                 Record::create('CREATE_USER_USER', [
                     'System',
-                    $user->getLogin()
+                    $user->getLogin(),
                 ]),
             ];
-        }else{
+        } else {
             $records = [
                 Record::create('CREATE_USER_USER', [
                     $executor->getUserIdentifier(),
-                    $user->getLogin()
+                    $user->getLogin(),
                 ]),
             ];
         }

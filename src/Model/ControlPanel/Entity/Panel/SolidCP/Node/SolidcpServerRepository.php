@@ -7,7 +7,7 @@ use App\Model\EntityNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class SolidcpServerRepository
+final class SolidcpServerRepository
 {
     private EntityManagerInterface $em;
     private EntityRepository $repo;
@@ -30,7 +30,6 @@ class SolidcpServerRepository
     }
 
     /**
-     * @param int $id_location
      * @return SolidcpServer[]
      */
     public function getByLocation(int $id_location): array

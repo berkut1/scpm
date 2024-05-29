@@ -6,12 +6,13 @@ namespace App\Model\User\Entity\AuditLog;
 use App\Model\AuditLog\Entity\TaskNameInterface;
 use Webmozart\Assert\Assert;
 
-class TaskName implements TaskNameInterface
+final class TaskName implements TaskNameInterface
 {
-    public const TASK_CREATE_USER = 'create_user';
-    public const TASK_LOGIN_USER = 'login_user';
+    public const string TASK_CREATE_USER = 'create_user';
+    public const string TASK_LOGIN_USER = 'login_user';
     private string $name;
 
+    #[\Override]
     public static function create(string $name): self
     {
         Assert::oneOf($name, [
@@ -34,11 +35,13 @@ class TaskName implements TaskNameInterface
         return self::create(self::TASK_LOGIN_USER);
     }
 
+    #[\Override]
     public function isEqual(TaskNameInterface $type): bool
     {
         return $this->getName() === $type->getName();
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;

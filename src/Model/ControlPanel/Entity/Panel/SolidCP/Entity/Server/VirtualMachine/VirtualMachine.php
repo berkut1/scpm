@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachi
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\ServiceProviderItem;
 
-class VirtualMachine extends ServiceProviderItem
+final class VirtualMachine extends ServiceProviderItem
 {
     //packageId in ServiceProviderItem
     public int $CpuCores;
@@ -84,26 +84,28 @@ class VirtualMachine extends ServiceProviderItem
     public ?array $HddLogicalDisks = null;
     public bool $IsClustered = false;
 
-    public static function create(int $PackageId,
-                                  int $CpuCores,
-                                  int $RamSize,
-                                  array $HddSize,//int $HddSize,
-                                  int $HddMinimumIOPS = 0,
-                                  int $HddMaximumIOPS = 0,
-                                  int $SnapshotsNumber = 0,
-                                  ?string $Hostname = null,
-                                  bool $DvdDriveInstalled = true,
-                                  bool $bootFromCD = false,
-                                  bool $numLockEnabled = false,
-                                  bool $StartTurnOffAllowed = true,
-                                  bool $PauseResumeAllowed = true,
-                                  bool $RebootAllowed = true,
-                                  bool $ResetAllowed = true,
-                                  bool $ReinstallAllowed = false,
-                                  bool $ExternalNetworkEnabled = true,
-                                  ?string $ExternalNicMacAddress = null,
-                                  bool $PrivateNetworkEnabled = false,
-                                  int $Defaultaccessvlan = 0): self
+    public static function create(
+        int     $PackageId,
+        int     $CpuCores,
+        int     $RamSize,
+        array   $HddSize,//int $HddSize,
+        int     $HddMinimumIOPS = 0,
+        int     $HddMaximumIOPS = 0,
+        int     $SnapshotsNumber = 0,
+        ?string $Hostname = null,
+        bool    $DvdDriveInstalled = true,
+        bool    $bootFromCD = false,
+        bool    $numLockEnabled = false,
+        bool    $StartTurnOffAllowed = true,
+        bool    $PauseResumeAllowed = true,
+        bool    $RebootAllowed = true,
+        bool    $ResetAllowed = true,
+        bool    $ReinstallAllowed = false,
+        bool    $ExternalNetworkEnabled = true,
+        ?string $ExternalNicMacAddress = null,
+        bool    $PrivateNetworkEnabled = false,
+        int     $Defaultaccessvlan = 0
+    ): self
     {
         $vm = new self();
         $vm->PackageId = $PackageId;
@@ -132,53 +134,4 @@ class VirtualMachine extends ServiceProviderItem
         $vm->ProvisioningStatus = VirtualMachineProvisioningStatus::default();
         return $vm;
     }
-
-//    public function __construct(int $PackageId,
-//                                int $CpuCores,
-//                                int $RamSize,
-//                                array $HddSize,//int $HddSize,
-//                                int $HddMinimumIOPS = 0,
-//                                int $HddMaximumIOPS = 0,
-//                                int $SnapshotsNumber = 0,
-//                                ?string $Hostname = null,
-//                                bool $DvdDriveInstalled = true,
-//                                bool $bootFromCD = false,
-//                                bool $numLockEnabled = false,
-//                                bool $StartTurnOffAllowed = true,
-//                                bool $PauseResumeAllowed = true,
-//                                bool $RebootAllowed = true,
-//                                bool $ResetAllowed = true,
-//                                bool $ReinstallAllowed = false,
-//                                bool $ExternalNetworkEnabled = true,
-//                                ?string $ExternalNicMacAddress = null,
-//                                bool $PrivateNetworkEnabled = false,
-//                                int $Defaultaccessvlan = 0)
-//    {
-//        parent::__construct();
-//        $this->PackageId = $PackageId;
-//        $this->Name = $Hostname;
-//        $this->CpuCores = $CpuCores;
-//        $this->RamSize = $RamSize;
-//        $this->HddSize = $HddSize;
-//        $this->HddMaximumIOPS = $HddMaximumIOPS;
-//        $this->HddMinimumIOPS = $HddMinimumIOPS;
-//        $this->SnapshotsNumber = $SnapshotsNumber;
-//        $this->DvdDriveInstalled = $DvdDriveInstalled;
-//        $this->BootFromCD = $bootFromCD;
-//        $this->NumLockEnabled = $numLockEnabled;
-//        $this->StartTurnOffAllowed = $StartTurnOffAllowed;
-//        $this->PauseResumeAllowed = $PauseResumeAllowed;
-//        $this->RebootAllowed = $RebootAllowed;
-//        $this->ResetAllowed = $ResetAllowed;
-//        $this->ReinstallAllowed = $ReinstallAllowed;
-//        $this->ExternalNetworkEnabled = $ExternalNetworkEnabled;
-//        $this->ExternalNicMacAddress = $ExternalNicMacAddress;
-//        $this->PrivateNetworkEnabled = $PrivateNetworkEnabled;
-//        $this->defaultaccessvlan = $Defaultaccessvlan;
-//        $this->State = VirtualMachineState::default();
-//        $this->Heartbeat = OperationalStatus::default();
-//        $this->ReplicationState = ReplicationState::default();
-//        $this->ProvisioningStatus = VirtualMachineProvisioningStatus::default();
-//    }
-
 }

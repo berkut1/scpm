@@ -6,31 +6,27 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\Create;
 use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
 use App\ReadModel\ControlPanel\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\Node\SolidcpServerFetcher;
-use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form extends AbstractType
+final class Form extends AbstractType
 {
-    private EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher;
-    private SolidcpServerFetcher $serverFetcher;
-    private HostingSpaceService $hostingSpaceService;
+    public function __construct(
+        private readonly EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher,
+        private readonly SolidcpServerFetcher        $serverFetcher,
+        private readonly HostingSpaceService         $hostingSpaceService
+    ) {}
 
-    public function __construct(EnterpriseDispatcherFetcher $enterpriseDispatcherFetcher, SolidcpServerFetcher $serverFetcher, HostingSpaceService $hostingSpaceService)
-    {
-        $this->enterpriseDispatcherFetcher = $enterpriseDispatcherFetcher;
-        $this->serverFetcher = $serverFetcher;
-        $this->hostingSpaceService = $hostingSpaceService;
-    }
-
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit')); //need to refill data to pass the form validation
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, $this->onPreSetData(...));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, $this->onPreSubmit(...)); //need to refill data to pass the form validation
     }
 
     protected function addElements(FormInterface $form, array $data, Command $modelOriginalData): void
@@ -64,45 +60,34 @@ class Form extends AbstractType
         }
         $form
             ->add('id_hosting_space', Type\ChoiceType::class,
-            [
-                'label' => 'Hosting Space',
-                'required' => true,
-                'placeholder' => 'Select a Node first...',
-                'choices' => $spaces,
-                //'data' => isset($data['id_hosting_space']) ?? $data['id_hosting_space'],
-            ])
+                [
+                    'label' => 'Hosting Space',
+                    'required' => true,
+                    'placeholder' => 'Select a Node first...',
+                    'choices' => $spaces,
+                    //'data' => isset($data['id_hosting_space']) ?? $data['id_hosting_space'],
+                ])
             ->add('name', Type\TextType::class,
-            [
-                'label' => 'Name',
-                'required' => true
-            ]);
+                [
+                    'label' => 'Name',
+                    'required' => true,
+                ]);
 
         $form
-//            ->add('id_server', Type\ChoiceType::class,
-//                [
-//                    'choices' => array_flip($this->serverFetcher->allList()),
-//                    'required' => true,
-//                    'placeholder' => 'Select a Node server'
-//                ])
-//            ->add('id_hosting_space', Type\IntegerType::class,
-//                [
-//                    'label' => 'SolidCP Hosting Space ID',
-//                    'required' => true
-//                ])
             ->add('max_active_number', Type\IntegerType::class,
                 [
                     'label' => 'Max Active Items',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('max_reserved_memory_mb', Type\IntegerType::class,
                 [
                     'label' => 'Max Reserver RAM (MB)',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('space_quota_gb', Type\IntegerType::class,
                 [
                     'label' => 'Space Quota (GB)',
-                    'required' => true
+                    'required' => true,
                 ]);
     }
 
@@ -124,10 +109,9 @@ class Form extends AbstractType
         $this->addElements($form, $data, $modelOriginalData);
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Command::class,
-        ));
+        $resolver->setDefaults(['data_class' => Command::class]);
     }
 }

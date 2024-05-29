@@ -13,33 +13,29 @@ use App\Model\EntityNotFoundException;
 use App\ReadModel\ControlPanel\Location\LocationFetcher;
 use Doctrine\DBAL\Connection;
 
-class HostingSpaceService
+final readonly class HostingSpaceService
 {
-    private Connection $connection;
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private LocationFetcher $locationFetcher;
-    private VirtualMachinePackageRepository $virtualMachinePackageRepository;
-    private SolidcpServerRepository $serverRepository;
-
-    public function __construct(Connection                      $connection,
-                                EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
-                                LocationFetcher                 $locationFetcher,
-                                VirtualMachinePackageRepository $virtualMachinePackageRepository,
-                                SolidcpServerRepository         $serverRepository)
-    {
-        $this->connection = $connection;
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->locationFetcher = $locationFetcher;
-        $this->virtualMachinePackageRepository = $virtualMachinePackageRepository;
-        $this->serverRepository = $serverRepository;
-    }
+    public function __construct(
+        private Connection                      $connection,
+        private EnterpriseDispatcherRepository  $enterpriseDispatcherRepository,
+        private LocationFetcher                 $locationFetcher,
+        private VirtualMachinePackageRepository $virtualMachinePackageRepository,
+        private SolidcpServerRepository         $serverRepository
+    ) {}
 
     //$idEnterprise - means a Reseller with his hosting spaces
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function allNotAddedHostingSpacesFrom(int $id_enterprise_dispatcher): array
     {
         return $this->allNotAddedHostingSpacesFromInternal($id_enterprise_dispatcher);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function allNotAddedHostingSpacesExceptHostingSpaceIdFrom(int $id_enterprise_dispatcher, int $exceptHostingSpaceId): array
     {
         return $this->allNotAddedHostingSpacesFromInternal($id_enterprise_dispatcher, $exceptHostingSpaceId);
@@ -47,7 +43,6 @@ class HostingSpaceService
 
     /**
      * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
      * @throws \Exception
      */
     private function allNotAddedHostingSpacesFromInternal(int $id_enterprise_dispatcher, int $exceptHostingSpaceId = 0): array
@@ -71,7 +66,7 @@ class HostingSpaceService
 //            ->where("NOT (id_hosting_space = ANY (string_to_array(:ids,',')::int[]))") //NOT IN ARRAY
 //            ->setParameter('ids', implode(',', array_keys($spaces)))
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
         $existSpaces = array_column($stmt->fetchAllAssociative(), 'name', 'solidcp_id_hosting_space');
         if ($exceptHostingSpaceId > 0) {
@@ -82,16 +77,16 @@ class HostingSpaceService
     }
 
     /**
-     * @param int $id_enterprise_dispatcher
-     * @param string $location_name
-     * @param string $server_package_name
-     * @param int $ip_amount
      * @param int[] $ignore_node_ids
      * @param int[] $ignore_hosting_space_ids
      * @return SolidcpHostingPlan[]
-     * @throws \Exception
+     * @throws \SoapFault
      */
-    public function possibleHostingSpacesWithPlansForVPS2012Installation(int $id_enterprise_dispatcher, string $location_name, string $server_package_name, int $ip_amount, array $ignore_node_ids, array $ignore_hosting_space_ids): array
+    public function possibleHostingSpacesWithPlansForVPS2012Installation(
+        int    $id_enterprise_dispatcher, string $location_name,
+        string $server_package_name, int $ip_amount,
+        array  $ignore_node_ids, array $ignore_hosting_space_ids
+    ): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);
         if (!$enterpriseDispatcher->isEnabled()) {
@@ -108,6 +103,8 @@ class HostingSpaceService
         $esServers = EsServers::createFromEnterpriseDispatcher($enterpriseDispatcher);
         $possibleSpacesAndPlans = [];
         $esPackages = EsPackages::createFromEnterpriseDispatcher($enterpriseDispatcher);
+
+        $soapError = null;
         //searching possible spaces with plans for installation
         foreach ($possiblePlans as $possiblePlan) {
             $solidcpHostingSpace = $possiblePlan->getHostingSpace();
@@ -118,20 +115,20 @@ class HostingSpaceService
                     break;
                 }
             }
-            if($ignoreHostingSpace){
+            if ($ignoreHostingSpace) {
                 continue;
             }
             $ips = $esServers->getPackageUnassignedIPAddressesVpsExternalNetwork($possiblePlan->getHostingSpace()->getSolidCpIdHostingSpace());
             /*thanks for this awful code - data return SolidCP*/
-            if(!isset($ips['PackageIPAddress'])){
+            if (!isset($ips['PackageIPAddress'])) {
                 continue;
             }
-            if(isset($ips['PackageIPAddress'][0])){ //we can get different arrays, so if it is a true array, check that exist 0 index
-                if(count($ips['PackageIPAddress']) < $ip_amount){
+            if (isset($ips['PackageIPAddress'][0])) { //we can get different arrays, so if it is a true array, check that exist 0 index
+                if (count($ips['PackageIPAddress']) < $ip_amount) {
                     continue;
                 }
-            }else{ //if we get assoc array, that means there is only 1 ip left
-                if(1 < $ip_amount){
+            } else { //if we get assoc array, that means there is only 1 ip left
+                if (1 < $ip_amount) {
                     continue;
                 }
             }
@@ -139,21 +136,30 @@ class HostingSpaceService
             $isEnabled = ($solidcpHostingSpace->getSolidcpServer()->isEnabled() && $solidcpHostingSpace->isEnabled());
 
             if ($isEnabled && $solidcpHostingSpace->getSolidcpServer()->getLocation()->getId() === $location->getId()) {
-                //Check Free RAM
-                $memory = $esServers->getMemoryPackageId($solidcpHostingSpace->getSolidCpIdHostingSpace());
-                $freeMemory = (int)$memory['FreePhysicalMemoryKB'] - ($package->getRamMb() * 1024);
-                if ($freeMemory >= $possiblePlan->getHostingSpace()->getMaxReservedMemoryKb()) {
-                    $countOfActivePackages = $esPackages->getNumberOfActivePackages($solidcpHostingSpace->getSolidCpIdHostingSpace());
-                    $storageUsageGB = $esPackages->getPackageVPS2012StorageUsageGB($solidcpHostingSpace->getSolidCpIdHostingSpace());
 
-                    $isHasStorageSpace = (($storageUsageGB + $package->getSpaceGb()) <= $possiblePlan->getHostingSpace()->getSpaceQuotaGb());
-                    $isActivePackagesNotOverQuota = ($countOfActivePackages < $solidcpHostingSpace->getMaxActiveNumber() + 1);
+                try {
+                    //Check Free RAM
+                    $memory = $esServers->getMemoryPackageId($solidcpHostingSpace->getSolidCpIdHostingSpace());
+                    $freeMemory = (int)$memory['FreePhysicalMemoryKB'] - ($package->getRamMb() * 1024);
+                    if ($freeMemory >= $possiblePlan->getHostingSpace()->getMaxReservedMemoryKb()) {
+                        $countOfActivePackages = $esPackages->getNumberOfActivePackages($solidcpHostingSpace->getSolidCpIdHostingSpace());
+                        $storageUsageGB = $esPackages->getPackageVPS2012StorageUsageGB($solidcpHostingSpace->getSolidCpIdHostingSpace());
 
-                    if ($isHasStorageSpace && $isActivePackagesNotOverQuota) {
-                        $possibleSpacesAndPlans[] = $possiblePlan;
+                        $isHasStorageSpace = (($storageUsageGB + $package->getSpaceGb()) <= $possiblePlan->getHostingSpace()->getSpaceQuotaGb());
+                        $isActivePackagesNotOverQuota = ($countOfActivePackages < $solidcpHostingSpace->getMaxActiveNumber() + 1);
+
+                        if ($isHasStorageSpace && $isActivePackagesNotOverQuota) {
+                            $possibleSpacesAndPlans[] = $possiblePlan;
+                        }
                     }
+                } catch (\SoapFault $e) {
+                    $soapError = $e;
                 }
             }
+        }
+
+        if (count($possibleSpacesAndPlans) == 0 && $soapError !== null) { //we accept that some node can be down, so only throw error if all of them are down
+            throw $soapError;
         }
 
         return $possibleSpacesAndPlans;
@@ -171,7 +177,7 @@ class HostingSpaceService
                 }
                 unset($hostingSpace);
                 $hosting_space_ids_from_node_id = array_merge($hosting_space_ids_from_node_id, $spaceIds);
-            } catch (EntityNotFoundException $e) {
+            } catch (EntityNotFoundException) {
                 //ignore if not found $server
             }
         }

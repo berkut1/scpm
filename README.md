@@ -11,21 +11,21 @@ Swagger API docs - http://localhost/docs/index.html
 
 Requirements
 ------------
-- PHP >= 8.2
-- PostgreSQL
+- PHP >= 8.3
+- PostgresSQL
 - SolidCP 1.4.9
 
 Installation
 ------------
-apache or nginx (https://symfony.com/doc/5.4/setup/web_server_configuration.html#nginx)
-- `sudo apt install php8.2-soap php8.2-xml php8.2-mbstring php8.2-intl` - php libs
+apache or nginx (https://symfony.com/doc/6.4/setup/web_server_configuration.html#nginx)
+- `sudo apt install php8.3-soap php8.3-xml php8.3-mbstring php8.3-intl` - php libs
 - `git clone --branch builded https://github.com/berkut1/scpm.git`
 - `composer dump-env prod` after in the file .env.local.php update APP_SECRET, DATABASE_URL and JWT_PASSPHRASE variables
 - `composer install`
 - `composer install --no-dev --optimize-autoloader`
 - `APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear`
 
-More information here - https://symfony.com/doc/5.4/deployment.html
+More information here - https://symfony.com/doc/6.4/deployment.html
 - `php bin/console lexik:jwt:generate-keypair` - generate jwt key
 - `php bin/console doctrine:migrations:migrate` - create sql tables
 - `php bin/console user:create` - create a panel user
@@ -81,8 +81,8 @@ Swagger API docs - http://localhost/docs/index.html
 
 Requirements
 ------------
-- PHP >= 8.2
-- PostgreSQL (не тестировалось с другими СУБД)
+- PHP >= 8.3
+- PostgresSQL (не тестировалось с другими СУБД)
 
 Описание (true for HyperV SolidCP module)
 ------------

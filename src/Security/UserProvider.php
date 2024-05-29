@@ -6,24 +6,21 @@ namespace App\Security;
 use App\ReadModel\User\AuthView;
 use App\ReadModel\User\UserFetcher;
 use Doctrine\ORM\EntityManagerInterface;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
+final readonly class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    private UserFetcher $users;
-    private EntityManagerInterface $em;
+    public function __construct(
+        private UserFetcher            $users,
+        private EntityManagerInterface $em
+    ) {}
 
-    public function __construct(UserFetcher $users, EntityManagerInterface $em)
-    {
-        $this->users = $users;
-        $this->em = $em;
-    }
-
+    #[\Override]
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         // Load a User object from your data source or throw UserNotFoundException.
@@ -31,24 +28,18 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
         return self::identityByUser($user, $identifier);
     }
 
-    /**
-     * @deprecated since Symfony 5.3, use loadUserByIdentifier() instead
-     */
-    public function loadUserByUsername($username)
-    {
-
-    }
-
+    #[\Override]
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof UserIdentity) {
-            throw new UnsupportedUserException('Invalid user class ' . \get_class($user));
+            throw new UnsupportedUserException('Invalid user class ' . $user::class);
         }
 
         $loadUser = $this->loadUser($user->getUserIdentifier());
         return self::identityByUser($loadUser, $user->getUserIdentifier());
     }
 
+    #[\Override]
     public function supportsClass($class): bool
     {
         //return $class instanceof UserIdentity;
@@ -58,7 +49,8 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     /**
      * Upgrades the encoded password of a user, typically for using a better hash algorithm.
      */
-    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    #[\Override]
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         // TODO: when encoded passwords are in use, this method should:
         // 1. persist the new password in the user storage
@@ -78,7 +70,6 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
         throw new UserNotFoundException('');
     }
 
-    #[Pure]
     private static function identityByUser(AuthView $user, string $username): UserIdentity
     {
         return new UserIdentity(

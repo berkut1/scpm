@@ -6,16 +6,12 @@ namespace App\Model\ControlPanel\UseCase\Package\Rename;
 use App\Model\ControlPanel\Entity\Package\PackageRepository;
 use App\Model\Flusher;
 
-class Handler
+final readonly class Handler
 {
-    private Flusher $flusher;
-    private PackageRepository $repository;
-
-    public function __construct(Flusher $flusher, PackageRepository $repository)
-    {
-        $this->flusher = $flusher;
-        $this->repository = $repository;
-    }
+    public function __construct(
+        private Flusher           $flusher,
+        private PackageRepository $repository
+    ) {}
 
     public function handle(Command $command): void
     {

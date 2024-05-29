@@ -10,7 +10,7 @@ class ServiceProviderItem
     public int $TypeId = 0;
     public int $PackageId = -1;
     public int $ServiceId = -1;
-    public ?string $Name;
+    public ?string $Name = null;
     public array $properties = [];
     public ?string $groupName = null;
     public string $CreatedDate;

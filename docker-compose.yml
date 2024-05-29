@@ -1,4 +1,3 @@
-version: '3'
 services:
     scpsc-nginx:
         build:
@@ -11,6 +10,7 @@ services:
             - scpsc-php-fpm
         ports:
             - "8080:80"
+            - "9003:9003" #https://stackoverflow.com/questions/71203601/xdebugtime-out-connecting-to-debugging-client/73809254#73809254
     scpsc-php-fpm:
         build:
             context: ./docker/development
@@ -32,11 +32,11 @@ services:
 #            - vendor:/app/vendor
         depends_on:
             - scpsc-postgres
-    scpsc-node:
-        image: node:17-alpine
-        volumes:
-          - ./:/app
-        working_dir: /app
+#    scpsc-node:
+#        image: node:21-alpine
+#        volumes:
+#          - ./:/app
+#        working_dir: /app
     scpsc-postgres:
         image: postgres:14.1-alpine
         volumes:

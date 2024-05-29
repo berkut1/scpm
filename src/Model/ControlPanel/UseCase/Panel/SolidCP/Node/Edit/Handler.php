@@ -8,22 +8,14 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseD
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServerRepository;
 use App\Model\Flusher;
 
-class Handler
+final readonly class Handler
 {
-    private Flusher $flusher;
-    private SolidcpServerRepository $repository;
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private LocationRepository $locationRepository;
-
-    public function __construct(Flusher                        $flusher,
-                                SolidcpServerRepository        $repository,
-                                EnterpriseDispatcherRepository $enterpriseDispatcherRepository, LocationRepository $locationRepository)
-    {
-        $this->flusher = $flusher;
-        $this->repository = $repository;
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->locationRepository = $locationRepository;
-    }
+    public function __construct(
+        private Flusher                        $flusher,
+        private SolidcpServerRepository        $repository,
+        private EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
+        private LocationRepository             $locationRepository
+    ) {}
 
     public function handle(Command $command): void
     {

@@ -5,16 +5,16 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\Virtuali
 
 use Webmozart\Assert\Assert;
 
-class VirtualMachineRequestedState
+final class VirtualMachineRequestedState implements \Stringable
 {
-    const START = 'Start';
-    const TURNOFF = 'TurnOff';
-    const SHUTDOWN = 'ShutDown';
-    const REBOOT = 'Reboot';
-    const RESUME = 'Resume';
-    const RESET = 'Reset';
-    const PAUSE = 'Pause';
-    const SAVE = 'Save';
+    public const string START = 'Start';
+    public const string TURNOFF = 'TurnOff';
+    public const string SHUTDOWN = 'ShutDown';
+    public const string REBOOT = 'Reboot';
+    public const string RESUME = 'Resume';
+    public const string RESET = 'Reset';
+    public const string PAUSE = 'Pause';
+    public const string SAVE = 'Save';
     private string $name;
 
     public function __construct(string $name)
@@ -40,8 +40,8 @@ class VirtualMachineRequestedState
 
     private function tryToGetCorrectCaseName(string $name): string
     {
-        foreach ($this->stringEnumArray() as $value){
-            if(strtolower($name) === strtolower($value)){
+        foreach ($this->stringEnumArray() as $value) {
+            if (strtolower($name) === strtolower((string)$value)) {
                 return $value;
             }
         }
@@ -67,8 +67,8 @@ class VirtualMachineRequestedState
      */
     public function getId(): int
     {
-        foreach (self::list() as $key => $value){
-            if($this->name === $value){
+        foreach (self::list() as $key => $value) {
+            if ($this->name === $value) {
                 return $key;
             }
         }
@@ -105,6 +105,7 @@ class VirtualMachineRequestedState
         return $this->name;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;

@@ -6,15 +6,15 @@ namespace App\Model\User\UseCase\Create;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public string $login = '';
+    public ?string $login = '';
 
     #[Assert\NotCompromisedPassword]
     #[Assert\Length(min: 8)]
-    public string $password = '';
+    public ?string $password = '';
 
     #[Assert\NotBlank]
-    public string $role = '';
+    public ?string $role = '';
 }

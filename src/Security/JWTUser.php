@@ -5,25 +5,20 @@ namespace App\Security;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 
-class JWTUser implements JWTUserInterface
+readonly class JWTUser implements JWTUserInterface
 {
-    private string $username;
-    private string $id;
-    private string $ip;
-    private array $roles;
+    public function __construct(
+        private string $username,
+        private string $id = '',
+        private string $ip = '',
+        private array  $roles = []
+    ) {}
 
-    public function __construct(string $username, string $id = '', string $ip = '', array $roles = [])
-    {
-        $this->username = $username;
-        $this->id = $id;
-        $this->ip = $ip;
-        $this->roles = $roles;
-    }
-
+    #[\Override]
     public static function createFromPayload($username, array $payload): self
     {
         if (isset($payload['roles'])) {
-            return new static($username, $payload['id'], $payload['ip'], (array) $payload['roles']);
+            return new static($username, $payload['id'], $payload['ip'], (array)$payload['roles']);
         }
 
         return new static($username);
@@ -39,41 +34,18 @@ class JWTUser implements JWTUserInterface
         return $this->ip;
     }
 
+    #[\Override]
     public function getRoles(): array
     {
         return $this->roles;
     }
 
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getPassword()
-    {
-        return null;
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getSalt()
-    {
-        return null;
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
+    #[\Override]
     public function getUserIdentifier(): string
     {
         return $this->username;
     }
 
-    public function eraseCredentials()
-    {
-    }
+    #[\Override]
+    public function eraseCredentials(): void {}
 }

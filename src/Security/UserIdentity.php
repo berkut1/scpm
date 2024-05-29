@@ -8,28 +8,15 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
+final readonly class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
 {
-    private string $id;
-    private string $username;
-    private string $password;
-    private string $role;
-    private string $status;
-
     public function __construct(
-        string $id,
-        string $username,
-        string $password,
-        string $role,
-        string $status
-    )
-    {
-        $this->id = $id;
-        $this->username = $username;
-        $this->password = $password;
-        $this->role = $role;
-        $this->status = $status;
-    }
+        private string $id,
+        private string $username,
+        private string $password,
+        private string $role,
+        private string $status
+    ) {}
 
     public function getId(): string
     {
@@ -41,45 +28,28 @@ class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthent
         return $this->status === Status::STATUS_ACTIVE;
     }
 
+    #[\Override]
     public function getUserIdentifier(): string
     {
         return $this->username;
     }
 
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
+    #[\Override]
     public function getPassword(): string
     {
         return $this->password;
     }
 
+    #[\Override]
     public function getRoles(): array
     {
         return [$this->role];
     }
 
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getSalt(): ?string
-    {
-        return null;
-    }
+    #[\Override]
+    public function eraseCredentials(): void {}
 
-    public function eraseCredentials(): void
-    {
-
-    }
-
+    #[\Override]
     public function isEqualTo(UserInterface $user): bool
     {
         if (!$user instanceof self) {

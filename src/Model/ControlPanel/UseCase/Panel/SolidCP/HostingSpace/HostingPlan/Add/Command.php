@@ -5,18 +5,18 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\HostingPlan\
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    private int $id_hosting_space;
+    private readonly ?int $id_hosting_space;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $solidcp_id_plan = 0;
+    public ?int $solidcp_id_plan = 0;
 
     #[Assert\NotBlank]
-    public string $name = '';
+    public ?string $name = '';
 
     public function __construct(int $id_hosting_space)
     {

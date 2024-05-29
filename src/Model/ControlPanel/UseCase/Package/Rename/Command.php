@@ -5,23 +5,21 @@ namespace App\Model\ControlPanel\UseCase\Package\Rename;
 
 use App\Model\ControlPanel\Entity\Package\Id;
 use App\Model\ControlPanel\Entity\Package\Package;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public Id $id;
+    public ?Id $id;
 
     #[Assert\NotBlank]
-    public string $name;
+    public ?string $name;
 
     private function __construct(Id $id)
     {
         $this->id = $id;
     }
 
-    #[Pure]
     public static function fromPackage(Package $package): self
     {
         $command = new self($package->getId());

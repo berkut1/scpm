@@ -17,6 +17,7 @@
                 <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
                     <thead>
                     <tr>
+                        <th>{{ knp_pagination_sortable(pagination, 'ID', 'id') }}</th>
                         <th>{{ knp_pagination_sortable(pagination, 'Name', 'name') }}</th>
                         <th>{{ knp_pagination_sortable(pagination, 'Url', 'url') }}</th>
                         <th>{{ knp_pagination_sortable(pagination, 'Default', 'is_default') }}</th>
@@ -27,6 +28,7 @@
                     <tbody>
                     {% for object in pagination %}
                         <tr>
+                            <td>{{ object.id }}</td>
                             <td><a href="#">{{ object.name }}</a></td>
                             <td>{{ object.url }}</td>
                             <td>{{ object.is_default ? 'Yes' : 'No' }}

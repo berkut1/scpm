@@ -8,6 +8,21 @@
         <div class="card-header">{{ page_title }}</div>
 
         <div class="card-body">
+
+            {% if is_granted('ROLE_ADMIN') %}
+                {{ form_start(form) }}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-2">Start: {{ form_widget(form.startDate) }}</div>
+                        <div class="col-md-2">End: {{ form_widget(form.endDate) }}</div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            {% endif %}
+
             <div class="box">
                 <table class="table table-responsive-sm table-bordered table-striped table-sm table-hover">
                     <thead>

@@ -9,18 +9,13 @@ use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Service\PasswordHasher;
 use App\Security\UserIdentity;
 
-class Handler
+final readonly class Handler
 {
-    private UserRepository $users;
-    private PasswordHasher $hasher;
-    private Flusher $flusher;
-
-    public function __construct(UserRepository $users, PasswordHasher $hasher, Flusher $flusher)
-    {
-        $this->users = $users;
-        $this->hasher = $hasher;
-        $this->flusher = $flusher;
-    }
+    public function __construct(
+        private UserRepository $users,
+        private PasswordHasher $hasher,
+        private Flusher        $flusher
+    ) {}
 
     public function handle(Command $command): void
     {

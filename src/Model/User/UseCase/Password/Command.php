@@ -2,16 +2,17 @@
 declare(strict_types=1);
 
 namespace App\Model\User\UseCase\Password;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public string $id;
+    public ?string $id;
 
     #[Assert\NotCompromisedPassword]
     #[Assert\Length(min: 8)]
-    public string $password = '';
+    public ?string $password = '';
 
     public function __construct(string $id)
     {

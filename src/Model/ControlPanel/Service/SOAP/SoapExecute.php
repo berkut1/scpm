@@ -6,7 +6,7 @@ namespace App\Model\ControlPanel\Service\SOAP;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Service\NotFoundException;
 
-class SoapExecute
+class SoapExecute implements SoapExecuteInterface
 {
     private string $url;
     private array $options;
@@ -32,13 +32,12 @@ class SoapExecute
 
     public function initFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher, $caching = false, $compression = true): void
     {
-//        if(!$enterpriseDispatcher->isEnabled()){ //not good, we have to give a chance to finish service their work, better to prevent it from UseCases
-//            throw new \DomainException("The EnterpriseDispatcher {$enterpriseDispatcher->getName()} is disabled");
-//        }
         $this->initManual($enterpriseDispatcher->getUrl(), $enterpriseDispatcher->getLogin(), $enterpriseDispatcher->getPassword(), $caching, $compression);
     }
 
-    public function initManual(string $url, string $login, string $password, bool $caching = false, bool $compression = true, bool $keepAlive = false): void
+    public function initManual(
+        string $url, string $login, string $password, bool $caching = false, bool $compression = true, bool $keepAlive = false
+    ): void
     {
         $this->url = $url;
         $this->options = [
@@ -75,7 +74,7 @@ class SoapExecute
 
     public function setOptions(bool $keepAlive = false, bool $caching = false, bool $compression = true): void
     {
-        if(!isset($this->options['login'])){
+        if (!isset($this->options['login'])) {
             throw new NotFoundException("The login was not found. First init the class");
         }
         $this->options = [
@@ -98,28 +97,21 @@ class SoapExecute
     }
 
     /**
-     * @param string $service
-     * @param string $method
-     * @param array $params
-     * @return mixed
-     * @throws \Exception
+     * @throws \SoapFault
      */
     protected function execute(string $service, string $method, array $params): mixed
     {
         $result = $this->executeInternal($service, $method, $params);
 
         if (count((array)$result) === 0) {
-            throw new NotFoundException("Not Found " . implode(", ", $params). " in the method: $method");
+            throw new NotFoundException("Not Found " . implode(", ", $params) . " in the method: $method");
         }
 
         return $result;
     }
 
     /**
-     * @param string $service
-     * @param string $method
-     * @param array $params
-     * @return mixed
+     * @throws \SoapFault
      * @throws \Exception
      */
     private function executeInternal(string $service, string $method, array $params): mixed
@@ -128,26 +120,22 @@ class SoapExecute
         try {
             $this->soapClient = new \SoapClient($host, $this->options);
             // Execute the request and process the results
-            return call_user_func(array($this->soapClient, $method), $params);
+            return call_user_func([$this->soapClient, $method], $params);
         } catch (\SoapFault $e) {
-            throw new \Exception("SOAP Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+            throw new \SoapFault($e->faultcode, "SOAP Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         } catch (\Exception $e) {
-            throw new \Exception("General Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(),$e);
+            throw new \Exception("General Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
         }
     }
 
     /**
      * Converts an object or an XML string to an array
-     *
-     * @param mixed $value Object or an XML string
-     * @param boolean $loadXml Loads the string into the SimpleXML object
-     * @return array
      */
     protected function convertArray(mixed $value, bool $loadXml = false): array
     {
         // This is silly, but it works, and it works very well for what we are doing :)
         // copy-pasted from SolidCP php module https://solidcp.com
-        return json_decode(json_encode(($loadXml ? simplexml_load_string($value) : $value)), true);
+        return json_decode(json_encode(($loadXml ? simplexml_load_string((string)$value) : $value)), true);
     }
 
     public function showDump(): void

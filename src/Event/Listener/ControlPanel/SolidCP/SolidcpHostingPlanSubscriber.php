@@ -1,4 +1,4 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Event\Listener\ControlPanel\SolidCP;
@@ -12,18 +12,14 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\Event\S
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SolidcpHostingPlanSubscriber implements EventSubscriberInterface
+final readonly class SolidcpHostingPlanSubscriber implements EventSubscriberInterface
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(private AuditLog\Add\Handler $auditLogHandler) {}
 
     #[ArrayShape([
         SolidcpHostingPlanCreated::class => "string",
     ])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

@@ -26,16 +26,15 @@ services:
     #for autowiring Entity Repositories
     App\Model\AuditLog\Entity\AuditLogRepository: ~
 
-    App\Model\User\Entity\AuditLog\AuditLogRepository: ~
     App\Model\User\Entity\User\UserRepository: ~
 
-    App\Model\ControlPanel\Entity\AuditLog\AuditLogRepository: ~
     App\Model\ControlPanel\Entity\Location\LocationRepository: ~
     App\Model\ControlPanel\Entity\Package\PackageRepository: ~
     App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackageRepository: ~
     App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository: ~
     App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServerRepository: ~
     App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceRepository: ~
+    App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanRepository: ~
 
 
     # controllers are imported separately to make sure services can be injected

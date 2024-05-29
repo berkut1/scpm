@@ -5,30 +5,26 @@ namespace App\Controller\ControlPanel\Package\VirtualMachine;
 
 use App\Model\ControlPanel\Entity\Package\Package;
 use App\Model\ControlPanel\Entity\Package\VirtualMachine\VirtualMachinePackage;
-use App\Model\ControlPanel\UseCase\Package\VirtualMachine\{Create, Edit};
 use App\Model\ControlPanel\UseCase\Package\{ChangePlans, Remove, Rename};
+use App\Model\ControlPanel\UseCase\Package\VirtualMachine\{Create, Edit};
 use App\ReadModel\ControlPanel\Package\VirtualMachine\VirtualMachinePackageFetcher;
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlanFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/packages/virtual-machines', name: 'virtualMachinePackages')]
 #[IsGranted('ROLE_MODERATOR')]
-class VirtualMachinePackagesController extends AbstractController
+final class VirtualMachinePackagesController extends AbstractController
 {
-    private const PER_PAGE = 25;
-    private const MAIN_TITLE = 'Virtual Machine Packages';
+    private const int PER_PAGE = 25;
+    private const string MAIN_TITLE = 'Virtual Machine Packages';
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, VirtualMachinePackageFetcher $fetcher): Response
@@ -72,7 +68,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/rename', name: '.rename')]
+    #[Route('/{id}/rename', name: '.rename', requirements: ['id' => Requirement::UID_RFC4122])]
     public function rename(VirtualMachinePackage $virtualMachinePackage, Request $request, Rename\Handler $handler): Response
     {
         $command = Rename\Command::fromPackage($virtualMachinePackage->getPackage());
@@ -83,7 +79,7 @@ class VirtualMachinePackagesController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('virtualMachinePackages.show', ['id'=> $virtualMachinePackage->getId()->getValue()]);
+                return $this->redirectToRoute('virtualMachinePackages.show', ['id' => $virtualMachinePackage->getId()->getValue()]);
             } catch (\DomainException $e) {
                 $this->logger->error($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
@@ -97,7 +93,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '.edit')]
+    #[Route('/{id}/edit', name: '.edit', requirements: ['id' => Requirement::UID_RFC4122])]
     public function edit(VirtualMachinePackage $virtualMachinePackage, Request $request, Edit\Handler $handler): Response
     {
         $command = Edit\Command::fromVirtualMachine($virtualMachinePackage);
@@ -108,7 +104,7 @@ class VirtualMachinePackagesController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('virtualMachinePackages.show', ['id'=> $virtualMachinePackage->getId()->getValue()]);
+                return $this->redirectToRoute('virtualMachinePackages.show', ['id' => $virtualMachinePackage->getId()->getValue()]);
             } catch (\DomainException $e) {
                 $this->logger->error($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
@@ -122,7 +118,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: '.show')]
+    #[Route('/{id}', name: '.show', requirements: ['id' => Requirement::UID_RFC4122])]
     public function show(Request $request, VirtualMachinePackage $virtualMachinePackage, SolidcpHostingPlanFetcher $planFetcher): Response
     {
         $plansFromPackage = $planFetcher->allPlansFromPackage(
@@ -140,8 +136,10 @@ class VirtualMachinePackagesController extends AbstractController
         );
     }
 
-    #[Route('/{id}/change-solidcp-plans', name: '.changeSolidCpPlans')]
-    public function changeSolidCpPlans(Request $request, VirtualMachinePackage $virtualMachinePackage, ChangePlans\SolidCP\Handler $handler): Response
+    #[Route('/{id}/change-solidcp-plans', name: '.changeSolidCpPlans', requirements: ['id' => Requirement::UID_RFC4122])]
+    public function changeSolidCpPlans(
+        Request $request, VirtualMachinePackage $virtualMachinePackage, ChangePlans\SolidCP\Handler $handler
+    ): Response
     {
         $command = ChangePlans\SolidCP\Command::fromPackage($virtualMachinePackage->getPackage());
 
@@ -166,7 +164,7 @@ class VirtualMachinePackagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
+    #[Route('/{id}/remove', name: '.remove', requirements: ['id' => Requirement::UID_RFC4122], methods: ['POST'])]
     public function remove(Package $location, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {

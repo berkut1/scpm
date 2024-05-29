@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachine;
 
-class VirtualMachineNetworkAdapter
+final class VirtualMachineNetworkAdapter
 {
     public string $name;
     public array $iPAddresses;

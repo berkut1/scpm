@@ -1,0 +1,18 @@
+services:
+  _defaults:
+    autowire: true
+#    public: true
+
+## Override classes for mocking. I left it just as an example of an alternative way that guarantees work,
+## but it requires creating interfaces and manually adding all classes for mocking here. Also check App\Tests\Functional\DbWebTestCase::setCustomHttpClientRespond
+  App\Service\CustomHttpClient:
+    public: true
+    class: App\Tests\Mock\CustomHttpClientMock
+#
+#  App\Model\ControlPanel\Service\SolidCP\EnterpriseDispatcherService:
+#    public: true
+#    class: App\Tests\Mock\EnterpriseDispatcherServiceMock
+
+#  App\Service\CustomHttpClientInterface:
+#    public: true
+#    alias: App\Service\CustomHttpClient

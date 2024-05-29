@@ -3,34 +3,31 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\Edit;
 
-use App\Model\ControlPanel\Entity\Location\Location;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public int $id = 0;
+    public ?int $id = 0;
 
     #[Assert\NotBlank]
-    public string $name = '';
+    public ?string $name = '';
 
     #[Assert\NotBlank]
-    public string $url = '';
+    public ?string $url = '';
 
     #[Assert\NotBlank]
-    public string $login = '';
+    public ?string $login = '';
 
     #[Assert\NotBlank]
-    public string $password = '';
+    public ?string $password = '';
 
     private function __construct(int $id)
     {
         $this->id = $id;
     }
 
-    #[Pure]
     public static function fromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self
     {
         $command = new self($enterpriseDispatcher->getId());

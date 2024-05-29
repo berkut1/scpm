@@ -1,4 +1,4 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Event\Listener\ControlPanel\SolidCP;
@@ -15,14 +15,9 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\Event\SolidcpServerEnabled;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SolidcpServerSubscriber implements EventSubscriberInterface
+final readonly class SolidcpServerSubscriber implements EventSubscriberInterface
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(private AuditLog\Add\Handler $auditLogHandler) {}
 
     #[ArrayShape([
         SolidcpServerCreated::class => "string",
@@ -30,6 +25,7 @@ class SolidcpServerSubscriber implements EventSubscriberInterface
         SolidcpServerDisabled::class => "string",
         SolidcpServerEnabled::class => "string",
     ])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

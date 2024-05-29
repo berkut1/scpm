@@ -7,19 +7,19 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\OsTemplate\OsTempla
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_enterprise_dispatcher = 0;
+    public ?int $id_enterprise_dispatcher = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id_hosting_space = 0;
+    public ?int $id_hosting_space = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $packageId = 0;
+    public ?int $packageId = 0;
     public array $osTemplates = [];
 
     private function __construct(int $id_hosting_space)
@@ -44,8 +44,8 @@ class Command
     private function getOsTemplateArray(array $osTemplates): array
     {
         $array = [];
-        foreach ($osTemplates as $osTemplate){
-            $array[] = \App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\OsTemplate\Add\Collection\Command::create($osTemplate->getPath(), $osTemplate->getName());
+        foreach ($osTemplates as $osTemplate) {
+            $array[] = Collection\Command::create($osTemplate->getFileName(), $osTemplate->getName());
         }
         return $array;
     }

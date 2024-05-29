@@ -6,13 +6,13 @@ namespace App\Model\ControlPanel\UseCase\Location\Edit;
 use App\Model\ControlPanel\Entity\Location\Location;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public int $id;
+    public ?int $id;
 
     #[Assert\NotBlank]
-    public string $name;
+    public ?string $name;
 
     private function __construct(int $id)
     {

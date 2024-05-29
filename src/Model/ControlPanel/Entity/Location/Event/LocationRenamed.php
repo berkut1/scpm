@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Location\Event;
 
 use App\Model\ControlPanel\Entity\Location\Location;
 
-class LocationRenamed
+final class LocationRenamed
 {
     public string $oldName;
     public Location $location;

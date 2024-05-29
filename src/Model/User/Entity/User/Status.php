@@ -5,11 +5,11 @@ namespace App\Model\User\Entity\User;
 
 use Webmozart\Assert\Assert;
 
-class Status
+final class Status implements \Stringable
 {
-    public const STATUS_SUSPENDED = 'suspended';
-    public const STATUS_ACTIVE = 'active';
-    public const STATUS_ARCHIVED = 'archived';
+    public const string STATUS_SUSPENDED = 'suspended';
+    public const string STATUS_ACTIVE = 'active';
+    public const string STATUS_ARCHIVED = 'archived';
 
     private string $name;
 
@@ -73,6 +73,7 @@ class Status
         return $this->name;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->getName();

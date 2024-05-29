@@ -13,16 +13,12 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\Package\Packag
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsPackages;
 use App\Model\ControlPanel\UseCase\AuditLog;
 
-class Handler
+final readonly class Handler
 {
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-    private AuditLog\Add\SolidCP\Handler $auditLogHandler;
-
-    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository, AuditLog\Add\SolidCP\Handler $auditLogHandler)
-    {
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(
+        private EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
+        private AuditLog\Add\SolidCP\Handler   $auditLogHandler
+    ) {}
 
     public function handle(Command $command, array &$auditLogRecords = [], bool $saveAuditLog = true): void
     {

@@ -8,20 +8,24 @@ use App\ReadModel\CustomFetcher;
 use App\ReadModel\NotFoundException;
 use App\ReadModel\User\Filter\Filter;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class UserFetcher
+final readonly class UserFetcher
 {
     private Connection $connection;
     private EntityRepository $repository;
     private PaginatorInterface $paginator;
     private CustomFetcher $customFetcher;
 
-    public function __construct(Connection $connection, EntityManagerInterface $em, PaginatorInterface $paginator, CustomFetcher $customFetcher)
+    public function __construct(
+        Connection             $connection,
+        EntityManagerInterface $em,
+        PaginatorInterface     $paginator,
+        CustomFetcher          $customFetcher
+    )
     {
         $this->connection = $connection;
         /** @var EntityRepository $repo */

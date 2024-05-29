@@ -5,12 +5,11 @@ namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\Package\PackageStatus;
-use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsPackages extends SoapExecute
 {
-    public const SERVICE = 'esPackages.asmx';
+    public const string SERVICE = 'esPackages.asmx';
 
     public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
     {
@@ -19,6 +18,9 @@ final class EsPackages extends SoapExecute
         return $soap;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function addPackageWithResources(
         int     $userId,
         int     $planId,
@@ -32,7 +34,8 @@ final class EsPackages extends SoapExecute
         bool    $createFtpAccount = false,
         ?string $ftpAccountName = null,
         bool    $createMailAccount = false,
-        string  $hostName = ""): int
+        string  $hostName = ""
+    ): int
     {
         try {
             return $this->execute(
@@ -53,13 +56,14 @@ final class EsPackages extends SoapExecute
                     'createMailAccount' => $createMailAccount,
                     'hostName' => $hostName,
                 ])->AddPackageWithResourcesResult->Result;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("AddPackageWithResources Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "AddPackageWithResources Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function changePackageStatus(int $packageId, PackageStatus $status): int
     {
         try {
@@ -68,12 +72,10 @@ final class EsPackages extends SoapExecute
                 'ChangePackageStatus',
                 [
                     'packageId' => $packageId,
-                    'status' => $status->getName()
+                    'status' => $status->getName(),
                 ])->ChangePackageStatusResult;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("ChangePackageStatus Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "ChangePackageStatus Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
 
         if ($result < 0) {
@@ -82,6 +84,9 @@ final class EsPackages extends SoapExecute
         return $result;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function updatePackageName(int $packageId, string $packageName, string $packageComments = null): int
     {
         try {
@@ -91,12 +96,10 @@ final class EsPackages extends SoapExecute
                 [
                     'packageId' => $packageId,
                     'packageName' => $packageName,
-                    'packageComments' => $packageComments
+                    'packageComments' => $packageComments,
                 ])->UpdatePackageNameResult;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("UpdatePackageName Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "UpdatePackageName Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
 
         if ($result < 0) {
@@ -105,22 +108,24 @@ final class EsPackages extends SoapExecute
         return $result;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getUserPackages(int $userId): array
     {
         try {
-            $result = $this->convertArray($this->execute(
+            return $this->convertArray($this->execute(
                 self::SERVICE,
                 'GetMyPackages',
                 ['userId' => $userId])->GetMyPackagesResult->PackageInfo);
-
-            return $result;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetMyPackages Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetMyPackages Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getPackageAddons(int $packageId): array
     {
         try {
@@ -128,13 +133,14 @@ final class EsPackages extends SoapExecute
                 self::SERVICE,
                 'GetPackageAddons',
                 ['packageId' => $packageId])->GetPackageAddonsResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetPackageAddons Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetPackageAddons Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getHostingPlans(int $userId): array
     {
         try {
@@ -142,16 +148,17 @@ final class EsPackages extends SoapExecute
                 self::SERVICE,
                 'GetHostingPlans',
                 [
-                    'userId' => $userId
+                    'userId' => $userId,
                 ])->GetHostingPlansResult;
             return $this->convertArray($result['any'], true);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetHostingPlans Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetHostingPlans Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getHostingPlan(int $planId): array
     {
         try {
@@ -159,13 +166,14 @@ final class EsPackages extends SoapExecute
                 self::SERVICE,
                 'GetHostingPlan',
                 ['planId' => $planId])->GetHostingPlanResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetPackageAddons Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetPackageAddons Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getPackageContext(int $packageId): array
     {
         try {
@@ -173,10 +181,8 @@ final class EsPackages extends SoapExecute
                 self::SERVICE,
                 'GetPackageContext',
                 ['packageId' => $packageId])->GetPackageContextResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetPackageContext Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetPackageContext Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
@@ -189,6 +195,9 @@ final class EsPackages extends SoapExecute
         return $packageQuotaValues[$VPS2012hddQuotaIndex]['QuotaUsedValue'];
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getNestedPackagesSummary(int $packageId): array
     {
         try {
@@ -198,10 +207,8 @@ final class EsPackages extends SoapExecute
                 ['packageId' => $packageId])->GetNestedPackagesSummaryResult;
 
             return $this->convertArray($result['any'], true);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetNestedPackagesSummary Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetNestedPackagesSummary Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
@@ -210,7 +217,7 @@ final class EsPackages extends SoapExecute
         $packageDataSet = $this->getNestedPackagesSummary($packageId);
         $countOfActivePackages = 0;
 
-        if($packageDataSet['NewDataSet']['Table']['PackagesNumber'] > 0){ //if we have packages, then get number of Active Packages
+        if ($packageDataSet['NewDataSet']['Table']['PackagesNumber'] > 0) { //if we have packages, then get number of Active Packages
             $summary = $packageDataSet['NewDataSet']['Table1']; //in Table1 we have separated packages to Active/Suspended/Canceled
             /*thanks for this awful code - data return SolidCP*/
             if (isset($summary[0])) { //we can get different arrays from getNestedPackagesSummary
@@ -231,6 +238,9 @@ final class EsPackages extends SoapExecute
         return $countOfActivePackages;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getPackageQuotas(int $packageId): array
     {
         try {
@@ -240,13 +250,14 @@ final class EsPackages extends SoapExecute
                 ['packageId' => $packageId])->GetPackageQuotasResult;
 
             return $this->convertArray($result['any'], true);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetPackageQuotas Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetPackageQuotas Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getRawPackages(int $userId): array
     {
         try {
@@ -256,13 +267,14 @@ final class EsPackages extends SoapExecute
                 ['userId' => $userId])->GetRawPackagesResult;
 
             return $this->convertArray($result['any'], true);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetRawPackages Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetRawPackages Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getRawPackageItems(int $packageId): array
     {
         try {
@@ -272,10 +284,8 @@ final class EsPackages extends SoapExecute
                 ['packageId' => $packageId])->GetRawPackageItemsResult;
 
             return $this->convertArray($result['any'], true);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetRawPackageItems Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetRawPackageItems Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 }

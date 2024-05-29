@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace App\Model\AuditLog\Entity;
 
-use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
-class Id
+final class Id implements \Stringable
 {
-    const ZEROS = "00000000-0000-0000-0000-000000000000";
+    final public const string ZEROS = "00000000-0000-0000-0000-000000000000";
     private string $value;
 
     public function __construct(string $value)
@@ -25,7 +24,7 @@ class Id
 
     public static function next(): self
     {
-        return new self(Uuid::uuid6()->toString());
+        return new self(Uuid::uuid7()->toString());
     }
 
     public function isEqual(self $id): bool
@@ -38,7 +37,7 @@ class Id
         return $this->value;
     }
 
-    #[Pure]
+    #[\Override]
     public function __toString(): string
     {
         return $this->getValue();

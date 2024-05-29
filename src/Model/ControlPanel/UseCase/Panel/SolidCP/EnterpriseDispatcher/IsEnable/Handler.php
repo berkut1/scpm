@@ -5,14 +5,9 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\IsEn
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 
-class Handler
+final readonly class Handler
 {
-    private EnterpriseDispatcherRepository $repository;
-
-    public function __construct(EnterpriseDispatcherRepository $repository)
-    {
-        $this->repository = $repository;
-    }
+    public function __construct(private EnterpriseDispatcherRepository $repository) {}
 
     public function handle(Command $command): bool
     {

@@ -6,10 +6,10 @@ namespace App\Model\ControlPanel\UseCase\Package\Remove;
 use App\Model\ControlPanel\Entity\Package\Id;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public Id $id;
+    public ?Id $id;
 
     public function __construct(Id $id)
     {

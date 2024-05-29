@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class VirtualMachinePackageFetcher
+final readonly class VirtualMachinePackageFetcher
 {
     private Connection $connection;
     private EntityRepository $repository;
@@ -35,9 +35,9 @@ class VirtualMachinePackageFetcher
             ->from('cp_package_virtual_machines', 'vms')
             ->leftJoin('vms', 'cp_packages', 'packages', 'packages.id_package = vms.id_package')
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
-        return array_column($stmt->fetchAllAssociative(), 'name','id');
+        return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }
 
     public function all(int $page, int $size, string $sort, string $direction): PaginationInterface

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User;
 
-class UserInfo
+final class UserInfo
 {
     public int $UserId = 0;
     public int $OwnerId;
@@ -40,7 +40,9 @@ class UserInfo
     public int $MfaMode = 0;
 
 
-    public function __construct(int $ownerId, UserRole $role, UserStatus $status, bool $isPeer, bool $isDemo, string $username, string $firstName, string $lastName, string $email, bool $htmlMail)
+    public function __construct(int    $ownerId, UserRole $role, UserStatus $status, bool $isPeer, bool $isDemo, string $username,
+                                string $firstName, string $lastName, string $email, bool $htmlMail
+    )
     {
         $this->OwnerId = $ownerId;
         $this->RoleId = $role->getId();

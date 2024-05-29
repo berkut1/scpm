@@ -6,14 +6,9 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\SOAP\VirtualizationServer
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsVirtualizationServer2012;
 
-class Handler
+final readonly class Handler
 {
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
-
-    public function __construct(EnterpriseDispatcherRepository $enterpriseDispatcherRepository)
-    {
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-    }
+    public function __construct(private EnterpriseDispatcherRepository $enterpriseDispatcherRepository) {}
 
     public function handle(Command $command): string
     {

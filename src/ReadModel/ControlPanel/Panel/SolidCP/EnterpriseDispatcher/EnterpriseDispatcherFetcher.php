@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class EnterpriseDispatcherFetcher
+final readonly class EnterpriseDispatcherFetcher
 {
     private Connection $connection;
     private EntityRepository $repository;
@@ -44,9 +44,9 @@ class EnterpriseDispatcherFetcher
             )
             ->from('cp_solidcp_enterprise_dispatchers')
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
-        return array_column($stmt->fetchAllAssociative(), 'name','id');
+        return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }
 
     public function all(int $page, int $size, string $sort, string $direction): PaginationInterface
@@ -59,9 +59,9 @@ class EnterpriseDispatcherFetcher
                 'is_default',
                 'enabled',
             )
-            ->from('cp_solidcp_enterprise_dispatchers');
+            ->from('cp_solidcp_enterprise_dispatchers' /** @type EnterpriseDispatcher */);
 
-        if (!in_array($sort, ['name', 'url', 'is_default', 'enabled'], true)) {
+        if (!in_array($sort, ['id', 'name', 'url', 'is_default', 'enabled'], true)) {
             throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 

@@ -5,11 +5,11 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\EnterpriseDispatcher\SetD
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $id = 0;
+    public ?int $id = 0;
 
     public function __construct(int $id)
     {

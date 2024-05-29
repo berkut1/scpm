@@ -5,6 +5,7 @@ namespace App\Model\AuditLog\Entity;
 
 use App\Model\AuditLog\Entity\Record\Record;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "audit_logs")]
@@ -20,10 +21,10 @@ class AuditLog
     #[ORM\Column(name: "id_user", type: "audit_log_user_id", nullable: false)]
     private UserId $idUser;
 
-    #[ORM\Column(name: "date", type: "datetime_immutable", nullable: false, options: ["default" => "now()"])]
+    #[ORM\Column(name: "date", type: Types::DATETIME_IMMUTABLE, nullable: false, options: ["default" => "now()"])]
     private \DateTimeImmutable $date;
 
-    #[ORM\Column(name: "ip_inet", type: "string", nullable: false)]
+    #[ORM\Column(name: "ip_inet", type: Types::STRING, nullable: false)]
     private string $ipInet;
 
     #[ORM\Embedded(class: Entity::class)]
@@ -38,7 +39,7 @@ class AuditLog
 
     private function __construct(Id $id, UserId $idUser, string $ip, Entity $entity, TaskNameInterface $taskName)
     {
-        if(!inet_pton($ip)){
+        if (!inet_pton($ip)) {
             throw new \DomainException("Wrong IP format for the ip $ip");
         }
         $this->id = $id;
@@ -50,11 +51,6 @@ class AuditLog
     }
 
     /**
-     * @param Id $id
-     * @param UserId $idUser
-     * @param string $ip
-     * @param Entity $entity
-     * @param TaskNameInterface $taskName
      * @param Record[] $records
      * @return static
      */
@@ -92,6 +88,11 @@ class AuditLog
     public function getDate(): \DateTimeImmutable
     {
         return $this->date;
+    }
+
+    public function getIpInet(): string
+    {
+        return $this->ipInet;
     }
 
     public function getEntity(): Entity

@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\E
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
 
-class SolidcpHostingPlanCreated
+final class SolidcpHostingPlanCreated
 {
     public SolidcpHostingPlan $solidcpHostingPlan;
 

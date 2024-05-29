@@ -6,25 +6,25 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\Edit;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public int $id;
+    public ?int $id;
 
     #[Assert\NotBlank]
-    public string $name = '';
-
-    #[Assert\NotBlank]
-    #[Assert\Positive]
-    public int $max_active_number = 0;
+    public ?string $name = '';
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $max_reserved_memory_mb = 0;
+    public ?int $max_active_number = 0;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public int $space_quota_gb = 0;
+    public ?int $max_reserved_memory_mb = 0;
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    public ?int $space_quota_gb = 0;
 
     private function __construct(int $id)
     {

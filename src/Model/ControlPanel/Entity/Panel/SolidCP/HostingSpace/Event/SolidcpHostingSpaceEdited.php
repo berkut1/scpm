@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\Event;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
 
-class SolidcpHostingSpaceEdited
+final class SolidcpHostingSpaceEdited
 {
     public SolidcpHostingSpace $solidcpHostingSpace;
 

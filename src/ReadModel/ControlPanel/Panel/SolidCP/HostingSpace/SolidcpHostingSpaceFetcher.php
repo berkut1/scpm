@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class SolidcpHostingSpaceFetcher
+final readonly class SolidcpHostingSpaceFetcher
 {
     private Connection $connection;
     private EntityRepository $repository;
@@ -34,9 +34,9 @@ class SolidcpHostingSpaceFetcher
             )
             ->from('cp_solidcp_hosting_spaces')
             ->orderBy('name')
-            ->executeQuery(); //execute() deprecated https://github.com/doctrine/dbal/pull/4578thub.com/doctrine/dbal/pull/4578;
+            ->executeQuery();
 
-        return array_column($stmt->fetchAllAssociative(), 'name','id');
+        return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }
 
     public function all(int $page, int $size, string $sort, string $direction): PaginationInterface

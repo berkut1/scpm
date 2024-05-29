@@ -6,16 +6,12 @@ namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\HostingSpace\Edit;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceRepository;
 use App\Model\Flusher;
 
-class Handler
+final class Handler
 {
-    private Flusher $flusher;
-    private SolidcpHostingSpaceRepository $repository;
-
-    public function __construct(Flusher $flusher, SolidcpHostingSpaceRepository $repository)
-    {
-        $this->flusher = $flusher;
-        $this->repository = $repository;
-    }
+    public function __construct(
+        private readonly Flusher                       $flusher,
+        private readonly SolidcpHostingSpaceRepository $repository
+    ) {}
 
     public function handle(Command $command): void
     {

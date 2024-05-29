@@ -5,10 +5,10 @@ namespace App\Model\ControlPanel\UseCase\Location\Remove;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Command
+final class Command
 {
     #[Assert\NotBlank]
-    public int $id;
+    public ?int $id;
 
     public function __construct(int $id)
     {

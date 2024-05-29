@@ -6,12 +6,11 @@ namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\VirtualizationServer2012\VirtualMachineRequestedState;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachine\VirtualMachine;
-use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
 final class EsVirtualizationServer2012 extends SoapExecute
 {
-    public const SERVICE = 'esVirtualizationServer2012.asmx';
+    public const string SERVICE = 'esVirtualizationServer2012.asmx';
 
     public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
     {
@@ -20,19 +19,23 @@ final class EsVirtualizationServer2012 extends SoapExecute
         return $soap;
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function generateMacAddress(): string
     {
         try {
             return $this->execute(
                 self::SERVICE,
                 'GenerateMacAddress', [])->GenerateMacAddressResult;
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GenerateMacAddress Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GenerateMacAddress Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function changeVirtualMachineState(int $itemId, VirtualMachineRequestedState $state): array
     {
         try {
@@ -41,15 +44,16 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'ChangeVirtualMachineState', [
                     'itemId' => $itemId,
-                    'state' => $state
+                    'state' => $state,
                 ])->ChangeVirtualMachineStateResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("ChangeVirtualMachineState Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "ChangeVirtualMachineState Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getOperatingSystemTemplates(int $packageId): array
     {
         try {
@@ -58,25 +62,28 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'GetOperatingSystemTemplates',
                     [
-                        'packageId' => $packageId
+                        'packageId' => $packageId,
                     ])->GetOperatingSystemTemplatesResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetOperatingSystemTemplates Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetOperatingSystemTemplates Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         }
     }
 
-    public function createNewVirtualMachine(VirtualMachine $vmSettings,
-                                            string         $osTemplateFile,
-                                            string         $password,
-                                            int            $externalAddressesNumber = 0,
-                                            bool           $randomExternalAddresses = false,
-                                            array          $externalAddresses = [],
-                                            int            $privateAddressesNumber = 0,
-                                            bool           $randomPrivateAddresses = false,
-                                            array          $privateAddresses = [],
-                                            ?string        $summaryLetterEmail = null): array
+    /**
+     * @throws \SoapFault
+     */
+    public function createNewVirtualMachine(
+        VirtualMachine $vmSettings,
+        string         $osTemplateFile,
+        string         $password,
+        int            $externalAddressesNumber = 0,
+        bool           $randomExternalAddresses = false,
+        array          $externalAddresses = [],
+        int            $privateAddressesNumber = 0,
+        bool           $randomPrivateAddresses = false,
+        array          $privateAddresses = [],
+        ?string        $summaryLetterEmail = null
+    ): array
     {
         try {
             return $this->convertArray(
@@ -96,13 +103,14 @@ final class EsVirtualizationServer2012 extends SoapExecute
                         'privateAddresses' => $privateAddresses,
                     ]
                 )->CreateNewVirtualMachineResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("CreateNewVirtualMachine Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "CreateNewVirtualMachine Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()}");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getVirtualMachineItem(int $itemId): array
     {
         try {
@@ -111,15 +119,16 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'GetVirtualMachineItem',
                     [
-                        'itemId' => $itemId
+                        'itemId' => $itemId,
                     ])->GetVirtualMachineItemResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetVirtualMachineItem Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetVirtualMachineItem Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getVirtualMachineGeneralDetails(int $itemId): array
     {
         try {
@@ -128,15 +137,16 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'GetVirtualMachineGeneralDetails',
                     [
-                        'itemId' => $itemId
+                        'itemId' => $itemId,
                     ])->GetVirtualMachineGeneralDetailsResult); //symfony denormalize service?
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetVirtualMachineGeneralDetails Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetVirtualMachineGeneralDetails Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getExternalNetworkAdapterDetails(int $itemId): array
     {
         try {
@@ -145,15 +155,16 @@ final class EsVirtualizationServer2012 extends SoapExecute
                     self::SERVICE,
                     'GetExternalNetworkAdapterDetails',
                     [
-                        'itemId' => $itemId
+                        'itemId' => $itemId,
                     ])->GetExternalNetworkAdapterDetailsResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetExternalNetworkAdapterDetails Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetExternalNetworkAdapterDetails Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         }
     }
 
+    /**
+     * @throws \SoapFault
+     */
     public function getVirtualMachines(int $packageId): array
     {
         try {
@@ -168,12 +179,10 @@ final class EsVirtualizationServer2012 extends SoapExecute
                         'sortColumn' => '',
                         'startRow' => '',
                         'maximumRows' => 100000000,
-                        'recursive' => false
+                        'recursive' => false,
                     ])->GetVirtualMachinesResult);
-        } catch (NotFoundException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new \Exception("GetVirtualMachines Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
+        } catch (\SoapFault $e) {
+            throw new \SoapFault($e->faultcode, "GetVirtualMachines Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         }
     }
 }

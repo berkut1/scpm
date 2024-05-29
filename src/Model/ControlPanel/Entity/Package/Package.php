@@ -7,8 +7,8 @@ use App\Model\AggregateRoot;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
 use App\Model\EventsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 
 #[ORM\Table(name: "cp_packages")]
 #[ORM\Entity]
@@ -21,7 +21,7 @@ class Package implements AggregateRoot
     #[ORM\GeneratedValue(strategy: "NONE")]
     private Id $id;
 
-    #[ORM\Column(name: "name", type: "string", length: 128, nullable: false)]
+    #[ORM\Column(name: "name", type: Types::STRING, length: 128, nullable: false)]
     private string $name;
 
     #[ORM\Column(name: "package_type", type: "cp_package_type", length: 512, nullable: false)]
@@ -31,7 +31,6 @@ class Package implements AggregateRoot
     #[ORM\ManyToMany(targetEntity: SolidcpHostingPlan::class, mappedBy: "assignedPackages")]
     private mixed $solidcpHostingPlans;
 
-    #[Pure]
     public function __construct(Id $id, string $name, PackageType $packageType)
     {
         $this->id = $id;
@@ -57,7 +56,7 @@ class Package implements AggregateRoot
         $plan->assignPackage($this);
     }
 
-    public function removeSolidCpPlan(SolidcpHostingPlan $plan)
+    public function removeSolidCpPlan(SolidcpHostingPlan $plan): void
     {
         if (!$this->solidcpHostingPlans->contains($plan)) {
             return;
@@ -96,13 +95,11 @@ class Package implements AggregateRoot
         $this->recordEvent(new Event\PackageChangedSolidCpPlans($this, $removedPlans, $addedPlans));
     }
 
-    #[Pure]
     public function hasAssignedItems(): bool
     {
         return !$this->solidcpHostingPlans->isEmpty();
     }
 
-    #[Pure]
     public function isEqualName(string $name): bool
     {
         return $this->getName() === $name;

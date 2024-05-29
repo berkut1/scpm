@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Node\Event;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
 
-class SolidcpServerCreated
+final class SolidcpServerCreated
 {
     public SolidcpServer $solidcpServer;
 

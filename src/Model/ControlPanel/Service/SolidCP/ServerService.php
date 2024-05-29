@@ -6,43 +6,37 @@ namespace App\Model\ControlPanel\Service\SolidCP;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcherRepository;
 use App\Model\ControlPanel\Service\NotFoundException;
 use App\Model\ControlPanel\Service\SOAP\SolidCP\EsServers;
-use Doctrine\DBAL\Connection;
 
-class ServerService
+final readonly class ServerService
 {
-    private Connection $connection;
-    private EnterpriseDispatcherRepository $enterpriseDispatcherRepository;
+    private const int SYSTEM_PACKAGE = 1; //1 is the system package of all Panel package
 
-    public function __construct(Connection $connection, EnterpriseDispatcherRepository $enterpriseDispatcherRepository)
-    {
-        $this->connection = $connection;
-        $this->enterpriseDispatcherRepository = $enterpriseDispatcherRepository;
-    }
+    public function __construct(private EnterpriseDispatcherRepository $enterpriseDispatcherRepository) {}
 
     public function allIPAddressesVpsExternalNetwork(int $id_enterprise_dispatcher): array
     {
         $enterpriseDispatcher = $this->enterpriseDispatcherRepository->get($id_enterprise_dispatcher);
         $esServer = EsServers::createFromEnterpriseDispatcher($enterpriseDispatcher);
 
-        return $esServer->getPackageIPAddressesVpsExternalNetwork(1); //1 is the system package of all Panel package
+        return $esServer->getPackageIPAddressesVpsExternalNetwork(self::SYSTEM_PACKAGE);
     }
 
     public function ipAddressVpsExternalNetworkDetails(int $id_enterprise_dispatcher, string $ipAddress): array
     {
         $ips = $this->allIPAddressesVpsExternalNetwork($id_enterprise_dispatcher);
-        if($ips['Count'] > 1){
-            foreach ($ips['Items']['PackageIPAddress'] as $ip){
-                if($ip['ExternalIP'] === $ipAddress){
-                    if($ip['ItemId'] === 0){
+        if ($ips['Count'] > 1) {
+            foreach ($ips['Items']['PackageIPAddress'] as $ip) {
+                if ($ip['ExternalIP'] === $ipAddress) {
+                    if ($ip['ItemId'] === 0) {
                         throw new NotFoundException('The IP is not assigned to a VM.');
                     }
                     return $ip;
                 }
             }
-        }else{
+        } else {
             $ip = $ips['Items']['PackageIPAddress'];
-            if($ip['ExternalIP'] === $ipAddress){
-                if($ip['ItemId'] === 0){
+            if ($ip['ExternalIP'] === $ipAddress) {
+                if ($ip['ItemId'] === 0) {
                     throw new NotFoundException('The IP is not assigned to a VM.');
                 }
                 return $ip;

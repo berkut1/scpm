@@ -3,58 +3,67 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\UseCase\Panel\SolidCP\Node\HostingSpace\Create;
 
+use App\Event\FormErrorEvent;
 use App\Model\ControlPanel\Service\SolidCP\HostingSpaceService;
-use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class Form extends AbstractType
+final class Form extends AbstractType
 {
-    private HostingSpaceService $hostingSpaceService;
+    public function __construct(
+        private readonly HostingSpaceService      $hostingSpaceService,
+        private readonly EventDispatcherInterface $dispatcher
+    ) {}
 
-    public function __construct(HostingSpaceService $hostingSpaceService)
-    {
-        $this->hostingSpaceService = $hostingSpaceService;
-    }
-
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Command $data */
         $data = $options['data'];
+        $choices = [];
+
+        try {
+            $choices = array_flip($this->hostingSpaceService->allNotAddedHostingSpacesFrom($data->getIdEnterprise()));
+        } catch (\Exception $e) {
+            $this->dispatcher->dispatch(new FormErrorEvent($e, 'Error fetching hosting spaces'));
+        }
+
         $builder
             ->add('id_hosting_space', Type\ChoiceType::class,
                 [
                     'label' => 'Hosting Space',
-                    'choices' => array_flip($this->hostingSpaceService->allNotAddedHostingSpacesFrom($data->getIdEnterprise())),
+                    'choices' => $choices,
                     'required' => true,
-                    'placeholder' => 'Select a SolidCP Hosting Space'
+                    'placeholder' => 'Select a SolidCP Hosting Space',
+
                 ])
             ->add('name', Type\TextType::class,
                 [
                     'label' => 'Name',
-                    'required' => true
+                    'required' => true,
                 ])->add('max_active_number', Type\IntegerType::class,
                 [
                     'label' => 'Max Active Items',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('max_reserved_memory_mb', Type\IntegerType::class,
                 [
                     'label' => 'Max Reserver RAM (MB)',
-                    'required' => true
+                    'required' => true,
                 ])
             ->add('space_quota_gb', Type\IntegerType::class,
                 [
                     'label' => 'Space Quota (GB)',
-                    'required' => true
+                    'required' => true,
                 ]);
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Command::class,
-        ));
+        $resolver->setDefaults(['data_class' => Command::class]);
     }
 }

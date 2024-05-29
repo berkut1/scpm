@@ -5,9 +5,9 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachi
 
 use Webmozart\Assert\Assert;
 
-class OperationalStatus
+final class OperationalStatus implements \Stringable
 {
-    const NONE = 'None';
+    public const string NONE = 'None';
     private string $name;
 
     public function __construct(string $name)
@@ -29,6 +29,7 @@ class OperationalStatus
         return new self(self::NONE);
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;

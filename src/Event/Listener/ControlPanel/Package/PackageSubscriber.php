@@ -13,18 +13,15 @@ use App\Model\ControlPanel\Entity\Package\Event\PackageRenamed;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PackageSubscriber implements EventSubscriberInterface
+final readonly class PackageSubscriber implements EventSubscriberInterface
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler)
-    {
-        $this->auditLogHandler = $auditLogHandler;
-    }
+    public function __construct(private AuditLog\Add\Handler $auditLogHandler) {}
 
     #[ArrayShape([
         PackageRenamed::class => "string",
+        PackageChangedSolidCpPlans::class => "string",
     ])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [
@@ -54,12 +51,12 @@ class PackageSubscriber implements EventSubscriberInterface
                 $event->package->getName(),
             ]),
         ];
-        foreach ($event->removedPlans as $removedPlan){
+        foreach ($event->removedPlans as $removedPlan) {
             $records[] = Record::create('REMOVED_SOLIDCP_PLAN_NAME_FROM_PACKAGE', [
                 $removedPlan->getName(),
             ]);
         }
-        foreach ($event->addedPlans as $addedPlan){
+        foreach ($event->addedPlans as $addedPlan) {
             $records[] = Record::create('ADDED_SOLIDCP_PLAN_NAME_TO_PACKAGE', [
                 $addedPlan->getName(),
             ]);

@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Package\Event;
 
 use App\Model\ControlPanel\Entity\Package\Package;
 
-class PackageRenamed
+final class PackageRenamed
 {
     public Package $package;
     public string $oldName;

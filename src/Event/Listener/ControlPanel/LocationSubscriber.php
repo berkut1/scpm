@@ -1,11 +1,11 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Event\Listener\ControlPanel;
 
-use App\Model\AuditLog\UseCase\AuditLog;
 use App\Model\AuditLog\Entity\Entity;
 use App\Model\AuditLog\Entity\Record\Record;
+use App\Model\AuditLog\UseCase\AuditLog;
 use App\Model\ControlPanel\Entity\AuditLog\EntityType;
 use App\Model\ControlPanel\Entity\AuditLog\TaskName;
 use App\Model\ControlPanel\Entity\Location\Event\LocationCreated;
@@ -14,19 +14,15 @@ use App\Model\ControlPanel\Entity\Location\LocationRepository;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class LocationSubscriber implements EventSubscriberInterface
+final readonly class LocationSubscriber implements EventSubscriberInterface
 {
-    private AuditLog\Add\Handler $auditLogHandler;
-    private LocationRepository $locationRepository;
-
-    public function __construct(AuditLog\Add\Handler $auditLogHandler, LocationRepository $locationRepository)
-    {
-
-        $this->auditLogHandler = $auditLogHandler;
-        $this->locationRepository = $locationRepository;
-    }
+    public function __construct(
+        private AuditLog\Add\Handler $auditLogHandler,
+        private LocationRepository   $locationRepository
+    ) {}
 
     #[ArrayShape([LocationCreated::class => "string", LocationRenamed::class => "string"])]
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

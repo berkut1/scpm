@@ -29,7 +29,8 @@
 {% block javascripts %}
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
     {{ parent() }}
-    <script>
+    <script type="module"> {# need type="module" for import #}
+        import $ from 'jquery';
         $('#form_id_hosting_space').change(function () {
             let firstSelector = $(this);
             $("#form_name").val(firstSelector.find('option:selected').text());

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service;
 
-class Generators
+final class Generators
 {
     public static function generateRandomString(int $length = 10): string
     {
@@ -11,7 +11,7 @@ class Generators
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
+            $randomString .= $characters[random_int(0, $charactersLength - 1)];
         }
         return $randomString;
     }
@@ -21,7 +21,7 @@ class Generators
         $ms_mac_prefix = "00155D"; // IEEE prefix of MS MAC addresses
         $values = [
             "0", "1", "2", "3", "4", "5", "6", "7",
-            "8", "9", "A", "B", "C", "D", "E", "F"
+            "8", "9", "A", "B", "C", "D", "E", "F",
         ];
         $valuesCount = count($values);
         $mac = $ms_mac_prefix;

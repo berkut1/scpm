@@ -7,18 +7,13 @@ use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServerRepository;
 use App\Model\Flusher;
 
-class Handler
+final readonly class Handler
 {
-    private Flusher $flusher;
-    private SolidcpHostingSpaceRepository $solidcpHostingSpaceRepository;
-    private SolidcpServerRepository $solidcpServerRepository;
-
-    public function __construct(Flusher $flusher, SolidcpHostingSpaceRepository $solidcpHostingSpaceRepository, SolidcpServerRepository $solidcpServerRepository)
-    {
-        $this->flusher = $flusher;
-        $this->solidcpHostingSpaceRepository = $solidcpHostingSpaceRepository;
-        $this->solidcpServerRepository = $solidcpServerRepository;
-    }
+    public function __construct(
+        private Flusher                       $flusher,
+        private SolidcpHostingSpaceRepository $solidcpHostingSpaceRepository,
+        private SolidcpServerRepository       $solidcpServerRepository
+    ) {}
 
     public function handle(Command $command): void
     {

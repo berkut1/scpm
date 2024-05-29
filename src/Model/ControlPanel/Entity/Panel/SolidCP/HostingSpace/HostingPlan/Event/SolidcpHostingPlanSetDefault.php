@@ -5,7 +5,7 @@ namespace App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\E
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\HostingPlan\SolidcpHostingPlan;
 
-class SolidcpHostingPlanSetDefault
+final class SolidcpHostingPlanSetDefault
 {
     public SolidcpHostingPlan $solidcpHostingPlan;
 

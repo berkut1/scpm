@@ -5,7 +5,7 @@ namespace App\Model\User\Entity\User\Event;
 
 use App\Model\User\Entity\User\Id;
 
-class UserCreated
+final class UserCreated
 {
     public Id $id_createdUser;
 

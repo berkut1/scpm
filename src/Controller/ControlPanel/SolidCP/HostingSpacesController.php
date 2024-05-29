@@ -1,4 +1,4 @@
-<?php 
+<?php
 declare(strict_types=1);
 
 namespace App\Controller\ControlPanel\SolidCP;
@@ -10,24 +10,20 @@ use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\OsTemplate\OsTemplateF
 use App\ReadModel\ControlPanel\Panel\SolidCP\HostingSpace\SolidcpHostingSpaceFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/panel/solidcp/hosting-spaces', name: 'solidCpHostingSpaces')]
 #[IsGranted('ROLE_MODERATOR')]
-class HostingSpacesController extends AbstractController
+final class HostingSpacesController extends AbstractController
 {
-    private const PER_PAGE = 25;
-    private const MAIN_TITLE = 'Hosting Spaces';
+    private const int PER_PAGE = 25;
+    private const string MAIN_TITLE = 'Hosting Spaces';
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(private readonly LoggerInterface $logger) {}
 
     #[Route('', name: '')]
     public function index(Request $request, SolidcpHostingSpaceFetcher $fetcher): Response
@@ -71,7 +67,7 @@ class HostingSpacesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: '.edit')]
+    #[Route('/{id}/edit', name: '.edit', requirements: ['id' => Requirement::DIGITS])]
     public function edit(SolidcpHostingSpace $solidcpHostingSpace, Request $request, HostingSpace\Edit\Handler $handler): Response
     {
         $command = HostingSpace\Edit\Command::fromHostingSpace($solidcpHostingSpace);
@@ -96,8 +92,10 @@ class HostingSpacesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/change-node', name: '.changeNode')]
-    public function changeNode(SolidcpHostingSpace $solidcpHostingSpace, Request $request, HostingSpace\ChangeNode\Handler $handler): Response
+    #[Route('/{id}/change-node', name: '.changeNode', requirements: ['id' => Requirement::DIGITS])]
+    public function changeNode(
+        SolidcpHostingSpace $solidcpHostingSpace, Request $request, HostingSpace\ChangeNode\Handler $handler
+    ): Response
     {
         $command = HostingSpace\ChangeNode\Command::fromHostingSpace($solidcpHostingSpace);
 
@@ -121,8 +119,12 @@ class HostingSpacesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/change-solidcp-hosting-space-id', name: '.changeSolidCpHostingSpaceId')]
-    public function changeSolidCpHostingSpaceId(SolidcpHostingSpace $solidcpHostingSpace, Request $request, HostingSpace\ChangeSolidCpHostingSpace\Handler $handler): Response
+    #[Route('/{id}/change-solidcp-hosting-space-id', name: '.changeSolidCpHostingSpaceId', requirements: ['id' => Requirement::DIGITS])]
+    public function changeSolidCpHostingSpaceId(
+        SolidcpHostingSpace                            $solidcpHostingSpace,
+        Request                                        $request,
+        HostingSpace\ChangeSolidCpHostingSpace\Handler $handler
+    ): Response
     {
         $command = HostingSpace\ChangeSolidCpHostingSpace\Command::fromHostingSpace($solidcpHostingSpace);
 
@@ -146,7 +148,7 @@ class HostingSpacesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/enable', name: '.enable', methods: ['POST'])]
+    #[Route('/{id}/enable', name: '.enable', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function enable(int $id, Request $request, HostingSpace\Enable\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('enable', $request->request->get('token'))) {
@@ -165,7 +167,7 @@ class HostingSpacesController extends AbstractController
         return $this->redirectToRoute('solidCpHostingSpaces.show', ['id' => $id]);
     }
 
-    #[Route('/{id}/disable', name: '.disable', methods: ['POST'])]
+    #[Route('/{id}/disable', name: '.disable', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function disable(int $id, Request $request, HostingSpace\Disable\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('disable', $request->request->get('token'))) {
@@ -184,8 +186,10 @@ class HostingSpacesController extends AbstractController
         return $this->redirectToRoute('solidCpHostingSpaces.show', ['id' => $id]);
     }
 
-    #[Route('/{id}/add-plan', name: '.addPlan')]
-    public function addPlan(Request $request, SolidcpHostingSpace $solidcpHostingSpace, HostingSpace\HostingPlan\Add\Handler $handler): Response
+    #[Route('/{id}/add-plan', name: '.addPlan', requirements: ['id' => Requirement::DIGITS])]
+    public function addPlan(
+        Request $request, SolidcpHostingSpace $solidcpHostingSpace, HostingSpace\HostingPlan\Add\Handler $handler
+    ): Response
     {
         $command = new HostingSpace\HostingPlan\Add\Command($solidcpHostingSpace->getId());
 
@@ -210,7 +214,7 @@ class HostingSpacesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/plan/{id_plan}/remove', name: '.removePlan', methods: ['POST'])]
+    #[Route('/{id}/plan/{id_plan}/remove', name: '.removePlan', requirements: ['id' => Requirement::DIGITS, 'id_plan' => Requirement::DIGITS], methods: ['POST'])]
     public function removePlan(int $id, int $id_plan, Request $request, HostingSpace\HostingPlan\Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('removePlan', $request->request->get('token'))) {
@@ -229,8 +233,10 @@ class HostingSpacesController extends AbstractController
         return $this->redirectToRoute('solidCpHostingSpaces.show', ['id' => $id]);
     }
 
-    #[Route('/{id}/add-os-template', name: '.addOsTemplate')]
-    public function addOsTemplate(Request $request, SolidcpHostingSpace $solidcpHostingSpace, HostingSpace\OsTemplate\Add\Handler $handler): Response
+    #[Route('/{id}/add-os-template', name: '.addOsTemplate', requirements: ['id' => Requirement::DIGITS])]
+    public function addOsTemplate(
+        Request $request, SolidcpHostingSpace $solidcpHostingSpace, HostingSpace\OsTemplate\Add\Handler $handler
+    ): Response
     {
         $command = HostingSpace\OsTemplate\Add\Command::fromHostingSpace($solidcpHostingSpace);
 
@@ -255,8 +261,13 @@ class HostingSpacesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/os-template/{id_os_template}/remove', name: '.removeOsTemplate', methods: ['POST'])]
-    public function removeOsTemplate(Request $request, SolidcpHostingSpace $solidcpHostingSpace, HostingSpace\OsTemplate\Remove\Handler $handler, int $id_os_template): Response
+    #[Route('/{id}/os-template/{id_os_template}/remove', name: '.removeOsTemplate', requirements: ['id' => Requirement::DIGITS, 'id_os_template' => Requirement::DIGITS], methods: ['POST'])]
+    public function removeOsTemplate(
+        Request                                $request,
+        SolidcpHostingSpace                    $solidcpHostingSpace,
+        HostingSpace\OsTemplate\Remove\Handler $handler,
+        int                                    $id_os_template
+    ): Response
     {
         if (!$this->isCsrfTokenValid('removeOsTemplate', $request->request->get('token'))) {
             return $this->redirectToRoute('solidCpHostingSpaces.show', ['id' => $solidcpHostingSpace->getId()]);
@@ -274,8 +285,13 @@ class HostingSpacesController extends AbstractController
         return $this->redirectToRoute('solidCpHostingSpaces.show', ['id' => $solidcpHostingSpace->getId()]);
     }
 
-    #[Route('/{id}', name: '.show')]
-    public function show(Request $request, SolidcpHostingSpace $solidcpHostingSpace, SolidcpHostingPlanFetcher $planFetcher, OsTemplateFetcher $osTemplateFetcher): Response
+    #[Route('/{id}', name: '.show', requirements: ['id' => Requirement::DIGITS])]
+    public function show(
+        Request                   $request,
+        SolidcpHostingSpace       $solidcpHostingSpace,
+        SolidcpHostingPlanFetcher $planFetcher,
+        OsTemplateFetcher         $osTemplateFetcher
+    ): Response
     {
         $hostingPlans = $planFetcher->allPlansFromSpace(
             $solidcpHostingSpace->getId(),
@@ -300,7 +316,7 @@ class HostingSpacesController extends AbstractController
         );
     }
 
-    #[Route('/{id}/remove', name: '.remove', methods: ['POST'])]
+    #[Route('/{id}/remove', name: '.remove', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
     public function remove(int $id, Request $request, HostingSpace\Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('remove', $request->request->get('token'))) {
