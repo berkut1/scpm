@@ -56,6 +56,14 @@ jobs:
           ${{ runner.os }}-php-
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    - name: Wait for PostgreSQL to be ready
+      run: | 
+          echo "Waiting for PostgreSQL to be ready..."
+          until nc -z -v -w30 scpsc-postgres 5432
+          do
+            echo "Waiting for postgres database connection..."
+            sleep 1
+          done
     - name: Create Database
       run: |
         php bin/console doctrine:database:create --env=test
