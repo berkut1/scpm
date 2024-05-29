@@ -5,9 +5,9 @@ namespace App\Model\User\UseCase\SignUp\Manual;
 
 final class Command
 {
-    public string $login;
-    public string $password;
-    public string $role;
+    public ?string $login;
+    public ?string $password;
+    public ?string $role;
 
     public function __construct(string $login, string $password, string $role)
     {

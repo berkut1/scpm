@@ -15,6 +15,8 @@ use Doctrine\Persistence\ObjectManager;
 
 final class UserFixture extends Fixture
 {
+    public const string EXISTING_ID = '00000000-0000-0000-0000-000000000001';
+
     public const array REFERENCE_USERS = [
         'test_user_1',
         'test_user_2',
@@ -24,22 +26,22 @@ final class UserFixture extends Fixture
     public function load(ObjectManager $manager): void
     {
         $textPassword = 'password';
-        $admin = $this->createUser('test_admin', $textPassword);
+        $admin = $this->createUser('test_admin', $textPassword, Id::next());
         $admin->changeRole(Role::admin());
         $manager->persist($admin);
         $this->setReference(self::REFERENCE_USERS[0], $admin);
 
-        $user = $this->createUser('test_user', $textPassword);
+        $user = $this->createUser('test_user', $textPassword, new Id(self::EXISTING_ID));
         $manager->persist($user);
         $this->setReference(self::REFERENCE_USERS[1], $user);
 
         $manager->flush();
     }
 
-    private function createUser(string $login, string $textPassword): User
+    private function createUser(string $login, string $textPassword, Id $id): User
     {
         $userIdentity = new UserIdentity(
-            Id::next()->getValue(),
+            $id->getValue(),
             $login,
             '',
             Role::user()->getName(),
