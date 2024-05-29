@@ -62,5 +62,5 @@ jobs:
         php bin/console doctrine:migrations:migrate --no-interaction --env=test
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        DATABASE_URL: postgresql://app_user:secret@localhost:54321/app_db
+        DATABASE_URL: postgresql://app_user:secret@scpsc-postgres:5432/app_db
       run: vendor/bin/phpunit
