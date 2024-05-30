@@ -13,17 +13,15 @@ final readonly class HostingPlanService
 {
     public function __construct(
         private Connection                    $connection,
-        //private readonly EnterpriseDispatcherRepository $enterpriseDispatcherRepository,
         private SolidcpHostingSpaceRepository $solidcpHostingSpaceRepository,
-        private EsPackages                    $esPackages
     ) {}
 
     public function getRealSolidCpServerIdFromPlanId(SolidcpHostingSpace $hostingSpace, int $plan_id): int
     {
         $enterpriseDispatcher = $hostingSpace->getSolidcpServer()->getEnterprise();
-        $this->esPackages->initFromEnterpriseDispatcher($enterpriseDispatcher);
+        $esPackages = EsPackages::createFromEnterpriseDispatcher($enterpriseDispatcher);
         try {
-            $plan = $this->esPackages->getHostingPlan($plan_id);
+            $plan = $esPackages->getHostingPlan($plan_id);
         } catch (\Exception $e) {
             throw new \DomainException("Soap execution error (Code: {$e->getCode()}, Message: {$e->getMessage()})", $e->getCode(), $e);
         }

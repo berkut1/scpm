@@ -28,8 +28,19 @@ final readonly class Handler
         if (empty($headers) || !strpos((string)$headers[0], '200')) {
             throw new \DomainException('EnterpriseDispatcher is unreachable.');
         }
+        $command->url = $this->removeTrailingSlash($command->url);
 
         $enterpriseDispatcher->edit($this->enterpriseDispatcherService, $command->name, $command->url, $command->login, $command->password);
         $this->flusher->flush($enterpriseDispatcher);
+    }
+
+    private function removeTrailingSlash(string $url): string
+    {
+        $url = trim($url);
+        if (str_ends_with($url, '/')) {
+            $url = substr($url, 0, -1);
+        }
+
+        return $url;
     }
 }

@@ -3,19 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
-use App\Model\ControlPanel\Service\SOAP\SoapExecute;
-
-final class EsTasks extends SoapExecute
+final class EsTasks extends EnterpriseSoapServiceFactory
 {
-    public const string SERVICE = 'esTasks.asmx';
-
-    public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
-    {
-        $soap = new self();
-        $soap->initFromEnterpriseDispatcher($enterpriseDispatcher);
-        return $soap;
-    }
+    protected const string SERVICE = 'esTasks.asmx';
 
     /**
      * @throws \SoapFault
@@ -24,7 +14,6 @@ final class EsTasks extends SoapExecute
     {
         try {
             return $this->convertArray($this->execute(
-                self::SERVICE,
                 'GetTask',
                 ['taskId' => $taskId])->GetTaskResult);
         } catch (\SoapFault $e) {

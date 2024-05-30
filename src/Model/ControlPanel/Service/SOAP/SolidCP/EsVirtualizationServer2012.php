@@ -3,21 +3,12 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\VirtualizationServer2012\VirtualMachineRequestedState;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Server\VirtualMachine\VirtualMachine;
-use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
-final class EsVirtualizationServer2012 extends SoapExecute
+final class EsVirtualizationServer2012 extends EnterpriseSoapServiceFactory
 {
-    public const string SERVICE = 'esVirtualizationServer2012.asmx';
-
-    public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
-    {
-        $soap = new self();
-        $soap->initFromEnterpriseDispatcher($enterpriseDispatcher);
-        return $soap;
-    }
+    protected const string SERVICE = 'esVirtualizationServer2012.asmx';
 
     /**
      * @throws \SoapFault
@@ -26,7 +17,6 @@ final class EsVirtualizationServer2012 extends SoapExecute
     {
         try {
             return $this->execute(
-                self::SERVICE,
                 'GenerateMacAddress', [])->GenerateMacAddressResult;
         } catch (\SoapFault $e) {
             throw new \SoapFault($e->faultcode, "GenerateMacAddress Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
@@ -41,7 +31,6 @@ final class EsVirtualizationServer2012 extends SoapExecute
         try {
             return $this->convertArray(
                 $this->execute(
-                    self::SERVICE,
                     'ChangeVirtualMachineState', [
                     'itemId' => $itemId,
                     'state' => $state,
@@ -59,7 +48,6 @@ final class EsVirtualizationServer2012 extends SoapExecute
         try {
             return $this->convertArray(
                 $this->execute(
-                    self::SERVICE,
                     'GetOperatingSystemTemplates',
                     [
                         'packageId' => $packageId,
@@ -88,7 +76,6 @@ final class EsVirtualizationServer2012 extends SoapExecute
         try {
             return $this->convertArray(
                 $this->execute(
-                    self::SERVICE,
                     'CreateNewVirtualMachine',
                     [
                         'VMSettings' => $vmSettings,
@@ -116,7 +103,6 @@ final class EsVirtualizationServer2012 extends SoapExecute
         try {
             return $this->convertArray(
                 $this->execute(
-                    self::SERVICE,
                     'GetVirtualMachineItem',
                     [
                         'itemId' => $itemId,
@@ -134,7 +120,6 @@ final class EsVirtualizationServer2012 extends SoapExecute
         try {
             return $this->convertArray(
                 $this->execute(
-                    self::SERVICE,
                     'GetVirtualMachineGeneralDetails',
                     [
                         'itemId' => $itemId,
@@ -152,7 +137,6 @@ final class EsVirtualizationServer2012 extends SoapExecute
         try {
             return $this->convertArray(
                 $this->execute(
-                    self::SERVICE,
                     'GetExternalNetworkAdapterDetails',
                     [
                         'itemId' => $itemId,
@@ -170,7 +154,6 @@ final class EsVirtualizationServer2012 extends SoapExecute
         try {
             return $this->convertArray(
                 $this->execute(
-                    self::SERVICE,
                     'GetVirtualMachines',
                     [
                         'packageId' => $packageId,
