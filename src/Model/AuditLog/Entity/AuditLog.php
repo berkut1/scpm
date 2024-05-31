@@ -24,13 +24,13 @@ class AuditLog
     #[ORM\Column(name: "date", type: Types::DATETIME_IMMUTABLE, nullable: false, options: ["default" => "now()"])]
     private \DateTimeImmutable $date;
 
-    #[ORM\Column(name: "ip_inet", type: Types::STRING, nullable: false)]
+    #[ORM\Column(name: "ip_inet", type: 'inet', nullable: false)]
     private string $ipInet;
 
     #[ORM\Embedded(class: Entity::class)]
     private Entity $entity;
 
-    #[ORM\Column(name: "task_name", type: "audit_log_task_name_type", nullable: false)]
+    #[ORM\Column(name: "task_name", type: "audit_log_task_name_type", length: 255, nullable: false)]
     private TaskNameInterface $taskName;
 
     /** @var ArrayCollection|Record[] */
