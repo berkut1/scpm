@@ -12,7 +12,7 @@ final class RecordType extends JsonType
     final public const string NAME = 'audit_log_record_type';
 
     #[\Override]
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if ($value instanceof ArrayCollection) {
             $data = $value->toArray();
@@ -37,15 +37,8 @@ final class RecordType extends JsonType
         return Record::setFromDecodedJSON($data);
     }
 
-    #[\Override]
     public function getName(): string
     {
         return self::NAME;
-    }
-
-    #[\Override]
-    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
-    {
-        return true;
     }
 }

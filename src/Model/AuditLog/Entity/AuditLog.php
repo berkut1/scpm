@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "audit_logs")]
-#[ORM\Index(columns: ["entity_type", "entity_id"], name: "audit_logs_entity_type_id_idx")]
+#[ORM\Index(name: "audit_logs_entity_type_id_idx", columns: ["entity_type", "entity_id"])]
 #[ORM\Entity]
 class AuditLog
 {

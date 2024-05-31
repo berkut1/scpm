@@ -22,7 +22,6 @@ final class EntityTypeType extends StringType
         return !empty($value) ? EntityType::create($value) : null;
     }
 
-    #[\Override]
     public function getName(): string
     {
         return self::NAME;

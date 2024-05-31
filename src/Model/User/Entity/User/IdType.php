@@ -21,10 +21,4 @@ final class IdType extends GuidType
     {
         return !empty($value) ? new Id($value) : null;
     }
-
-    #[\Override]
-    public function getName(): string
-    {
-        return self::NAME;
-    }
 }
