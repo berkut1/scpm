@@ -6,8 +6,10 @@ doctrine:
 
         url: '%env(resolve:DATABASE_URL)%'
 
+#        schema_filter: ~^(?!doctrine_)~ #TODO: https://github.com/doctrine/migrations/issues/1406#issuecomment-1994382323
+
         mapping_types:
-            inet: inet #docrtinr does not know inet/cidr type
+            inet: inet #docrtinr does not know inet/cidr types and tries to replace it to VARCHAR. (mapping inet to our inet)
 
         types:
             inet: { class: 'App\Model\InetType' }

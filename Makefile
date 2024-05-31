@@ -26,7 +26,7 @@ docker-pull:
 docker-build:
 	docker-compose build
 
-scpsc-init: scpsc-composer-install scpsc-migrations scpsc-clear-cache scpsc-fixtures scpsc-generate-ssl-key
+scpsc-init: scpsc-composer-install scpsc-clear-cache scpsc-migrations scpsc-fixtures scpsc-generate-ssl-key
 
 scpsc-init-no-cache: scpsc-composer-install scpsc-migrations scpsc-fixtures scpsc-generate-ssl-key
 
