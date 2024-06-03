@@ -21,4 +21,9 @@ final class IdType extends GuidType
     {
         return !empty($value) ? new Id($value) : null;
     }
+
+    public function getName(): string
+    {
+        return self::NAME;
+    }
 }
