@@ -30,6 +30,8 @@ services:
             - ./:/app
             - composer:/root/.composer/cache
 #            - vendor:/app/vendor
+        environment:
+            PHP_IDE_CONFIG: "serverName=Docker"
         depends_on:
             - scpsc-postgres
 #    scpsc-node:

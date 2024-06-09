@@ -1,0 +1,1 @@
+If you have used this project prior to PHP 8.3 (or before 06/10/2024), check this [MIGRATION](docs/MIGRATION.md)

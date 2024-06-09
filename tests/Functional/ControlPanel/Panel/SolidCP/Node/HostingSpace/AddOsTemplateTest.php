@@ -39,9 +39,8 @@ final class AddOsTemplateTest extends DbWebTestCase
         $this->assertStringContainsString('Add Os Template', $crawler->filter('title')->text());
     }
 
-    public function testAddOs(): void //make a warning - an empty test
+    public function testAddOs(): void
     {
-        //With WebTestCase we can't test if a form has JavaScript dependent drop down list
-        //check it manually.
+        $this->markTestSkipped("With WebTestCase we can't test if a form has JavaScript dependent drop down list, check it manually");
     }
 }

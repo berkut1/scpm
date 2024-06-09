@@ -10,7 +10,7 @@ use Webmozart\Assert\Assert;
 #[ORM\Embeddable]
 class Entity
 {
-    #[ORM\Column(type: "audit_log_entity_type", nullable: false)]
+    #[ORM\Column(type: "audit_log_entity_type", length: 255, nullable: false)]
     private EntityTypeInterface $type;
 
     /** We use string because not only UUID is possible to be here */

@@ -22,15 +22,8 @@ final class UserIdType extends GuidType
         return !empty($value) ? new UserId($value) : null;
     }
 
-    #[\Override]
     public function getName(): string
     {
         return self::NAME;
-    }
-
-    #[\Override]
-    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
-    {
-        return true;
     }
 }

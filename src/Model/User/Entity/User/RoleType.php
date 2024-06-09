@@ -22,7 +22,6 @@ final class RoleType extends StringType
         return !empty($value) ? new Role($value) : null;
     }
 
-    #[\Override]
     public function getName(): string
     {
         return self::NAME;

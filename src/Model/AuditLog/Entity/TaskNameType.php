@@ -22,7 +22,6 @@ final class TaskNameType extends StringType
         return !empty($value) ? TaskName::create($value) : null;
     }
 
-    #[\Override]
     public function getName(): string
     {
         return self::NAME;

@@ -6,10 +6,13 @@ doctrine:
 
         url: '%env(resolve:DATABASE_URL)%'
 
+#        schema_filter: ~^(?!doctrine_)~ #TODO: https://github.com/doctrine/migrations/issues/1406#issuecomment-1994382323
+
         mapping_types:
-            cidr: string #docrtinr does not know cidr type
+            inet: inet #docrtinr does not know inet/cidr types and tries to replace it to VARCHAR. (mapping inet to our inet)
 
         types:
+            inet: { class: 'App\Model\InetType' }
             bigint: { class: 'App\Model\BigIntType' } #//we override that Type because of this https://github.com/doctrine/dbal/issues/3690
             audit_log_id: { class: 'App\Model\AuditLog\Entity\IdType' }
             audit_log_user_id: { class: 'App\Model\AuditLog\Entity\UserIdType' }

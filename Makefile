@@ -2,6 +2,7 @@ up: docker-up
 down: docker-down
 restart: docker-down docker-up
 init: docker-down-clear docker-pull docker-build docker-up scpsc-init
+init-no-cache: docker-down-clear docker-pull docker-build docker-up scpsc-init-no-cache
 init-no-fixtures: docker-down-clear docker-pull docker-build docker-up scpsc-init-no-fixtures
 test: scpsc-test
 test-unit: scpsc-test-unit
@@ -25,7 +26,9 @@ docker-pull:
 docker-build:
 	docker-compose build
 
-scpsc-init: scpsc-composer-install scpsc-migrations scpsc-clear-cache scpsc-fixtures scpsc-generate-ssl-key
+scpsc-init: scpsc-composer-install scpsc-clear-cache scpsc-migrations scpsc-fixtures scpsc-generate-ssl-key
+
+scpsc-init-no-cache: scpsc-composer-install scpsc-migrations scpsc-fixtures scpsc-generate-ssl-key
 
 scpsc-init-no-fixtures: scpsc-composer-install scpsc-assets-install scpsc-migrations scpsc-generate-ssl-key
 
