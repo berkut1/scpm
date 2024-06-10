@@ -28,7 +28,7 @@ final readonly class Handler
                 $command->endDate,
             ]),
         ];
-        $entity = new Entity(EntityType::auditLog(), Id::ZEROS);
+        $entity = new Entity(EntityType::auditLog(), Id::zeros()->getValue());
         $auditLogCommand = new AuditLog\Add\Command(
             $entity,
             TaskName::removeLog(),

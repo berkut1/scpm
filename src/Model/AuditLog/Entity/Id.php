@@ -3,38 +3,36 @@ declare(strict_types=1);
 
 namespace App\Model\AuditLog\Entity;
 
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 use Webmozart\Assert\Assert;
 
-final class Id implements \Stringable
+final class Id extends Uuid implements \Stringable
 {
-    final public const string ZEROS = "00000000-0000-0000-0000-000000000000";
-    private string $value;
-
     public function __construct(string $value)
     {
         Assert::notEmpty($value);
-        $this->value = $value;
+        $uid = Uuid::fromString($value)->uid;
+        parent::__construct($uid);
     }
 
     public static function zeros(): self
     {
-        return new self(self::ZEROS);
+        return new self(Uuid::NIL);
     }
 
     public static function next(): self
     {
-        return new self(Uuid::uuid7()->toString());
+        return new self(self::v7()::generate());
     }
 
     public function isEqual(self $id): bool
     {
-        return $this->value === $id->value;
+        return $this->equals($id);
     }
 
     public function getValue(): string
     {
-        return $this->value;
+        return $this->toRfc4122();
     }
 
     #[\Override]
