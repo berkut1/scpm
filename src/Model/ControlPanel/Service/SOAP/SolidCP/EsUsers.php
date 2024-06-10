@@ -3,35 +3,18 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\User\UserInfo;
-use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
-final class EsUsers extends SoapExecute
+final class EsUsers extends EnterpriseSoapServiceFactory
 {
-    public const string SERVICE = 'esUsers.asmx';
-
-    //private SoapExecute $soapExecute;
-
-    public function __construct()
-    {
-        //parent::__construct();
-        //$this->soapExecute = SoapExecute::initFromEnterpriseDispatcher($enterpriseDispatcher);
-    }
-
-    public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
-    {
-        $soap = new self();
-        $soap->initFromEnterpriseDispatcher($enterpriseDispatcher);
-        return $soap;
-    }
+    protected const string SERVICE = 'esUsers.asmx';
 
     /**
      * @throws \SoapFault
      */
     public function addUser(UserInfo $userInfo, string $password, bool $sendLetter = false, ?string $notes = null): int
     {
-        $result = $this->execute(self::SERVICE, 'AddUser', [
+        $result = $this->execute('AddUser', [
             'user' => $userInfo,
             'sendLetter' => $sendLetter,
             'password' => $password,
@@ -50,11 +33,10 @@ final class EsUsers extends SoapExecute
     public function getUserByUsername(string $username): array
     {
         try {
-//            return $this->execute(self::SERVICE, 'GetUserByUsername', [
+//            return $this->execute('GetUserByUsername', [
 //                'username' => $username,
 //            ])->GetUserByUsernameResult;
             $result = $this->convertArray($this->execute(
-                self::SERVICE,
                 'GetUserByUsername',
                 ['username' => $username])->GetUserByUsernameResult);
         } catch (\SoapFault $e) {
@@ -70,7 +52,7 @@ final class EsUsers extends SoapExecute
     public function userExists(string $username): bool
     {
         try {
-            return $this->execute(self::SERVICE, 'UserExists', [
+            return $this->execute('UserExists', [
                 'username' => $username,
             ])->UserExistsResult;
         } catch (\SoapFault $e) {
@@ -84,7 +66,7 @@ final class EsUsers extends SoapExecute
     public function changeUserPassword(int $userId, string $password): int
     {
         try {
-            $result = $this->execute(self::SERVICE, 'ChangeUserPassword', [
+            $result = $this->execute('ChangeUserPassword', [
                 'userId' => $userId,
                 'password' => $password,
             ])->ChangeUserPasswordResult;
@@ -127,7 +109,7 @@ final class EsUsers extends SoapExecute
     ): int
     {
         try {
-            $result = $this->execute(self::SERVICE, 'UpdateUserLiteral', [
+            $result = $this->execute('UpdateUserLiteral', [
                 'userId' => $userId,
                 'roleId' => $roleId,
                 'statusId' => $statusId,

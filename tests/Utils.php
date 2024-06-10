@@ -28,7 +28,7 @@ final class Utils
         $generatorType = $metadata->generatorType;
 
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadataInfo::GENERATOR_TYPE_NONE);
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $unitOfWork = $em->getUnitOfWork();
         $persistersRef = new \ReflectionProperty($unitOfWork, 'persisters');

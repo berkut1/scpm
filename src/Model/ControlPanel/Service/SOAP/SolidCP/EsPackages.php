@@ -3,20 +3,11 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SOAP\SolidCP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Entity\Enterprise\Package\PackageStatus;
-use App\Model\ControlPanel\Service\SOAP\SoapExecute;
 
-final class EsPackages extends SoapExecute
+final class EsPackages extends EnterpriseSoapServiceFactory
 {
-    public const string SERVICE = 'esPackages.asmx';
-
-    public static function createFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher): self //TODO: move to a facade?
-    {
-        $soap = new self();
-        $soap->initFromEnterpriseDispatcher($enterpriseDispatcher);
-        return $soap;
-    }
+    protected const string SERVICE = 'esPackages.asmx';
 
     /**
      * @throws \SoapFault
@@ -39,7 +30,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             return $this->execute(
-                self::SERVICE,
                 'AddPackageWithResources',
                 [
                     'userId' => $userId,
@@ -68,7 +58,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             $result = $this->execute(
-                self::SERVICE,
                 'ChangePackageStatus',
                 [
                     'packageId' => $packageId,
@@ -91,7 +80,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             $result = $this->execute(
-                self::SERVICE,
                 'UpdatePackageName',
                 [
                     'packageId' => $packageId,
@@ -115,7 +103,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             return $this->convertArray($this->execute(
-                self::SERVICE,
                 'GetMyPackages',
                 ['userId' => $userId])->GetMyPackagesResult->PackageInfo);
         } catch (\SoapFault $e) {
@@ -130,7 +117,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             return $this->convertArray($this->execute(
-                self::SERVICE,
                 'GetPackageAddons',
                 ['packageId' => $packageId])->GetPackageAddonsResult);
         } catch (\SoapFault $e) {
@@ -145,7 +131,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             $result = (array)$this->execute(
-                self::SERVICE,
                 'GetHostingPlans',
                 [
                     'userId' => $userId,
@@ -163,7 +148,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             return $this->convertArray($this->execute(
-                self::SERVICE,
                 'GetHostingPlan',
                 ['planId' => $planId])->GetHostingPlanResult);
         } catch (\SoapFault $e) {
@@ -178,7 +162,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             return $this->convertArray($this->execute(
-                self::SERVICE,
                 'GetPackageContext',
                 ['packageId' => $packageId])->GetPackageContextResult);
         } catch (\SoapFault $e) {
@@ -202,7 +185,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             $result = (array)$this->execute(
-                self::SERVICE,
                 'GetNestedPackagesSummary',
                 ['packageId' => $packageId])->GetNestedPackagesSummaryResult;
 
@@ -245,7 +227,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             $result = (array)$this->execute(
-                self::SERVICE,
                 'GetPackageQuotas',
                 ['packageId' => $packageId])->GetPackageQuotasResult;
 
@@ -262,7 +243,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             $result = (array)$this->execute(
-                self::SERVICE,
                 'GetRawPackages',
                 ['userId' => $userId])->GetRawPackagesResult;
 
@@ -279,7 +259,6 @@ final class EsPackages extends SoapExecute
     {
         try {
             $result = (array)$this->execute(
-                self::SERVICE,
                 'GetRawPackageItems',
                 ['packageId' => $packageId])->GetRawPackageItemsResult;
 

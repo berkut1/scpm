@@ -33,10 +33,10 @@ final class EditTest extends TestCase
 
         self::assertSame($newEnterpriseDispatcher, $solidcpServer->getEnterprise());
         self::assertSame($location, $solidcpServer->getLocation());
-        self::assertEquals($name, $solidcpServer->getName());
-        self::assertEquals($cores, $solidcpServer->getCores());
-        self::assertEquals($threads, $solidcpServer->getThreads());
-        self::assertEquals($memoryMb, $solidcpServer->getMemoryMb());
+        self::assertSame($name, $solidcpServer->getName());
+        self::assertSame($cores, $solidcpServer->getCores());
+        self::assertSame($threads, $solidcpServer->getThreads());
+        self::assertSame($memoryMb, $solidcpServer->getMemoryMb());
     }
 
     public function testRecordEvent(): void

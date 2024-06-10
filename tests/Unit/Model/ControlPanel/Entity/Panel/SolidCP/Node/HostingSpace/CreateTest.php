@@ -25,11 +25,11 @@ final class CreateTest extends TestCase
 
         self::assertInstanceOf(SolidcpHostingSpace::class, $hostingSpace);
         self::assertSame($this->solidcpServer, $hostingSpace->getSolidcpServer());
-        self::assertEquals($name, $hostingSpace->getName());
-        self::assertEquals($maxActiveNumber, $hostingSpace->getMaxActiveNumber());
-        self::assertEquals($maxReservedMemoryKb, $hostingSpace->getMaxReservedMemoryKb());
-        self::assertEquals($spaceQuotaGb, $hostingSpace->getSpaceQuotaGb());
-        self::assertEquals($solidCpIdHostingSpace, $hostingSpace->getSolidCpIdHostingSpace());
+        self::assertSame($name, $hostingSpace->getName());
+        self::assertSame($maxActiveNumber, $hostingSpace->getMaxActiveNumber());
+        self::assertSame($maxReservedMemoryKb, $hostingSpace->getMaxReservedMemoryKb());
+        self::assertSame($spaceQuotaGb, $hostingSpace->getSpaceQuotaGb());
+        self::assertSame($solidCpIdHostingSpace, $hostingSpace->getSolidCpIdHostingSpace());
         self::assertFalse($hostingSpace->hasPlans());
         self::assertTrue($hostingSpace->isEnabled());
     }

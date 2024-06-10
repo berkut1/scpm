@@ -22,7 +22,6 @@ final class StatusType extends StringType
         return !empty($value) ? new Status($value) : null;
     }
 
-    #[\Override]
     public function getName(): string
     {
         return self::NAME;

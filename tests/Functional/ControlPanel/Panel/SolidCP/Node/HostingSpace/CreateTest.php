@@ -32,11 +32,8 @@ final class CreateTest extends DbWebTestCase
         $this->assertStringContainsString('Add Hosting Space', $crawler->filter('title')->text());
     }
 
-    public function testCreate(): void //make a warning - an empty test
+    public function testCreate(): void
     {
-        //With WebTestCase we can't test if a form has JavaScript dependent drop down list
-        //check it manually.
+        $this->markTestSkipped("With WebTestCase we can't test if a form has JavaScript dependent drop down list, check it manually");
     }
-
-
 }

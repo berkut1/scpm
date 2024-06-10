@@ -16,7 +16,7 @@ final class Command
     public ?array $id_plans = [];
 
     #[Assert\NotBlank]
-    private ?string $packageType;
+    private ?string $packageType = null;
 
     private function __construct(string $id_package)
     {

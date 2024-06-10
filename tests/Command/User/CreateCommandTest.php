@@ -23,6 +23,7 @@ final class CreateCommandTest extends AbstractCommandTest
         $this->assertStringContainsString('Done!', $output);
     }
 
+    #[\Override]
     protected function getCommandFqcn(): string
     {
         return CreateCommand::class;

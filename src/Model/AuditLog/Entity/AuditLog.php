@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "audit_logs")]
-#[ORM\Index(columns: ["entity_type", "entity_id"], name: "audit_logs_entity_type_id_idx")]
+#[ORM\Index(name: "audit_logs_entity_type_id_idx", columns: ["entity_type", "entity_id"])]
 #[ORM\Entity]
 class AuditLog
 {
@@ -24,13 +24,13 @@ class AuditLog
     #[ORM\Column(name: "date", type: Types::DATETIME_IMMUTABLE, nullable: false, options: ["default" => "now()"])]
     private \DateTimeImmutable $date;
 
-    #[ORM\Column(name: "ip_inet", type: Types::STRING, nullable: false)]
+    #[ORM\Column(name: "ip_inet", type: 'inet', nullable: false)]
     private string $ipInet;
 
     #[ORM\Embedded(class: Entity::class)]
     private Entity $entity;
 
-    #[ORM\Column(name: "task_name", type: "audit_log_task_name_type", nullable: false)]
+    #[ORM\Column(name: "task_name", type: "audit_log_task_name_type", length: 255, nullable: false)]
     private TaskNameInterface $taskName;
 
     /** @var ArrayCollection|Record[] */

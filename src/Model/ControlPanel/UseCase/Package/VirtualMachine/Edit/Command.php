@@ -14,27 +14,27 @@ final class Command
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public ?int $cores;
+    public ?int $cores = null;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public ?int $threads;
+    public ?int $threads = null;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public ?int $ram_mb;
+    public ?int $ram_mb = null;
 
     #[Assert\NotBlank]
     #[Assert\Positive]
-    public ?int $space_gb;
+    public ?int $space_gb = null;
 
     #[Assert\NotBlank]
     #[Assert\PositiveOrZero]
-    public ?int $iops_min;
+    public ?int $iops_min = null;
 
     #[Assert\NotBlank]
     #[Assert\PositiveOrZero]
-    public ?int $iops_max;
+    public ?int $iops_max = null;
 
     private function __construct(Id $id)
     {

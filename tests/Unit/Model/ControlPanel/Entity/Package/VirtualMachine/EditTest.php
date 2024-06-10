@@ -27,9 +27,9 @@ final class EditTest extends TestCase
         $IopsMax = 40;
         $vmPackage->edit(1, 2, $newRamMb, $spaceGb, 0, $IopsMax);
 
-        self::assertEquals($newRamMb, $vmPackage->getRamMb());
-        self::assertEquals($spaceGb, $vmPackage->getSpaceGb());
-        self::assertEquals($IopsMax, $vmPackage->getIopsMax());
+        self::assertSame($newRamMb, $vmPackage->getRamMb());
+        self::assertSame($spaceGb, $vmPackage->getSpaceGb());
+        self::assertSame($IopsMax, $vmPackage->getIopsMax());
     }
 
     public function testRecordEvent(): void

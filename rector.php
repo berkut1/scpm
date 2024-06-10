@@ -8,8 +8,12 @@ use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
+use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\CodeQuality\Rector\BinaryOp\ResponseStatusCodeRector;
+use Rector\Symfony\CodeQuality\Rector\MethodCall\AssertSameResponseCodeWithDebugContentsRector;
+use Rector\Symfony\CodeQuality\Rector\MethodCall\LiteralGetToRequestClassConstantRector;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\Symfony\Symfony40\Rector\MethodCall\FormIsValidRector;
 use Rector\Symfony\Symfony61\Rector\Class_\CommandPropertyToAttributeRector;
@@ -18,7 +22,12 @@ use Rector\Symfony\Symfony62\Rector\ClassMethod\ParamConverterAttributeToMapEnti
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->symfonyContainerXml(__DIR__ . '/var/cache/dev/App_KernelDevDebugContainer.xml');
     $rectorConfig->paths([
+        __DIR__ . '/bin',
+        __DIR__ . '/config',
+        __DIR__ . '/public',
         __DIR__ . '/src',
+        __DIR__ . '/tests',
+        __DIR__ . '/translations',
     ]);
     $rectorConfig->skip([
         __DIR__ . '/src/Kernel.php',
@@ -33,13 +42,22 @@ return static function (RectorConfig $rectorConfig): void {
             __DIR__ . '/src/ReadModel/User',
             __DIR__ . '/src/ReadModel/ControlPanel',
             __DIR__ . '/src/Service',
+            __DIR__ . '/tests/Builder',
         ],
-        ReadOnlyPropertyRector::class => [ //remove in future ?
+        ReadOnlyPropertyRector::class => [ //TODO: remove in future ?
             __DIR__ . '/src/Model/AuditLog/Entity',
             __DIR__ . '/src/Model/ControlPanel/Entity', //some readonly ids in constructors throw an error by doctrine/symfony
             __DIR__ . '/src/Model/User/Entity',
         ],
         ReadOnlyClassRector::class, //buggy
+        PreferPHPUnitThisCallRector::class,
+        AssertSameResponseCodeWithDebugContentsRector::class, //TODO: remove ? https://github.com/rectorphp/rector-symfony/blob/main/docs/rector_rules_overview.md#assertsameresponsecodewithdebugcontentsrector
+        ResponseStatusCodeRector::class => [
+            __DIR__ . '/tests',
+        ],
+        LiteralGetToRequestClassConstantRector::class => [
+            __DIR__ . '/tests',
+        ],
     ]);
 
     // register a single rule
@@ -52,11 +70,19 @@ return static function (RectorConfig $rectorConfig): void {
     // define sets of rules
     $rectorConfig->sets([
         LevelSetList::UP_TO_PHP_83,
+
+        DoctrineSetList::DOCTRINE_DBAL_40,
+        DoctrineSetList::DOCTRINE_ORM_214,
         DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
+
         SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
         SymfonySetList::SYMFONY_64,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
+
+        PHPUnitSetList::PHPUNIT_100,
+        PHPUnitSetList::PHPUNIT_CODE_QUALITY,
+        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
     ]);
 };

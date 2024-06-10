@@ -13,19 +13,19 @@ final class AuthenticationTest extends DbWebTestCase
     {
         $this->client->request('GET', self::URI);
 
-        self::assertEquals(405, $this->client->getResponse()->getStatusCode());
+        self::assertSame(405, $this->client->getResponse()->getStatusCode());
     }
 
 
     public function testGuest(): void
     {
         $this->client->request('POST', self::URI);
-        self::assertEquals(400, $this->client->getResponse()->getStatusCode());
+        self::assertSame(400, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
         $data = json_decode($content, true);
 
-        self::assertEquals('Invalid JSON.', $data['detail']);
+        self::assertSame('Invalid JSON.', $data['detail']);
     }
 
     public function testSuccess(): void
@@ -42,7 +42,7 @@ final class AuthenticationTest extends DbWebTestCase
             ])
         );
 
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
         $data = json_decode($content, true);

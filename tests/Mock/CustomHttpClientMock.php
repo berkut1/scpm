@@ -14,6 +14,7 @@ final class CustomHttpClientMock implements CustomHttpClientInterface
         $this->responseMap[$url] = $response;
     }
 
+    #[\Override]
     public function getHeaders(string $url): array
     {
         return $this->responseMap[$url] ?? [];

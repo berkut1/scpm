@@ -3,38 +3,16 @@ declare(strict_types=1);
 
 namespace App\Model\ControlPanel\Service\SOAP;
 
-use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Service\NotFoundException;
 
-class SoapExecute implements SoapExecuteInterface
+abstract class BaseSoapExecute implements SoapExecuteInterface
 {
-    private string $url;
+    protected string $url;
     private array $options;
     private \SoapClient $soapClient;
     private bool $enabledTraceMode = false;
 
-//    protected function __construct(string $url, string $login, string $password, bool $caching = false, bool $compression = true)
-//    {
-//        $this->url = $url;
-//        $this->caching = $caching;
-//        $this->compression = $compression;
-//        $this->options = [
-//            'login' => $login,
-//            'password' => $password,
-//            //'trace' => 1, //debug
-//            //'exceptions' => 0,
-//            //'soap_version' => SOAP_1_2,
-//            'compression' => (($this->compression) ? (SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP) : ''),
-//            'cache_wsdl' => ($this->caching) ? 1 : 0,
-//        ];
-//
-//    }
-
-    public function initFromEnterpriseDispatcher(EnterpriseDispatcher $enterpriseDispatcher, $caching = false, $compression = true): void
-    {
-        $this->initManual($enterpriseDispatcher->getUrl(), $enterpriseDispatcher->getLogin(), $enterpriseDispatcher->getPassword(), $caching, $compression);
-    }
-
+    #[\Override]
     public function initManual(
         string $url, string $login, string $password, bool $caching = false, bool $compression = true, bool $keepAlive = false
     ): void
@@ -50,27 +28,29 @@ class SoapExecute implements SoapExecuteInterface
             'compression' => (($compression) ? (SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP) : ''),
             'cache_wsdl' => ($caching) ? 1 : 0,
         ];
-//        $this->options = [
-//            'login' => $login,
-//            'password' => $password,
-//            'verifypeer' => false,
-//            'verifyhost' => false,
-//            'trace' => true,
-//            'connection_timeout' => 5000,
-//            'soap_version' => SOAP_1_2,
-//            'stream_context' => stream_context_create([
-//                'http' => [
-//                    'protocol_version' => '1.0',
-//                    'header' => 'Connection: Close'
-//                ]
-//            ])
-//        ];
+/*        $this->options = [
+            'login' => $login,
+            'password' => $password,
+            'verifypeer' => false,
+            'verifyhost' => false,
+            'trace' => true,
+            'connection_timeout' => 5000,
+            'soap_version' => SOAP_1_2,
+            'stream_context' => stream_context_create([
+                'http' => [
+                    'protocol_version' => '1.0',
+                    'header' => 'Connection: Close'
+                ]
+            ])
+        ];*/
     }
 
     public function getOptions(): array
     {
         return $this->options;
     }
+
+    protected abstract function getServiceWsdl(): string;
 
     public function setOptions(bool $keepAlive = false, bool $caching = false, bool $compression = true): void
     {
@@ -99,9 +79,17 @@ class SoapExecute implements SoapExecuteInterface
     /**
      * @throws \SoapFault
      */
-    protected function execute(string $service, string $method, array $params): mixed
+    protected function createSoapClient(): \SoapClient
     {
-        $result = $this->executeInternal($service, $method, $params);
+        return new \SoapClient($this->getServiceWsdl(), $this->options);
+    }
+
+    /**
+     * @throws \SoapFault
+     */
+    protected function execute(string $method, array $params): mixed
+    {
+        $result = $this->executeInternal($method, $params);
 
         if (count((array)$result) === 0) {
             throw new NotFoundException("Not Found " . implode(", ", $params) . " in the method: $method");
@@ -114,13 +102,13 @@ class SoapExecute implements SoapExecuteInterface
      * @throws \SoapFault
      * @throws \Exception
      */
-    private function executeInternal(string $service, string $method, array $params): mixed
+    private function executeInternal(string $method, array $params): mixed
     {
-        $host = $this->url . "/{$service}?WSDL";
+        //$host = $this->url . "/{$service}?WSDL";
         try {
-            $this->soapClient = new \SoapClient($host, $this->options);
+            $this->soapClient = $this->createSoapClient();
             // Execute the request and process the results
-            return call_user_func([$this->soapClient, $method], $params);
+            return $this->soapClient->__soapCall($method, [$params]); //return call_user_func([$this->soapClient, $method], $params);
         } catch (\SoapFault $e) {
             throw new \SoapFault($e->faultcode, "SOAP Fault: (Code: {$e->getCode()}, Message: {$e->getMessage()})");
         } catch (\Exception $e) {

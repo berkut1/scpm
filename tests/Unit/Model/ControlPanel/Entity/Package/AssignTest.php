@@ -23,6 +23,6 @@ final class AssignTest extends TestCase
         $package->assignSolidCpPlan($plan);
 
         self::assertTrue($package->hasAssignedItems());
-        self::assertTrue(in_array($plan, $package->getSolidcpHostingPlans(), true));
+        self::assertContains($plan, $package->getSolidcpHostingPlans());
     }
 }

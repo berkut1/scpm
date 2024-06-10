@@ -22,11 +22,11 @@ final class CreateTest extends TestCase
 
         self::assertInstanceOf(SolidcpServer::class, $solidcpServer);
         self::assertSame($this->enterpriseDispatcher, $solidcpServer->getEnterprise());
-        self::assertEquals($name, $solidcpServer->getName());
-        self::assertEquals($cores, $solidcpServer->getCores());
-        self::assertEquals($threads, $solidcpServer->getThreads());
-        self::assertEquals($memoryMb, $solidcpServer->getMemoryMb());
-        self::assertEquals($locName, $solidcpServer->getLocation()->getName());
+        self::assertSame($name, $solidcpServer->getName());
+        self::assertSame($cores, $solidcpServer->getCores());
+        self::assertSame($threads, $solidcpServer->getThreads());
+        self::assertSame($memoryMb, $solidcpServer->getMemoryMb());
+        self::assertSame($locName, $solidcpServer->getLocation()->getName());
         self::assertFalse($solidcpServer->hasHostingSpace());
         self::assertTrue($solidcpServer->isEnabled());
     }

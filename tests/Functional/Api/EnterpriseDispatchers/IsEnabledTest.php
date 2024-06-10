@@ -14,7 +14,7 @@ final class IsEnabledTest extends DbWebTestCase
     {
         $this->client->request('GET', self::URI);
 
-        self::assertEquals(401, $this->client->getResponse()->getStatusCode());
+        self::assertSame(401, $this->client->getResponse()->getStatusCode());
     }
 
     public function testIsEnabled(): void
@@ -22,7 +22,7 @@ final class IsEnabledTest extends DbWebTestCase
         $this->apiLoginAs('test_user');
         $this->client->request('GET', self::URI);
 
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
         $data = json_decode($content, true);
@@ -37,7 +37,7 @@ final class IsEnabledTest extends DbWebTestCase
         $this->apiLoginAs('test_user');
         $this->client->request('GET', '/api/solidCP/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/is-enable');
 
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
         $data = json_decode($content, true);
@@ -52,7 +52,7 @@ final class IsEnabledTest extends DbWebTestCase
         $this->apiLoginAs('test_user');
         $this->client->request('GET', '/api/solidCP/enterprise-dispatchers/default/is-enable');
 
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
         $data = json_decode($content, true);
@@ -67,12 +67,12 @@ final class IsEnabledTest extends DbWebTestCase
         $this->apiLoginAs('test_user');
         $this->client->request('GET', '/api/solidCP/enterprise-dispatchers/' . 9999 . '/is-enable');
 
-        self::assertEquals(400, $this->client->getResponse()->getStatusCode());
+        self::assertSame(400, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
         $data = json_decode($content, true);
 
-        self::assertEquals(400, $data['error']['code']);
-        self::assertEquals('EnterpriseDispatcher is not found.', $data['error']['message']);
+        self::assertSame(400, $data['error']['code']);
+        self::assertSame('EnterpriseDispatcher is not found.', $data['error']['message']);
     }
 }

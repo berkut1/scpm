@@ -21,7 +21,6 @@ final class BigIntType extends Type //we override that Type because of this http
         return $platform->getBigIntTypeDeclarationSQL($column);
     }
 
-    #[\Override]
     public function getName(): string
     {
         return Types::BIGINT;

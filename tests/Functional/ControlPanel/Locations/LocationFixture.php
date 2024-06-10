@@ -12,6 +12,7 @@ final class LocationFixture extends Fixture
 {
     public const int EXISTING_ID = 101;
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $exists = new Location('Exist Test Location');

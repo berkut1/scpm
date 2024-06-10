@@ -8,6 +8,7 @@ use PHPUnit\Runner\BeforeTestHook;
 
 final class BypassFinalHook implements BeforeTestHook
 {
+    #[\Override]
     public function executeBeforeTest(string $test): void
     {
         BypassFinals::enable();

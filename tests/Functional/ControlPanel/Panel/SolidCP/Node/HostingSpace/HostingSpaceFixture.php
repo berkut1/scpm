@@ -20,6 +20,7 @@ final class HostingSpaceFixture extends Fixture implements DependentFixtureInter
         self::EXISTING_ID_DISABLED => 'hs_2',
     ];
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $server = $this->getReference(NodeFixture::REFERENCES[NodeFixture::EXISTING_ID_ENABLED]);
@@ -41,6 +42,7 @@ final class HostingSpaceFixture extends Fixture implements DependentFixtureInter
         Utils::flushEntityWithCustomId($manager, SolidcpHostingSpace::class);
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return [

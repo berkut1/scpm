@@ -22,7 +22,6 @@ final class PackageTypeType extends StringType
         return !empty($value) ? new PackageType($value) : null;
     }
 
-    #[\Override]
     public function getName(): string
     {
         return self::NAME;

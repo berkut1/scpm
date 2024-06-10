@@ -9,21 +9,16 @@ use App\Model\ControlPanel\Service\SolidCP\EnterpriseUserValidator;
 final class EnterpriseDispatcherBuilder
 {
     private EnterpriseUserValidator $service;
-    private string $name;
-    private string $url;
-    private string $login;
-    private string $password;
-    private bool $enabled;
+    private string $name = 'Test Enterprise';
+    private string $url = 'http://127.0.0.1:9002';
+    private string $login = 'test_reseller';
+    private string $password = 'test_password';
+    private bool $enabled = true;
     private ?int $id = null;
 
     public function __construct(EnterpriseUserValidator $service)
     {
         $this->service = $service;
-        $this->name = 'Test Enterprise';
-        $this->url = 'http://127.0.0.1:9002';
-        $this->login = 'test_reseller';
-        $this->password = 'test_password';
-        $this->enabled = true;
     }
 
     public function via(string $name, string $url, string $login, string $password): self
