@@ -12,6 +12,7 @@ abstract class BaseSoapExecute implements SoapExecuteInterface
     private \SoapClient $soapClient;
     private bool $enabledTraceMode = false;
 
+    #[\Override]
     public function initManual(
         string $url, string $login, string $password, bool $caching = false, bool $compression = true, bool $keepAlive = false
     ): void

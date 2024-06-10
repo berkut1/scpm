@@ -11,6 +11,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * @see \App\Tests\Command\User\CreateCommandTest
+ */
 #[AsCommand('user:create')]
 class CreateCommand extends Command
 {

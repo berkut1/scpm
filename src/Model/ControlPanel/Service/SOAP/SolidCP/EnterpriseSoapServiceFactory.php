@@ -18,6 +18,7 @@ abstract class EnterpriseSoapServiceFactory extends BaseSoapExecute
         return $soap;
     }
 
+    #[\Override]
     protected function getServiceWsdl(): string
     {
         return $this->url . '/' . static::SERVICE . '?WSDL';

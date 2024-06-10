@@ -19,7 +19,7 @@ final readonly class ErrorHandler
         $this->logger->error($e->getMessage(), ['exception' => $e]);
     }
 
-    public function handleError(\Exception $e): void
+    public function handleError(\Throwable $e): void
     {
         $this->logger->error($e->getMessage(), ['exception' => $e]);
     }
