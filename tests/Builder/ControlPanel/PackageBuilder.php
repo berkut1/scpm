@@ -9,11 +9,10 @@ use App\Model\ControlPanel\Entity\Package\PackageType;
 
 final class PackageBuilder
 {
-    private string $name;
+    private string $name = 'Test VM Package';
     private readonly PackageType $packageType;
 
     public function __construct() {
-        $this->name = 'Test VM Package';
         $this->packageType = PackageType::virtualMachine();
     }
 

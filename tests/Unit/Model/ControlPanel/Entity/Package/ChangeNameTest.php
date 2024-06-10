@@ -15,7 +15,7 @@ final class ChangeNameTest extends TestCase
         $newName = 'New Name';
         $package->changeName($newName);
 
-        self::assertEquals($newName, $package->getName());
+        self::assertSame($newName, $package->getName());
     }
 
     public function testRecordEvent(): void

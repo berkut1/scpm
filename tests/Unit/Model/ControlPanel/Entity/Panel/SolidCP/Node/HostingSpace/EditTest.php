@@ -24,10 +24,10 @@ final class EditTest extends TestCase
             $spaceQuotaGb = 431
         );
 
-        self::assertEquals($name, $hostingSpace->getName());
-        self::assertEquals($maxActiveNumber, $hostingSpace->getMaxActiveNumber());
-        self::assertEquals($maxReservedMemoryKb, $hostingSpace->getMaxReservedMemoryKb());
-        self::assertEquals($spaceQuotaGb, $hostingSpace->getSpaceQuotaGb());
+        self::assertSame($name, $hostingSpace->getName());
+        self::assertSame($maxActiveNumber, $hostingSpace->getMaxActiveNumber());
+        self::assertSame($maxReservedMemoryKb, $hostingSpace->getMaxReservedMemoryKb());
+        self::assertSame($spaceQuotaGb, $hostingSpace->getSpaceQuotaGb());
     }
 
     public function testRecordEvent(): void

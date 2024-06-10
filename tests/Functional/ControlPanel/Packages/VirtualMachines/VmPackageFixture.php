@@ -12,6 +12,7 @@ final class VmPackageFixture extends Fixture
 {
     public const string EXISTING_ID = '018f6ee9-2b3e-72e4-9aa2-eb61ec04b2d1';
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $exists = new VirtualMachinePackage(

@@ -27,11 +27,11 @@ final class EditTest extends TestCase
             $login = 'http://updated-example.com',
             $password = 'updated_test_password');
 
-        self::assertEquals($name, $enterpriseDispatcher->getName());
-        self::assertEquals($url, $enterpriseDispatcher->getUrl());
-        self::assertEquals($login, $enterpriseDispatcher->getLogin());
-        self::assertEquals($password, $enterpriseDispatcher->getPassword());
-        self::assertEquals($userId, $enterpriseDispatcher->getSolidcpLoginId());
+        self::assertSame($name, $enterpriseDispatcher->getName());
+        self::assertSame($url, $enterpriseDispatcher->getUrl());
+        self::assertSame($login, $enterpriseDispatcher->getLogin());
+        self::assertSame($password, $enterpriseDispatcher->getPassword());
+        self::assertSame($userId, $enterpriseDispatcher->getSolidcpLoginId());
     }
 
     public function testRecordEvent(): void

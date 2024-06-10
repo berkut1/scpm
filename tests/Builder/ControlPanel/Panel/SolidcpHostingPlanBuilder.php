@@ -12,16 +12,14 @@ final class SolidcpHostingPlanBuilder
     private SolidcpHostingSpace $hostingSpace;
     private int $solidcpIdPlan;
     private HostingPlanService $hostingPlanService;
-    private string $name;
-    private int $id;
+    private string $name = 'Test Plan';
+    private int $id = 1;
 
     public function __construct(SolidcpHostingSpace $hostingSpace, int $solidcpIdPlan, HostingPlanService $hostingPlanService)
     {
         $this->hostingSpace = $hostingSpace;
         $this->solidcpIdPlan = $solidcpIdPlan;
         $this->hostingPlanService = $hostingPlanService;
-        $this->name = 'Test Plan';
-        $this->id = 1;
     }
 
     public function withName(string $name): self

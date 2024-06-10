@@ -36,7 +36,6 @@ final readonly class Handler
             new \DateTimeImmutable(),
             $command->login,
             $hash,
-            new Role($command->role),
         );
 
         $this->users->add($user);

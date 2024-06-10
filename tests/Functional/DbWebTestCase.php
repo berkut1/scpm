@@ -14,6 +14,7 @@ class DbWebTestCase extends WebTestCase
 {
     protected KernelBrowser $client;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,6 +27,7 @@ class DbWebTestCase extends WebTestCase
         $this->em->getConnection()->setAutoCommit(false);*/
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         /*$this->em->getConnection()->rollback();

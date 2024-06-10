@@ -13,7 +13,7 @@ final class ShowTest extends DbWebTestCase
     {
         $this->client->request('GET', self::URI);
 
-        self::assertEquals(401, $this->client->getResponse()->getStatusCode());
+        self::assertSame(401, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAllList(): void
@@ -21,7 +21,7 @@ final class ShowTest extends DbWebTestCase
         $this->apiLoginAs('test_user');
         $this->client->request('GET', self::URI);
 
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
         $data = json_decode($content, true);

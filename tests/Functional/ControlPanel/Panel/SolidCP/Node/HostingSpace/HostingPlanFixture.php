@@ -25,6 +25,7 @@ final class HostingPlanFixture extends Fixture implements DependentFixtureInterf
         \DG\BypassFinals::enable(); //We can put in bin/console.php before kernel load, but that will enable it for all commands, so it's probably not a good idea.
     }
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $hostingSpace = $this->getReference(HostingSpaceFixture::REFERENCES[HostingSpaceFixture::EXISTING_ID_ENABLED]);
@@ -51,6 +52,7 @@ final class HostingPlanFixture extends Fixture implements DependentFixtureInterf
         \Mockery::close();
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return [

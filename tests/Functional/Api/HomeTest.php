@@ -11,12 +11,12 @@ final class HomeTest extends DbWebTestCase
     {
         $this->client->request('GET', '/api/');
 
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
         $data = json_decode($content, true);
 
-        self::assertEquals([
+        self::assertSame([
             'name' => 'JSON API v1',
         ], $data);
     }
@@ -25,6 +25,6 @@ final class HomeTest extends DbWebTestCase
     {
         $this->client->request('POST', '/api/');
 
-        self::assertEquals(405, $this->client->getResponse()->getStatusCode());
+        self::assertSame(405, $this->client->getResponse()->getStatusCode());
     }
 }

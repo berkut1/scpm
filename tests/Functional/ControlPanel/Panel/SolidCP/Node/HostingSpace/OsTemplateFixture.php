@@ -15,6 +15,7 @@ final class OsTemplateFixture extends Fixture implements DependentFixtureInterfa
     public const int EXISTING_ID = 10000001;
     public const string REFERENCE = 'template_os';
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         /** @var SolidcpHostingSpace $hostingSpace */
@@ -32,6 +33,7 @@ final class OsTemplateFixture extends Fixture implements DependentFixtureInterfa
         Utils::flushEntityWithCustomId($manager, OsTemplate::class);
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return [

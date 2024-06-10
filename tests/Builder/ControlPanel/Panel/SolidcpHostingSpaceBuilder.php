@@ -10,10 +10,10 @@ final class SolidcpHostingSpaceBuilder
 {
     private SolidcpServer $solidcpServer;
     private int $solidCpIdHostingSpace;
-    private string $name;
-    private int $maxActiveNumber;
+    private string $name = 'Test Hosting Space';
+    private int $maxActiveNumber = 70;
     private int $maxReservedMemoryKb;
-    private int $spaceQuotaGb;
+    private int $spaceQuotaGb = 500;
     private bool $enabled;
     private ?int $id = null;
 
@@ -25,10 +25,7 @@ final class SolidcpHostingSpaceBuilder
     {
         $this->solidcpServer = $solidcpServer;
         $this->solidCpIdHostingSpace = $solidCpIdHostingSpace;
-        $this->name = 'Test Hosting Space';
-        $this->maxActiveNumber = 70;
         $this->maxReservedMemoryKb = 1024 * 1024 * 64;
-        $this->spaceQuotaGb = 500;
         $this->enabled = $enabled;
     }
 

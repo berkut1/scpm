@@ -27,11 +27,11 @@ final class CreateTest extends TestCase
             ->build();
 
         self::assertInstanceOf(EnterpriseDispatcher::class, $enterpriseDispatcher);
-        self::assertEquals($name, $enterpriseDispatcher->getName());
-        self::assertEquals($url, $enterpriseDispatcher->getUrl());
-        self::assertEquals($login, $enterpriseDispatcher->getLogin());
-        self::assertEquals($password, $enterpriseDispatcher->getPassword());
-        self::assertEquals($userId, $enterpriseDispatcher->getSolidcpLoginId());
+        self::assertSame($name, $enterpriseDispatcher->getName());
+        self::assertSame($url, $enterpriseDispatcher->getUrl());
+        self::assertSame($login, $enterpriseDispatcher->getLogin());
+        self::assertSame($password, $enterpriseDispatcher->getPassword());
+        self::assertSame($userId, $enterpriseDispatcher->getSolidcpLoginId());
         self::assertFalse($enterpriseDispatcher->hasServers());
         self::assertTrue($enterpriseDispatcher->isEnabled());
     }

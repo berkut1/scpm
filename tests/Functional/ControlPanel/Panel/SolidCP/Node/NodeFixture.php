@@ -22,6 +22,7 @@ final class NodeFixture extends Fixture implements DependentFixtureInterface
     ];
 
 
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $enterpriseDispatcher = $this->getReference(EnterpriseDispatcherFixture::REFERENCES[EnterpriseDispatcherFixture::EXISTING_ID_ENABLED]);
@@ -46,6 +47,7 @@ final class NodeFixture extends Fixture implements DependentFixtureInterface
         Utils::flushEntityWithCustomId($manager, SolidcpServer::class);
     }
 
+    #[\Override]
     public function getDependencies(): array
     {
         return [
