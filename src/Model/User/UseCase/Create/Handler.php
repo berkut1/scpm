@@ -42,7 +42,11 @@ final readonly class Handler
             $command->login,
             $hash,
         );
-        $user->changeRole(new Role($command->role));
+
+        $role = new Role($command->role);
+        if(!$role->isUser()){
+            $user->changeRole(new Role($command->role));
+        }
 
         $this->users->add($user);
 
