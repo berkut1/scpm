@@ -30,6 +30,21 @@ final class EditTest extends TestCase
         self::assertSame($spaceQuotaGb, $hostingSpace->getSpaceQuotaGb());
     }
 
+    public function testFault(): void
+    {
+        $hostingSpace = (new SolidcpHostingSpaceBuilder($this->solidcpServer, 123))
+            ->build();
+
+        self::expectException(\DomainException::class);
+        $hostingSpace->edit(
+            'Test Hosting Space',
+            50,
+            37373737 * 1024,
+            360
+        );
+
+    }
+
     public function testRecordEvent(): void
     {
         $hostingSpace = (new SolidcpHostingSpaceBuilder($this->solidcpServer, 123))

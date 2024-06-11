@@ -82,6 +82,9 @@ class SolidcpHostingSpace implements AggregateRoot
     {
         $this->name = $name;
         $this->maxActiveNumber = $maxActiveNumber;
+        if($maxReservedMemoryKb > self::PSQL_INT_MAX){
+            throw new \DomainException("This value $maxReservedMemoryKb is too big than MAX ". self::PSQL_INT_MAX);
+        }
         $this->maxReservedMemoryKb = $maxReservedMemoryKb;
         $this->spaceQuotaGb = $spaceQuotaGb;
         $this->recordEvent(new Event\SolidcpHostingSpaceEdited($this));
