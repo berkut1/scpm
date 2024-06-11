@@ -21,6 +21,8 @@ class SolidcpHostingSpace implements AggregateRoot
 {
     use EventsTrait;
 
+    private const int PSQL_INT_MAX = 2147483647;
+
     #[ORM\Id]
     #[ORM\Column(name: "id", type: Types::INTEGER, nullable: false)]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
@@ -65,6 +67,9 @@ class SolidcpHostingSpace implements AggregateRoot
         $this->solidCpIdHostingSpace = $solidCpIdHostingSpace;
         $this->name = $name;
         $this->maxActiveNumber = $maxActiveNumber;
+        if($maxReservedMemoryKb > self::PSQL_INT_MAX){
+            throw new \DomainException("This value $maxReservedMemoryKb is too big than MAX ". self::PSQL_INT_MAX);
+        }
         $this->maxReservedMemoryKb = $maxReservedMemoryKb;
         $this->spaceQuotaGb = $spaceQuotaGb;
         $this->enabled = $enabled;

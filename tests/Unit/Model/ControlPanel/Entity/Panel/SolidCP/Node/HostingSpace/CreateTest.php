@@ -34,6 +34,19 @@ final class CreateTest extends TestCase
         self::assertTrue($hostingSpace->isEnabled());
     }
 
+    public function testFault(): void
+    {
+        self::expectException(\DomainException::class);
+
+        (new SolidcpHostingSpaceBuilder($this->solidcpServer, 123))
+            ->withDetails(
+                'Test Hosting Space',
+                50,
+                37373737 * 1024,
+                360)
+            ->build();
+    }
+
     public function testRecordEvent(): void
     {
         $hostingSpace = (new SolidcpHostingSpaceBuilder($this->solidcpServer, 123))->build();
