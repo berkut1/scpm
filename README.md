@@ -20,9 +20,10 @@ Installation
 apache or nginx (https://symfony.com/doc/6.4/setup/web_server_configuration.html#nginx)
 - `sudo apt install php8.3-soap php8.3-xml php8.3-mbstring php8.3-intl` - php libs
 - `git clone --branch builded https://github.com/berkut1/scpm.git`
-- `composer dump-env prod` after in the file .env.local.php update APP_SECRET, DATABASE_URL and JWT_PASSPHRASE variables
 - `composer install`
+- `composer dump-env prod` after in the file .env.local.php update APP_SECRET, DATABASE_URL and JWT_PASSPHRASE variables
 - `composer install --no-dev --optimize-autoloader`
+- `php bin/console asset-map:compile`
 - `APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear`
 
 More information here - https://symfony.com/doc/6.4/deployment.html
