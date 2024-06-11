@@ -13,8 +13,8 @@ final class EditTest extends DbWebTestCase
     {
         $this->client->request('GET', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -23,7 +23,7 @@ final class EditTest extends DbWebTestCase
 
         $this->client->request('GET', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -31,8 +31,8 @@ final class EditTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Edit SolidCP Server', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Edit SolidCP Server', $crawler->filter('title')->text());
     }
 
     public function testEdit(): void
@@ -49,15 +49,15 @@ final class EditTest extends DbWebTestCase
             'form[ram_mb]' => $ram_mb = 1024 * 8,
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString($name, $crawler->filter('title')->text());
-        $this->assertStringContainsString($name, $crawler->filter('body')->text());
-        $this->assertStringContainsString($cores . ' / ' . $threads, $crawler->filter('body')->text());
-        $this->assertStringContainsString((string)($ram_mb / 1024), $crawler->filter('body')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString($name, $crawler->filter('title')->text());
+        self::assertStringContainsString($name, $crawler->filter('body')->text());
+        self::assertStringContainsString($cores . ' / ' . $threads, $crawler->filter('body')->text());
+        self::assertStringContainsString((string)($ram_mb / 1024), $crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
@@ -74,18 +74,18 @@ final class EditTest extends DbWebTestCase
             'form[ram_mb]' => 0,
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_name')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_cores')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should be positive.', $crawler
+        self::assertStringContainsString('This value should be positive.', $crawler
             ->filter('#form_threads')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should be positive.', $crawler
+        self::assertStringContainsString('This value should be positive.', $crawler
             ->filter('#form_ram_mb')->ancestors()->first()->filter('.invalid-feedback')->text());
     }
 }

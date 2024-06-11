@@ -11,8 +11,8 @@ final class RemoveTest extends DbWebTestCase
     {
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_DISABLED . '/remove');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -20,7 +20,7 @@ final class RemoveTest extends DbWebTestCase
         $this->loginAs('test_user');
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_DISABLED . '/remove');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost(): void
@@ -28,10 +28,10 @@ final class RemoveTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_DISABLED . '/remove');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringContainsString('Exist Hosting Space Disabled', $crawler->filter('table > tbody')->text());
+        self::assertStringContainsString('Exist Hosting Space Disabled', $crawler->filter('table > tbody')->text());
     }
 
     public function testDelete(): void
@@ -45,7 +45,7 @@ final class RemoveTest extends DbWebTestCase
         $csrfToken = $form->getValues()['token'];
 
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_DISABLED . '/remove', ['token' => $csrfToken]);
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
@@ -57,7 +57,7 @@ final class RemoveTest extends DbWebTestCase
                 }
             });
 
-        $this->assertStringNotContainsString('Exist Hosting Space Disabled', $result);
+        self::assertStringNotContainsString('Exist Hosting Space Disabled', $result);
     }
 
     public function testFaultDelete(): void
@@ -71,7 +71,7 @@ final class RemoveTest extends DbWebTestCase
         $csrfToken = $form->getValues()['token'];
 
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/remove', ['token' => $csrfToken]);
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
@@ -83,7 +83,7 @@ final class RemoveTest extends DbWebTestCase
                 }
             });
 
-        $this->assertStringContainsString('Exist Hosting Space Enabled', $result);
-        $this->assertStringContainsString('Solidcp Hosting Space Exist Hosting Space Enabled has Plans', $crawler->filter('.alert.alert-danger')->text());
+        self::assertStringContainsString('Exist Hosting Space Enabled', $result);
+        self::assertStringContainsString('Solidcp Hosting Space Exist Hosting Space Enabled has Plans', $crawler->filter('.alert.alert-danger')->text());
     }
 }

@@ -12,8 +12,8 @@ final class AddPlanTest extends DbWebTestCase
     {
         $this->client->request('GET', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/add-plan');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -21,7 +21,7 @@ final class AddPlanTest extends DbWebTestCase
         $this->loginAs('test_user');
         $this->client->request('GET', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/add-plan');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -35,8 +35,8 @@ final class AddPlanTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/add-plan');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Add Plan', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Add Plan', $crawler->filter('title')->text());
     }
 
     public function testAddPlan(): void
@@ -55,15 +55,13 @@ final class AddPlanTest extends DbWebTestCase
             'form[name]' => $name = 'Test Plan',
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString($name,
-            $crawler->filter('body > div.body.flex-grow-1.px-5 > div > div.card-body > div.box > div:nth-child(2) > div.card-body > table > tbody')->text());
-        $this->assertStringContainsString((string)$id,
-            $crawler->filter('body > div.body.flex-grow-1.px-5 > div > div.card-body > div.box > div:nth-child(2) > div.card-body > table > tbody')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString($name, $crawler->filter('body > div.body.flex-grow-1.px-5 > div > div.card-body > div.box > div:nth-child(2) > div.card-body > table > tbody')->text());
+        self::assertStringContainsString((string)$id, $crawler->filter('body > div.body.flex-grow-1.px-5 > div > div.card-body > div.box > div:nth-child(2) > div.card-body > table > tbody')->text());
     }
 
     public function testExists(): void
@@ -82,7 +80,7 @@ final class AddPlanTest extends DbWebTestCase
             'form[name]' => $name = 'Exist Hosting Plan',
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('SolidcpHostingPlan with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('SolidcpHostingPlan with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
     }
 }

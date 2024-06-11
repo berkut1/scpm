@@ -11,8 +11,8 @@ final class RemoveTest extends DbWebTestCase
     {
         $this->client->request('POST', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/remove');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -21,7 +21,7 @@ final class RemoveTest extends DbWebTestCase
 
         $this->client->request('POST', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/remove');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost(): void
@@ -29,10 +29,10 @@ final class RemoveTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $this->client->request('POST', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/remove');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringContainsString('Exist Test VM Package RDP23', $crawler->filter('body')->text());
+        self::assertStringContainsString('Exist Test VM Package RDP23', $crawler->filter('body')->text());
     }
 
     public function testDelete(): void
@@ -45,10 +45,10 @@ final class RemoveTest extends DbWebTestCase
         $csrfToken = $form->getValues()['token'];
 
         $this->client->request('POST', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/remove', ['token' => $csrfToken]);
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringNotContainsString('Exist Test VM Package RDP23', $crawler->filter('body')->text());
+        self::assertStringNotContainsString('Exist Test VM Package RDP23', $crawler->filter('body')->text());
     }
 }

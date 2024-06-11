@@ -11,8 +11,8 @@ final class DisableTest extends DbWebTestCase
     {
         $this->client->request('POST', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/disable');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -20,7 +20,7 @@ final class DisableTest extends DbWebTestCase
         $this->loginAs('test_user');
 
         $this->client->request('POST', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/disable');
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost(): void
@@ -28,7 +28,7 @@ final class DisableTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $this->client->request('POST', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/disable');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
         $result = '';
@@ -39,7 +39,7 @@ final class DisableTest extends DbWebTestCase
                 }
             });
 
-        $this->assertStringContainsString('Yes Disable', $result);
+        self::assertStringContainsString('Yes Disable', $result);
     }
 
     public function testDisable(): void
@@ -52,7 +52,7 @@ final class DisableTest extends DbWebTestCase
         $csrfToken = $form->getValues()['token'];
 
         $this->client->request('POST', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/disable', ['token' => $csrfToken]);
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
@@ -63,6 +63,6 @@ final class DisableTest extends DbWebTestCase
                     $result = $row->text();
                 }
             });
-        $this->assertStringContainsString('No Enable', $result);
+        self::assertStringContainsString('No Enable', $result);
     }
 }

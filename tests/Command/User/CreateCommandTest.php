@@ -20,7 +20,7 @@ final class CreateCommandTest extends AbstractCommandTest
 
         // Check if the command output contains 'Done!'
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('Done!', $output);
+        self::assertStringContainsString('Done!', $output);
     }
 
     #[\Override]

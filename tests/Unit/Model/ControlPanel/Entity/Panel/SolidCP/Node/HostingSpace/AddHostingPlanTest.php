@@ -20,9 +20,9 @@ final class AddHostingPlanTest extends TestCase
             ->build();
         $plan = (new SolidCPHostingPlanBuilder($hostingSpace, 1, $this->createMock(HostingPlanService::class)))->withId(1)->build();
 
-        $this->assertCount(0, $hostingSpace->getHostingPlans());
+        self::assertCount(0, $hostingSpace->getHostingPlans());
         $hostingSpace->addHostingPlan($plan);
-        $this->assertCount(1, $hostingSpace->getHostingPlans());
+        self::assertCount(1, $hostingSpace->getHostingPlans());
     }
 
     public function testAlready(): void

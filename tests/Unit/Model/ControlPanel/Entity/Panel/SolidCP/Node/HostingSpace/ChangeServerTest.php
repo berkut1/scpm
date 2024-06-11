@@ -22,7 +22,7 @@ final class ChangeServerTest extends TestCase
         $newServer = (new SolidcpServerBuilder($this->enterpriseDispatcher))->withId(11)->build();
 
         $hostingSpace->changeServer($newServer);
-        $this->assertSame($newServer, $hostingSpace->getSolidcpServer());
+        self::assertSame($newServer, $hostingSpace->getSolidcpServer());
     }
 
     public function testNothingHappens(): void

@@ -19,7 +19,7 @@ final class AddOsTemplateTest extends TestCase
 
         $hostingSpace->addOsTemplate('template.vhdx', 'Test Template');
 
-        $this->assertCount(1, $hostingSpace->getOsTemplates());
+        self::assertCount(1, $hostingSpace->getOsTemplates());
     }
 
     public function testRecordEvent(): void

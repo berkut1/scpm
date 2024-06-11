@@ -11,8 +11,8 @@ final class EnableTest extends DbWebTestCase
     {
         $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/enable');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -20,7 +20,7 @@ final class EnableTest extends DbWebTestCase
         $this->loginAs('test_user');
 
         $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/enable');
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost(): void
@@ -28,7 +28,7 @@ final class EnableTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/enable');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
         $result = '';
@@ -39,7 +39,7 @@ final class EnableTest extends DbWebTestCase
                 }
             });
 
-        $this->assertStringContainsString('No Enable', $result);
+        self::assertStringContainsString('No Enable', $result);
     }
 
     public function testEnable(): void
@@ -52,7 +52,7 @@ final class EnableTest extends DbWebTestCase
         $csrfToken = $form->getValues()['token'];
 
         $this->client->request('POST', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_DISABLED . '/enable', ['token' => $csrfToken]);
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
@@ -63,6 +63,6 @@ final class EnableTest extends DbWebTestCase
                     $result = $row->text();
                 }
             });
-        $this->assertStringContainsString('Yes Disable', $result);
+        self::assertStringContainsString('Yes Disable', $result);
     }
 }

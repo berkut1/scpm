@@ -8,7 +8,7 @@ use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
-use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
+use Rector\PHPUnit\Rector\Class_\PreferPHPUnitSelfCallRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\CodeQuality\Rector\BinaryOp\ResponseStatusCodeRector;
@@ -29,6 +29,26 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/tests',
         __DIR__ . '/translations',
     ]);
+
+    // define sets of rules
+    $rectorConfig->sets([
+        LevelSetList::UP_TO_PHP_83,
+
+        DoctrineSetList::DOCTRINE_DBAL_40,
+        DoctrineSetList::DOCTRINE_ORM_214,
+        DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
+        DoctrineSetList::DOCTRINE_CODE_QUALITY,
+
+        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
+        SymfonySetList::SYMFONY_64,
+        SymfonySetList::SYMFONY_CODE_QUALITY,
+        SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
+
+        PHPUnitSetList::PHPUNIT_100,
+        PHPUnitSetList::PHPUNIT_CODE_QUALITY,
+        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
+    ]);
+
     $rectorConfig->skip([
         __DIR__ . '/src/Kernel.php',
         __DIR__ . '/src/EntityFromDB',
@@ -50,7 +70,6 @@ return static function (RectorConfig $rectorConfig): void {
             __DIR__ . '/src/Model/User/Entity',
         ],
         ReadOnlyClassRector::class, //buggy
-        PreferPHPUnitThisCallRector::class,
         AssertSameResponseCodeWithDebugContentsRector::class, //TODO: remove ? https://github.com/rectorphp/rector-symfony/blob/main/docs/rector_rules_overview.md#assertsameresponsecodewithdebugcontentsrector
         ResponseStatusCodeRector::class => [
             __DIR__ . '/tests',
@@ -60,29 +79,12 @@ return static function (RectorConfig $rectorConfig): void {
         ],
     ]);
 
-    // register a single rule
-    $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
-    $rectorConfig->rule(CommandPropertyToAttributeRector::class);
-    $rectorConfig->rule(FormIsValidRector::class);
-    $rectorConfig->rule(ResponseStatusCodeRector::class);
-    $rectorConfig->rule(ParamConverterAttributeToMapEntityAttributeRector::class); //from Symfony 5.4 to 6.4
-
-    // define sets of rules
-    $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_83,
-
-        DoctrineSetList::DOCTRINE_DBAL_40,
-        DoctrineSetList::DOCTRINE_ORM_214,
-        DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
-        DoctrineSetList::DOCTRINE_CODE_QUALITY,
-
-        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-        SymfonySetList::SYMFONY_64,
-        SymfonySetList::SYMFONY_CODE_QUALITY,
-        SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
-
-        PHPUnitSetList::PHPUNIT_100,
-        PHPUnitSetList::PHPUNIT_CODE_QUALITY,
-        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
+    $rectorConfig->rules([
+        PreferPHPUnitSelfCallRector::class,
+        InlineConstructorDefaultToPropertyRector::class,
+        CommandPropertyToAttributeRector::class,
+        FormIsValidRector::class,
+        ResponseStatusCodeRector::class,
+        ParamConverterAttributeToMapEntityAttributeRector::class, //from Symfony 5.4 to 6.4
     ]);
 };

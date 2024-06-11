@@ -12,8 +12,8 @@ final class EditTest extends DbWebTestCase
     {
         $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -22,7 +22,7 @@ final class EditTest extends DbWebTestCase
 
         $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -30,8 +30,8 @@ final class EditTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/panel/solidcp/enterprise-dispatchers/' . EnterpriseDispatcherFixture::EXISTING_ID_ENABLED . '/edit');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Edit Enterprise Dispatcher', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Edit Enterprise Dispatcher', $crawler->filter('title')->text());
     }
 
     public function testEdit(): void
@@ -55,14 +55,14 @@ final class EditTest extends DbWebTestCase
             'form[password]' => 'rename_password',
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Enterprise Dispatchers', $crawler->filter('title')->text());
-        $this->assertStringContainsString($name, $crawler->filter('body')->text());
-        $this->assertStringContainsString($url, $crawler->filter('body')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Enterprise Dispatchers', $crawler->filter('title')->text());
+        self::assertStringContainsString($name, $crawler->filter('body')->text());
+        self::assertStringContainsString($url, $crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
@@ -77,18 +77,18 @@ final class EditTest extends DbWebTestCase
             'form[password]' => '',
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_name')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_url')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_login')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_password')->ancestors()->first()->filter('.invalid-feedback')->text());
     }
 }

@@ -14,8 +14,8 @@ final class CreateTest extends DbWebTestCase
     {
         $this->client->request('GET', self::URI);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -24,7 +24,7 @@ final class CreateTest extends DbWebTestCase
 
         $this->client->request('GET', self::URI);
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -32,8 +32,8 @@ final class CreateTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', self::URI);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Add User', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Add User', $crawler->filter('title')->text());
     }
 
     public function testCreate(): void
@@ -47,13 +47,13 @@ final class CreateTest extends DbWebTestCase
             'form[role]' => Role::USER,
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Users', $crawler->filter('title')->text());
-        $this->assertStringContainsString($name, $crawler->filter('body')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Users', $crawler->filter('title')->text());
+        self::assertStringContainsString($name, $crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
@@ -67,12 +67,12 @@ final class CreateTest extends DbWebTestCase
             'form[role]' => Role::USER,
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_login')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value is too short. It should have 8 characters or more.', $crawler
+        self::assertStringContainsString('This value is too short. It should have 8 characters or more.', $crawler
             ->filter('#form_password')->ancestors()->first()->filter('.invalid-feedback')->text());
     }
 
@@ -87,7 +87,7 @@ final class CreateTest extends DbWebTestCase
             'form[role]' => Role::USER,
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('User with this login already exists.', $crawler->filter('.alert.alert-danger')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('User with this login already exists.', $crawler->filter('.alert.alert-danger')->text());
     }
 }

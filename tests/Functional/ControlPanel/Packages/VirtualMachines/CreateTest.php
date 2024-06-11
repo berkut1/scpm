@@ -11,8 +11,8 @@ final class CreateTest extends DbWebTestCase
     {
         $this->client->request('GET', '/packages/virtual-machines/create');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -21,7 +21,7 @@ final class CreateTest extends DbWebTestCase
 
         $this->client->request('GET', '/packages/virtual-machines/create');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -29,8 +29,8 @@ final class CreateTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/packages/virtual-machines/create');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Add Virtual Machine Package', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Add Virtual Machine Package', $crawler->filter('title')->text());
     }
 
     public function testCreate(): void
@@ -48,13 +48,13 @@ final class CreateTest extends DbWebTestCase
             'form[iops_max]' => 3000,
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Virtual Machine Packages', $crawler->filter('title')->text());
-        $this->assertStringContainsString('Test VM Package RDP23', $crawler->filter('body')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Virtual Machine Packages', $crawler->filter('title')->text());
+        self::assertStringContainsString('Test VM Package RDP23', $crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
@@ -72,18 +72,18 @@ final class CreateTest extends DbWebTestCase
             'form[iops_max]' => -1,
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_name')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should be positive.', $crawler
+        self::assertStringContainsString('This value should be positive.', $crawler
             ->filter('#form_cores')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_threads')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should be either positive or zero.', $crawler
+        self::assertStringContainsString('This value should be either positive or zero.', $crawler
             ->filter('#form_iops_max')->ancestors()->first()->filter('.invalid-feedback')->text());
     }
 
@@ -102,7 +102,7 @@ final class CreateTest extends DbWebTestCase
             'form[iops_max]' => 3000,
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('VirtualMachinePackage with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('VirtualMachinePackage with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
     }
 }

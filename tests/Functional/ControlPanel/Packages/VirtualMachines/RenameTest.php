@@ -11,8 +11,8 @@ final class RenameTest extends DbWebTestCase
     {
         $this->client->request('GET', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/rename');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -21,7 +21,7 @@ final class RenameTest extends DbWebTestCase
 
         $this->client->request('GET', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/rename');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -29,8 +29,8 @@ final class RenameTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/rename');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Rename Virtual Machine Package', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Rename Virtual Machine Package', $crawler->filter('title')->text());
     }
 
     public function testRename(): void
@@ -42,13 +42,13 @@ final class RenameTest extends DbWebTestCase
             'form[name]' => 'Renamed Test VM Package RDP23',
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Renamed Test VM Package RDP23', $crawler->filter('title')->text());
-        $this->assertStringContainsString('Name Renamed Test VM Package RDP23', $crawler->filter('table')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Renamed Test VM Package RDP23', $crawler->filter('title')->text());
+        self::assertStringContainsString('Name Renamed Test VM Package RDP23', $crawler->filter('table')->text());
     }
 
     public function testNotValid(): void
@@ -60,9 +60,9 @@ final class RenameTest extends DbWebTestCase
             'form[name]' => '',
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_name')->ancestors()->first()->filter('.invalid-feedback')->text());
     }
 }

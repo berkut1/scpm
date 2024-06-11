@@ -13,8 +13,8 @@ final class CreateTest extends DbWebTestCase
     {
         $this->client->request('GET', '/panel/solidcp/node-servers/create');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -23,7 +23,7 @@ final class CreateTest extends DbWebTestCase
 
         $this->client->request('GET', '/panel/solidcp/node-servers/create');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -31,8 +31,8 @@ final class CreateTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/panel/solidcp/node-servers/create');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Add SolidCP Server', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Add SolidCP Server', $crawler->filter('title')->text());
     }
 
     public function testCreate(): void
@@ -51,15 +51,15 @@ final class CreateTest extends DbWebTestCase
             'form[ram_mb]' => $ram_mb = 1024 * 32,
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Node Servers', $crawler->filter('title')->text());
-        $this->assertStringContainsString($name, $crawler->filter('table > tbody')->text());
-        $this->assertStringContainsString($cores.'/'.$threads, $crawler->filter('table > tbody')->text());
-        $this->assertStringContainsString((string)$ram_mb, $crawler->filter('table > tbody')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Node Servers', $crawler->filter('title')->text());
+        self::assertStringContainsString($name, $crawler->filter('table > tbody')->text());
+        self::assertStringContainsString($cores.'/'.$threads, $crawler->filter('table > tbody')->text());
+        self::assertStringContainsString((string)$ram_mb, $crawler->filter('table > tbody')->text());
     }
 
     public function testNotValid(): void
@@ -76,18 +76,18 @@ final class CreateTest extends DbWebTestCase
             'form[ram_mb]' => 0,
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_name')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_cores')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should be positive.', $crawler
+        self::assertStringContainsString('This value should be positive.', $crawler
             ->filter('#form_threads')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should be positive.', $crawler
+        self::assertStringContainsString('This value should be positive.', $crawler
             ->filter('#form_ram_mb')->ancestors()->first()->filter('.invalid-feedback')->text());
     }
 
@@ -106,7 +106,7 @@ final class CreateTest extends DbWebTestCase
             'form[ram_mb]' => 1024 * 32,
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('solidcpServer with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('solidcpServer with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
     }
 }

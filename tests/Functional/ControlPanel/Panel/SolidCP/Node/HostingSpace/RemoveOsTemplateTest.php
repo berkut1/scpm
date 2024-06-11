@@ -11,8 +11,8 @@ final class RemoveOsTemplateTest extends DbWebTestCase
     {
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/os-template/' . OsTemplateFixture::EXISTING_ID . '/remove');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -20,7 +20,7 @@ final class RemoveOsTemplateTest extends DbWebTestCase
         $this->loginAs('test_user');
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/os-template/' . OsTemplateFixture::EXISTING_ID . '/remove');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost(): void
@@ -28,10 +28,10 @@ final class RemoveOsTemplateTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/os-template/' . OsTemplateFixture::EXISTING_ID . '/remove');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringContainsString('Exist Hosting Space Enabled', $crawler->filter('table > tbody')->text());
+        self::assertStringContainsString('Exist Hosting Space Enabled', $crawler->filter('table > tbody')->text());
     }
 
     public function testDelete(): void
@@ -46,11 +46,10 @@ final class RemoveOsTemplateTest extends DbWebTestCase
 
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/os-template/' . OsTemplateFixture::EXISTING_ID . '/remove',
             ['token' => $csrfToken]);
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringNotContainsString('Exist OS File',
-            $crawler->filter('body > div.body.flex-grow-1.px-5 > div > div.card-body > div.box > div:nth-child(4) > div.card-body > table > tbody')->text());
+        self::assertStringNotContainsString('Exist OS File', $crawler->filter('body > div.body.flex-grow-1.px-5 > div > div.card-body > div.box > div:nth-child(4) > div.card-body > table > tbody')->text());
     }
 }

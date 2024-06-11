@@ -13,8 +13,8 @@ final class SetDefaultTest extends DbWebTestCase
     {
         $this->client->request('POST', self::URI);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -22,7 +22,7 @@ final class SetDefaultTest extends DbWebTestCase
         $this->loginAs('test_user');
 
         $this->client->request('POST', self::URI);
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost(): void
@@ -30,7 +30,7 @@ final class SetDefaultTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $this->client->request('POST', self::URI);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
         $result = '';
@@ -41,7 +41,7 @@ final class SetDefaultTest extends DbWebTestCase
                 }
             });
 
-        $this->assertStringContainsString('No Set Default', $result);
+        self::assertStringContainsString('No Set Default', $result);
     }
 
     public function testSetDefault(): void
@@ -54,7 +54,7 @@ final class SetDefaultTest extends DbWebTestCase
         $csrfToken = $form->getValues()['token'];
 
         $this->client->request('POST', self::URI, ['token' => $csrfToken]);
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
@@ -65,6 +65,6 @@ final class SetDefaultTest extends DbWebTestCase
                     $result = $row->text();
                 }
             });
-        $this->assertStringContainsString('http://10.0.0.2:9002 Yes', $result); //after url is Default section
+        self::assertStringContainsString('http://10.0.0.2:9002 Yes', $result); //after url is Default section
     }
 }

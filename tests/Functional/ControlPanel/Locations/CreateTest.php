@@ -11,8 +11,8 @@ final class CreateTest extends DbWebTestCase
     {
         $this->client->request('GET', '/locations/create');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -21,7 +21,7 @@ final class CreateTest extends DbWebTestCase
 
         $this->client->request('GET', '/locations/create');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -29,8 +29,8 @@ final class CreateTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/locations/create');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Add Location', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Add Location', $crawler->filter('title')->text());
     }
 
     public function testCreate(): void
@@ -42,13 +42,13 @@ final class CreateTest extends DbWebTestCase
             'form[name]' => 'Test Location',
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Locations', $crawler->filter('title')->text());
-        $this->assertStringContainsString('Test Location', $crawler->filter('body')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Locations', $crawler->filter('title')->text());
+        self::assertStringContainsString('Test Location', $crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
@@ -60,8 +60,8 @@ final class CreateTest extends DbWebTestCase
             'form[name]' => '',
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_name')->ancestors()->first()->filter('.invalid-feedback')->text());
     }
 
@@ -74,8 +74,8 @@ final class CreateTest extends DbWebTestCase
             'form[name]' => 'Exist Test Location',
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString('Location with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
+        self::assertStringContainsString('Location with this name already exists.', $crawler->filter('.alert.alert-danger')->text());
     }
 }

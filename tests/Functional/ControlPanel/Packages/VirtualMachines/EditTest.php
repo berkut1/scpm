@@ -11,8 +11,8 @@ final class EditTest extends DbWebTestCase
     {
         $this->client->request('GET', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/edit');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -21,7 +21,7 @@ final class EditTest extends DbWebTestCase
 
         $this->client->request('GET', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/edit');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -29,8 +29,8 @@ final class EditTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/packages/virtual-machines/' . VmPackageFixture::EXISTING_ID . '/edit');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Edit Virtual Machine Package', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Edit Virtual Machine Package', $crawler->filter('title')->text());
     }
 
     public function testEdit(): void
@@ -47,16 +47,16 @@ final class EditTest extends DbWebTestCase
             'form[iops_max]' => $iops_max = 1500,
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Exist Test VM Package RDP23', $crawler->filter('title')->text());
-        $this->assertStringContainsString('Cores/Threads: 1/1', $crawler->filter('body')->text());
-        $this->assertStringContainsString('RAM ' . $ram_mb, $crawler->filter('body')->text());
-        $this->assertStringContainsString('Space ' . $space_gb, $crawler->filter('body')->text());
-        $this->assertStringContainsString('IOPS Min: ' . $iops_min . ' / Max: ' . $iops_max, $crawler->filter('body')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Exist Test VM Package RDP23', $crawler->filter('title')->text());
+        self::assertStringContainsString('Cores/Threads: 1/1', $crawler->filter('body')->text());
+        self::assertStringContainsString('RAM ' . $ram_mb, $crawler->filter('body')->text());
+        self::assertStringContainsString('Space ' . $space_gb, $crawler->filter('body')->text());
+        self::assertStringContainsString('IOPS Min: ' . $iops_min . ' / Max: ' . $iops_max, $crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
@@ -73,21 +73,21 @@ final class EditTest extends DbWebTestCase
             'form[iops_max]' => null,
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString('This value should be positive.', $crawler
+        self::assertStringContainsString('This value should be positive.', $crawler
             ->filter('#form_cores')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should be positive.', $crawler
+        self::assertStringContainsString('This value should be positive.', $crawler
             ->filter('#form_threads')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_ram_mb')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should be either positive or zero.', $crawler
+        self::assertStringContainsString('This value should be either positive or zero.', $crawler
             ->filter('#form_iops_min')->ancestors()->first()->filter('.invalid-feedback')->text());
 
-        $this->assertStringContainsString('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_iops_max')->ancestors()->first()->filter('.invalid-feedback')->text());
     }
 }

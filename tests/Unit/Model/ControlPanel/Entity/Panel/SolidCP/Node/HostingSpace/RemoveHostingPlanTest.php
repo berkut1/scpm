@@ -24,7 +24,7 @@ final class RemoveHostingPlanTest extends TestCase
         $hostingSpace->addHostingPlan($plan);
         $hostingSpace->removeHostingPlan($plan->getId());
 
-        $this->assertCount(0, $hostingSpace->getHostingPlans());
+        self::assertCount(0, $hostingSpace->getHostingPlans());
     }
 
     public function testNotFound(): void

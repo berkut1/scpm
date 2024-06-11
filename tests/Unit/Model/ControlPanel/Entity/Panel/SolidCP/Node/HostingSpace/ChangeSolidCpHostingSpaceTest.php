@@ -18,7 +18,7 @@ final class ChangeSolidCpHostingSpaceTest extends TestCase
             ->build();
 
         $hostingSpace->changSolidCpHostingSpace($newId = 124);
-        $this->assertSame($newId, $hostingSpace->getSolidCpIdHostingSpace());
+        self::assertSame($newId, $hostingSpace->getSolidCpIdHostingSpace());
     }
 
     public function testNothingHappens(): void

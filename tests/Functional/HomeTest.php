@@ -12,8 +12,8 @@ final class HomeTest extends DbWebTestCase
     {
         $this->client->request('GET', '/');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -24,8 +24,8 @@ final class HomeTest extends DbWebTestCase
 
         $crawler = $this->client->request('GET', '/');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Home', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Home', $crawler->filter('title')->text());
     }
 
     public function testAdmin(): void
@@ -36,7 +36,7 @@ final class HomeTest extends DbWebTestCase
 
         $crawler = $this->client->request('GET', '/');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Home', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Home', $crawler->filter('title')->text());
     }
 }

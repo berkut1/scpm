@@ -12,8 +12,8 @@ final class AddHostingSpaceTest extends DbWebTestCase
     {
         $this->client->request('GET', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/create-hosting-space');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -22,7 +22,7 @@ final class AddHostingSpaceTest extends DbWebTestCase
 
         $this->client->request('GET', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/create-hosting-space');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -36,8 +36,8 @@ final class AddHostingSpaceTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/panel/solidcp/node-servers/' . NodeFixture::EXISTING_ID_ENABLED . '/create-hosting-space');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Add hosting Spaces', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Add hosting Spaces', $crawler->filter('title')->text());
     }
 
     public function testAddHostingSpace(): void
@@ -59,12 +59,11 @@ final class AddHostingSpaceTest extends DbWebTestCase
             'form[space_quota_gb]' => 200,
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStringContainsString($name . ' ' . $solidCpDd,
-            $crawler->filter('body > div.body.flex-grow-1.px-5 > div > div.card-body > div.box > div > div.card-body > table > tbody')->text());
+        self::assertStringContainsString($name . ' ' . $solidCpDd, $crawler->filter('body > div.body.flex-grow-1.px-5 > div > div.card-body > div.box > div > div.card-body > table > tbody')->text());
     }
 }

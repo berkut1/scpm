@@ -25,7 +25,7 @@ final class RemoveOsTemplateTest extends TestCase
         $this->initId($template, $id = 12);
 
         $hostingSpace->removeOsTemplate($id);
-        $this->assertCount(0, $hostingSpace->getOsTemplates());
+        self::assertCount(0, $hostingSpace->getOsTemplates());
     }
 
     public function testNotFound(): void

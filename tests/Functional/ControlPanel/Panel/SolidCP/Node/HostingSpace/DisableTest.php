@@ -11,8 +11,8 @@ final class DisableTest extends DbWebTestCase
     {
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/disable');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -20,7 +20,7 @@ final class DisableTest extends DbWebTestCase
         $this->loginAs('test_user');
 
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/disable');
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPost(): void
@@ -28,10 +28,10 @@ final class DisableTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/disable');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringContainsString('Yes Disable', $crawler->filter('body')->text());
+        self::assertStringContainsString('Yes Disable', $crawler->filter('body')->text());
     }
 
     public function testDisable(): void
@@ -44,10 +44,10 @@ final class DisableTest extends DbWebTestCase
         $csrfToken = $form->getValues()['token'];
 
         $this->client->request('POST', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/disable', ['token' => $csrfToken]);
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertStringContainsString('No Enable', $crawler->filter('body')->text());
+        self::assertStringContainsString('No Enable', $crawler->filter('body')->text());
     }
 }

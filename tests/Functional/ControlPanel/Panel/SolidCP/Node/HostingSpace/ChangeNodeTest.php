@@ -13,8 +13,8 @@ final class ChangeNodeTest extends DbWebTestCase
     {
         $this->client->request('GET', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/change-node');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -22,7 +22,7 @@ final class ChangeNodeTest extends DbWebTestCase
         $this->loginAs('test_user');
         $this->client->request('GET', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/change-node');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -30,8 +30,8 @@ final class ChangeNodeTest extends DbWebTestCase
         $this->loginAs('test_admin');
         $crawler = $this->client->request('GET', '/panel/solidcp/hosting-spaces/' . HostingSpaceFixture::EXISTING_ID_ENABLED . '/change-node');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Change Hosting Space Node', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Change Hosting Space Node', $crawler->filter('title')->text());
     }
 
     public function testChangeNode(): void
@@ -44,12 +44,12 @@ final class ChangeNodeTest extends DbWebTestCase
             'form[id_server]' => NodeFixture::EXISTING_ID_DISABLED,
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Exist Hosting Space Enabled', $crawler->filter('title')->text());
-        $this->assertStringContainsString('Exist Node Disabled', $crawler->filter('body')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Exist Hosting Space Enabled', $crawler->filter('title')->text());
+        self::assertStringContainsString('Exist Node Disabled', $crawler->filter('body')->text());
     }
 }
