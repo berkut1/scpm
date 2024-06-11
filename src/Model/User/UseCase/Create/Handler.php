@@ -45,7 +45,7 @@ final readonly class Handler
 
         $role = new Role($command->role);
         if(!$role->isUser()){
-            $user->changeRole(new Role($command->role));
+            $user->changeRole($role);
         }
 
         $this->users->add($user);
