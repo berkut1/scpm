@@ -18,7 +18,7 @@ Requirements
 Installation
 ------------
 apache or nginx (https://symfony.com/doc/6.4/setup/web_server_configuration.html#nginx)
-- `sudo apt install php8.3-soap php8.3-xml php8.3-mbstring php8.3-intl` - php libs
+- `sudo apt install php8.3-soap php8.3-xml php8.3-mbstring php8.3-intl php8.3-curl` - php libs
 - `git clone --branch builded https://github.com/berkut1/scpm.git`
 - `composer install`
 - `composer dump-env prod` after in the file .env.local.php update APP_SECRET, DATABASE_URL and JWT_PASSPHRASE variables
@@ -36,6 +36,7 @@ Update
 - `git pull`
 - `composer sefl-update`
 - `composer install --no-dev --optimize-autoloader`
+- `php bin/console asset-map:compile`
 - `APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear`
 
 Descriptions (true for HyperV SolidCP module)
