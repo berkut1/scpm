@@ -14,7 +14,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "cp_solidcp_hosting_plans")]
-#[ORM\Index(columns: ["id_hosting_space"], name: "cp_solidcp_hosting_plans_id_hosting_space_idx")]
+#[ORM\Index(name: "cp_solidcp_hosting_plans_id_hosting_space_idx", columns: ["id_hosting_space"])]
 #[ORM\Entity]
 class SolidcpHostingPlan implements AggregateRoot
 {

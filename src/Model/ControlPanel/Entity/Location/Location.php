@@ -26,7 +26,7 @@ class Location implements AggregateRoot
     private string $name;
 
     /** @var Collection|SolidcpServer[] */
-    #[ORM\OneToMany(mappedBy: "location", targetEntity: SolidcpServer::class)]
+    #[ORM\OneToMany(targetEntity: SolidcpServer::class, mappedBy: "location")]
     private array|Collection|ArrayCollection $solidcpServers;
 
     public function __construct(string $name)

@@ -46,7 +46,7 @@ class EnterpriseDispatcher implements AggregateRoot
     private bool $enabled;
 
     /** @var Collection|SolidcpServer[] */
-    #[ORM\OneToMany(mappedBy: "enterprise", targetEntity: SolidcpServer::class)]
+    #[ORM\OneToMany(targetEntity: SolidcpServer::class, mappedBy: "enterprise")]
     private array|Collection|ArrayCollection $solidcpServers;
 
     public function __construct(

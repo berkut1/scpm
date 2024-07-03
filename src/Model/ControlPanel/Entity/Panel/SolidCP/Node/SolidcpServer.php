@@ -27,11 +27,11 @@ class SolidcpServer implements AggregateRoot
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: EnterpriseDispatcher::class, inversedBy: "solidcpServers")]
-    #[ORM\JoinColumn(name: "id_enterprise_dispatcher", referencedColumnName: "id", nullable: false)]
+    #[ORM\JoinColumn(name: "id_enterprise_dispatcher", referencedColumnName: "id", nullable: false, onDelete: 'RESTRICT')]
     private EnterpriseDispatcher $enterprise;
 
     #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: "solidcpServers")]
-    #[ORM\JoinColumn(name: "id_location", referencedColumnName: "id", nullable: false)]
+    #[ORM\JoinColumn(name: "id_location", referencedColumnName: "id", nullable: false, onDelete: 'RESTRICT')]
     private Location $location;
 
     #[ORM\Column(name: "name", type: Types::STRING, length: 128, nullable: false)]

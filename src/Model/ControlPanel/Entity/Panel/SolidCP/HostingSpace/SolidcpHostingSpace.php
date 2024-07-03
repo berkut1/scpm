@@ -15,7 +15,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "cp_solidcp_hosting_spaces")]
-#[ORM\Index(columns: ["id_server"], name: "cp_solidcp_hosting_spaces_id_server_idx")]
+#[ORM\Index(name: "cp_solidcp_hosting_spaces_id_server_idx", columns: ["id_server"])]
 #[ORM\Entity]
 class SolidcpHostingSpace implements AggregateRoot
 {
@@ -51,11 +51,11 @@ class SolidcpHostingSpace implements AggregateRoot
     private bool $enabled;
 
     /** @var Collection|SolidcpHostingPlan[] */
-    #[ORM\OneToMany(mappedBy: "hostingSpace", targetEntity: SolidcpHostingPlan::class, cascade: ["persist"], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: SolidcpHostingPlan::class, mappedBy: "hostingSpace", cascade: ["persist"], orphanRemoval: true)]
     private array|Collection|ArrayCollection $hostingPlans;
 
     /** @var Collection|OsTemplate[] */
-    #[ORM\OneToMany(mappedBy: "hostingSpace", targetEntity: OsTemplate::class, cascade: ["persist"], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: OsTemplate::class, mappedBy: "hostingSpace", cascade: ["persist"], orphanRemoval: true)]
     private array|Collection|ArrayCollection $osTemplates;
 
     public function __construct(

@@ -12,7 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "cp_package_virtual_machines")]
-#[ORM\Index(columns: ["id_package"], name: "cp_package_virtual_machines_id_package_idx")]
+#[ORM\Index(name: "cp_package_virtual_machines_id_package_idx", columns: ["id_package"])]
 #[ORM\Entity]
 class VirtualMachinePackage implements AggregateRoot
 {

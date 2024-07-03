@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: "cp_solidcp_hosting_space_os_templates")]
 #[ORM\UniqueConstraint(name: "unique_ids_cp_solidcp_hosting_space_os_templates", columns: ["path", "id_hosting_space"])]
-#[ORM\Index(columns: ["id_hosting_space"], name: "cp_solidcp_hosting_space_os_templates_id_hosting_space_idx")]
+#[ORM\Index(name: "cp_solidcp_hosting_space_os_templates_id_hosting_space_idx", columns: ["id_hosting_space"])]
 #[ORM\Entity]
 class OsTemplate
 {
