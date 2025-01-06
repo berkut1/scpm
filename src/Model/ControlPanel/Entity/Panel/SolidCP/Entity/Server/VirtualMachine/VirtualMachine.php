@@ -59,6 +59,10 @@ final class VirtualMachine extends ServiceProviderItem
     public ?string $PrivateSwitchId = null;
     public ?string $ManagementNicMacAddress = null;
     public ?string $ManagementSwitchId = null;
+    public bool $DmzNetworkEnabled = false;
+    public ?string $DmzNicMacAddress = null;
+    public ?string $DmzSwitchId = null;
+    public int $DmzNetworkVlan = 0;
     /** @var null|VirtualMachineNetworkAdapter[] */
     public ?array $Adapters = null;
     /** @var null|VirtualHardDiskInfo[] */
