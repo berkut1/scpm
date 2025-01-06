@@ -30,11 +30,11 @@ final class SolidcpServerFixture extends Fixture implements DependentFixtureInte
         for ($i = 0; $i < count(self::REFERENCE_NODES); $i++) {
             /** @var EnterpriseDispatcher $enterpriseDispatcher */
             $rand_val = random_int(0, $max_node_num - 1);
-            $enterpriseDispatcher = $this->getReference(EnterpriseDispatcherFixture::REFERENCE_ED[$rand_val]);
+            $enterpriseDispatcher = $this->getReference(EnterpriseDispatcherFixture::REFERENCE_ED[$rand_val], EnterpriseDispatcher::class);
 
             /** @var Location $location */
             $rand_val = random_int(0, $max_loc_num - 1);
-            $location = $this->getReference(LocationFixture::REFERENCE_LOCATIONS[$rand_val]);
+            $location = $this->getReference(LocationFixture::REFERENCE_LOCATIONS[$rand_val], Location::class);
 
             $core = $faker->numberBetween(8, 64);
             $node = new SolidcpServer(

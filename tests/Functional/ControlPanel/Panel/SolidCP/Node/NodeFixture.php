@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\Node;
 
+use App\Model\ControlPanel\Entity\Location\Location;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\EnterpriseDispatcher\EnterpriseDispatcher;
 use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
 use App\Tests\Builder\ControlPanel\Panel\SolidcpServerBuilder;
 use App\Tests\Functional\ControlPanel\Locations\LocationFixture;
@@ -25,8 +27,8 @@ final class NodeFixture extends Fixture implements DependentFixtureInterface
     #[\Override]
     public function load(ObjectManager $manager): void
     {
-        $enterpriseDispatcher = $this->getReference(EnterpriseDispatcherFixture::REFERENCES[EnterpriseDispatcherFixture::EXISTING_ID_ENABLED]);
-        $location = $this->getReference(LocationFixture::EXISTING_ID);
+        $enterpriseDispatcher = $this->getReference(EnterpriseDispatcherFixture::REFERENCES[EnterpriseDispatcherFixture::EXISTING_ID_ENABLED], EnterpriseDispatcher::class);
+        $location = $this->getReference(LocationFixture::REFERENCE, Location::class);
 
         $server = (new SolidCPServerBuilder($enterpriseDispatcher))
             ->withServerDetails('Exist Node Enabled', 12, 24, 1024 * 46)

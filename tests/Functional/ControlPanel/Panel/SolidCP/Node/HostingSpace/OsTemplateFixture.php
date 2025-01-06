@@ -19,7 +19,7 @@ final class OsTemplateFixture extends Fixture implements DependentFixtureInterfa
     public function load(ObjectManager $manager): void
     {
         /** @var SolidcpHostingSpace $hostingSpace */
-        $hostingSpace = $this->getReference(HostingSpaceFixture::REFERENCES[HostingSpaceFixture::EXISTING_ID_ENABLED]);
+        $hostingSpace = $this->getReference(HostingSpaceFixture::REFERENCES[HostingSpaceFixture::EXISTING_ID_ENABLED], SolidcpHostingSpace::class);
 
         $osTemplate = new OsTemplate($hostingSpace, 'exist_os_file.vhdx', 'Exist OS File');
 

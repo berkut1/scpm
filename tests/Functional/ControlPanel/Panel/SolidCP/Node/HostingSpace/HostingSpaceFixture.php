@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\ControlPanel\Panel\SolidCP\Node\HostingSpace;
 
 use App\Model\ControlPanel\Entity\Panel\SolidCP\HostingSpace\SolidcpHostingSpace;
+use App\Model\ControlPanel\Entity\Panel\SolidCP\Node\SolidcpServer;
 use App\Tests\Builder\ControlPanel\Panel\SolidcpHostingSpaceBuilder;
 use App\Tests\Functional\ControlPanel\Panel\SolidCP\Node\NodeFixture;
 use App\Tests\Utils;
@@ -23,7 +24,7 @@ final class HostingSpaceFixture extends Fixture implements DependentFixtureInter
     #[\Override]
     public function load(ObjectManager $manager): void
     {
-        $server = $this->getReference(NodeFixture::REFERENCES[NodeFixture::EXISTING_ID_ENABLED]);
+        $server = $this->getReference(NodeFixture::REFERENCES[NodeFixture::EXISTING_ID_ENABLED], SolidcpServer::class);
 
         $hostingSpace = (new SolidcpHostingSpaceBuilder($server, random_int(100, 999)))
             ->withDetails('Exist Hosting Space Enabled', 40, 24 * 1024 * 1024, 500)

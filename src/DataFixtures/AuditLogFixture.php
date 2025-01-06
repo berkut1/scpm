@@ -39,7 +39,7 @@ final class AuditLogFixture extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < count(self::REFERENCE_LOGS); $i++) {
             /** @var User $user */
             $rand_val = random_int(0, $max_user_num - 1);
-            $user = $this->getReference(UserFixture::REFERENCE_USERS[$rand_val]);
+            $user = $this->getReference(UserFixture::REFERENCE_USERS[$rand_val], User::class);
             $ipv4 = $faker->ipv4();
             $date = \DateTimeImmutable::createFromMutable($faker->dateTimeBetween());
 

@@ -27,7 +27,7 @@ final class HostingSpaceFixture extends Fixture implements DependentFixtureInter
         for ($i = 0; $i < count(self::REFERENCES); $i++) {
             /** @var SolidcpServer $solidcpServer */
             $rand_val = random_int(0, $max_num - 1);
-            $solidcpServer = $this->getReference(SolidcpServerFixture::REFERENCE_NODES[$rand_val]);
+            $solidcpServer = $this->getReference(SolidcpServerFixture::REFERENCE_NODES[$rand_val], SolidcpServer::class);
 
             $solidcpHostingSpace = new SolidcpHostingSpace(
                 $solidcpServer,

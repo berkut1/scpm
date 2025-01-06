@@ -28,7 +28,7 @@ final class HostingPlanFixture extends Fixture implements DependentFixtureInterf
     #[\Override]
     public function load(ObjectManager $manager): void
     {
-        $hostingSpace = $this->getReference(HostingSpaceFixture::REFERENCES[HostingSpaceFixture::EXISTING_ID_ENABLED]);
+        $hostingSpace = $this->getReference(HostingSpaceFixture::REFERENCES[HostingSpaceFixture::EXISTING_ID_ENABLED], SolidcpHostingSpace::class);
 
         $hostingSpace = (new SolidcpHostingPlanBuilder($hostingSpace, self::EXISTING_SOLIDCP_PLAN_ID, $this->mockHostingPlanServiceWith($hostingSpace, self::EXISTING_SOLIDCP_PLAN_ID)))
             ->withName('Exist Hosting Plan')

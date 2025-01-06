@@ -11,12 +11,13 @@ use Doctrine\Persistence\ObjectManager;
 final class LocationFixture extends Fixture
 {
     public const int EXISTING_ID = 101;
+    public const string REFERENCE = 'location';
 
     #[\Override]
     public function load(ObjectManager $manager): void
     {
         $exists = new Location('Exist Test Location');
-        $this->setReference(self::EXISTING_ID, $exists);
+        $this->setReference(self::REFERENCE, $exists);
 
         $reflection = new \ReflectionClass($exists);
         $property = $reflection->getProperty('id');
