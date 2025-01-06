@@ -70,6 +70,10 @@ final class EsVirtualizationServer2012 extends EnterpriseSoapServiceFactory
         int            $privateAddressesNumber = 0,
         bool           $randomPrivateAddresses = false,
         array          $privateAddresses = [],
+        bool           $dmzNetworkEnabled = false,
+        int            $dmzAddressesNumber = 0,
+        bool           $randomDmzAddresses = false,
+        array          $dmzAddresses = [],
         ?string        $summaryLetterEmail = null
     ): array
     {
@@ -88,6 +92,10 @@ final class EsVirtualizationServer2012 extends EnterpriseSoapServiceFactory
                         'privateAddressesNumber' => $privateAddressesNumber,
                         'randomPrivateAddresses' => $randomPrivateAddresses,
                         'privateAddresses' => $privateAddresses,
+                        'dmzNetworkEnabled' => $dmzNetworkEnabled,
+                        'dmzAddressesNumber' => $dmzAddressesNumber,
+                        'randomDmzAddresses' => $randomDmzAddresses,
+                        'dmzAddresses' => $dmzAddresses,
                     ]
                 )->CreateNewVirtualMachineResult);
         } catch (\SoapFault $e) {

@@ -61,7 +61,7 @@ final readonly class Handler
             $command->randomPrivateAddresses = false;
         }
 
-        $result = $esVirtualizationServer2012->createNewVirtualMachine(
+        $result = $esVirtualizationServer2012->createNewVirtualMachine( //TODO: add support DMZ network?
             $vmSettings,
             $command->osTemplateFile,
             $command->password,

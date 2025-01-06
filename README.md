@@ -13,7 +13,7 @@ Requirements
 ------------
 - PHP >= 8.3
 - PostgresSQL
-- SolidCP 1.4.9
+- SolidCP 1.5.1 (for an old version change branch)
 
 Installation
 ------------
