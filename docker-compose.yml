@@ -28,10 +28,14 @@ services:
             dockerfile: php-cli.docker
         volumes:
             - ./:/app
-            - composer:/root/.composer/cache
+            - composer:/var/.composer/cache
 #            - vendor:/app/vendor
         environment:
             PHP_IDE_CONFIG: "serverName=DockerTest"
+            COMPOSER_CACHE_DIR: "/var/.composer/cache"
+            COMPOSER_HOME: "/var/.composer"
+        user: "1000:1000"
+        command: sh -c "usermod -aG 1000 www-data && chown -R 1000:1000 /app && chmod -R g+rw /app && chmod -R g+s /app && exec \"$@\""
         depends_on:
             - scpsc-postgres
 #    scpsc-node:

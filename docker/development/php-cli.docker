@@ -23,7 +23,11 @@ COPY ./php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
+#ENV COMPOSER_ALLOW_SUPERUSER 1
+
+RUN mkdir -p /var/.composer/cache && \
+    chown -R www-data:www-data /var/.composer && \
+    chmod -R 777 /var/.composer
 
 RUN echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini;
 

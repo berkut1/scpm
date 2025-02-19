@@ -95,3 +95,9 @@ rector:
 
 rector-dry:
 	docker-compose run --rm scpsc-php-cli vendor/bin/rector --dry-run
+
+validate-db:
+	docker-compose run --rm scpsc-php-cli php bin/console doctrine:schema:validate
+
+diff-db:
+	docker-compose run --rm scpsc-php-cli php bin/console doctrine:migrations:diff
